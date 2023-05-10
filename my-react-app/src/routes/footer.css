@@ -1,0 +1,12 @@
+
+.footer {
+    color: white;
+    background-color: black;
+    padding: 1rem;
+    
+}
+
+.footer .text {
+    text-align: center;
+    font: 0.7rem cursive;
+}

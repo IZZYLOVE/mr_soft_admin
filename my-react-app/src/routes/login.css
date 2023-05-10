@@ -1,0 +1,155 @@
+.body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url(../assets/img1.jpg);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .form h2{
+    text-align: center;
+  }
+
+  .wrapper{
+    position: relative;
+    width: 400px;
+    height: 440px;
+    background: transparent;
+    border:2px solid rgba(255, 255, 255, .5);
+    border-radius: 20px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0, 0, 30px rgba(0, 0, 0, .5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .wrapper .form{
+    width: 100%;
+    padding: 40px;
+  }
+
+  .wrapper .icon-close{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 2px;
+    font-weight: 900;
+    font: 1rem monospace;
+    color: white;
+    background-color: #163820;
+    padding: 0.8rem;
+    border-bottom-left-radius: 20px;
+    cursor: pointer;
+    z-index: 1;
+    
+  }
+
+  .icon-close a{
+     text-decoration: none;
+     color: white;
+     font-weight: 900;
+     font: 1.4rem monospace;
+     
+  }
+
+  .icon-close:hover{
+    background-color: #4d5b1f;
+    padding: 0.9rem;
+    transition: .5s;
+  }
+
+  .form h2{
+    font: 2rem cursive;
+  }
+
+  .input-box{
+    position: relative;
+    width: 100%;
+    height: 50px;
+    border-bottom: 2px solid #162938;
+    margin: 30px 0;
+  }
+
+  .input-box label {
+    position: absolute;
+    top: 50%;
+    left: 5px;
+    transform: translateY(-50%);
+    color: black;
+    font: 1rem monospace;
+    pointer-events: none;
+    transition: .5s;
+  }
+
+  .input-box input:focus~label,
+  .input-box input:valid~label {
+    top: -5px;
+  }
+
+
+  .input-box input{
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font: 0.9rem cursive;
+    font-weight: 600;
+    color: rgb(56, 56, 56);
+    padding: 0 35px 0 5px;
+  }
+
+  .remember {
+    font-size: .9em;
+    font-weight: 500;
+    margin: -15px 0 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .remember a{
+    color: #4d641f;
+    text-decoration: none;
+  }
+
+  .remember a:hover{
+    text-decoration: underline;
+  }
+
+  .butn{
+    width: 100%;
+    height: 45px;
+    background: #27641f;
+    border: none;
+    border-radius: 1rem;
+    cursor: pointer;
+    color: white;
+    font: 1rem cursive;
+    font-weight: 600;
+    transition: .5s;
+  }
+
+  .butn:hover{
+    background-color: #183614;;
+  }
+
+  .butn:active{
+    background-color: rgb(47, 32, 5);
+    border-radius: 1.5rem;
+  }
+
+  .no-account{
+    margin: 6px;
+    font: 1rem cursive;
+    color: rgb(127, 130, 132);
+  }
+
+  .no-account a{
+    font-weight: 900;
+    color: rgb(209, 209, 209);
+    text-decoration: none;
+  }
