@@ -1,0 +1,1 @@
+exports.dateTime = () => new Date();

@@ -1,0 +1,57 @@
+### USERS
+# signup
+{{RootURL}}api/v1/users/signup
+
+# login
+{{RootURL}}api/v1/users/login
+
+# get all users
+{{RootURL}}api/v1/users/
+
+# get/put one user
+{{RootURL}}api/v1/users/:_id
+{{RootURL}}api/v1/users/646cf8dced7c13012963967a
+
+# forgot password
+{{RootURL}}api/v1/users/forgotpassword
+
+# reset password
+{{RootURL}}api/v1/users/resetpassword/:token
+{{RootURL}}api/v1/users/resetpassword/f3a7b90365fcc8bcd85023def6dd830de5fb371811c3d713193873b1bab77b5a
+
+### courseS
+
+
+# course stats 
+{{RootURL}}api/v1/courses/course-stats
+
+# getAll/post courses
+{{RootURL}}api/v1/courses
+
+# highest rated
+{{RootURL}}api/v1/courses/highest-rated
+
+# getOne/put/patch/delete course
+# with course id
+{{RootURL}}api/v1/courses/:_id
+{{RootURL}}api/v1/courses/646b2ebe06fa59d06462a33e
+
+# Pagination serverside
+{{RootURL}}api/v1/courses?page=2&limit=2
+
+# sorting by fields
+# - means decendind order 
+# sort=-price is in decending order
+{{RootURL}}api/v1/courses?sort=-students,ratings
+
+# query by fields you want or the fields you dont want, there can be no mixup
+# by the fields you want
+{{RootURL}}api/v1/courses?fields=name,ratings,students
+# by the fields you dont want
+{{RootURL}}api/v1/courses?fields=-name,-ratings
+
+# filter by aggregation
+{{RootURL}}api/v1/courses?alumni[gte]=10&students[gte]=90&ratings[lte]=7
+
+# filter by equality (ordinary filter)
+{{RootURL}}api/v1/courses?alumni=10&students=90&ratings=5
