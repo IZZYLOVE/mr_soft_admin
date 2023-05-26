@@ -1,9 +1,12 @@
 import './login.css'
 import {Link} from "react-router-dom"
+import { Icon } from '@iconify/react';
+
 
 export function Login() {
     return < div className='body'>
     <div class="wrapper">
+    <Link to='/'><Icon icon="material-symbols:home-outline" id='loginicon' width='30px'/></Link>
         <div class="form">
             <h2>Login</h2>
             <form action="#">
@@ -25,9 +28,6 @@ export function Login() {
         </div>
         <button type="submit" class="butn">Login
         </button>
-        <div class="no-account">
-            Dont have an account? <Link to="/register">Register</Link>
-        </div>
         
             </form>
         </div>

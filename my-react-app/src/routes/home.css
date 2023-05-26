@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url(../assets/img1.jpg) no-repeat;
+    background: url(../assets/img2.png) no-repeat;
     background-size: cover;
 }
 .Header {
@@ -28,24 +28,27 @@
 .link a{
     font: 1rem monospace;
     text-decoration: none;
-    color: rgb(139, 184, 187);
-    background: rgb(28, 41, 3);
-    border: 1px solid rgb(28, 41, 3);
+    color: rgb(175, 175, 175);
+    background: rgb(84, 67, 4);
+    border: 1px solid rgb(84, 67, 4);
     border-radius: 4px;
-    padding: 7px;
-    padding-left: 4vw;
-    padding-right: 4vw;
-    margin-left: -3vw;
+    padding: 0.6rem 1rem 0.6rem 1.4rem;
+    margin: 0 0 0 -1rem;
 }
 
 .link {
-    margin-top: -4vh;
+    margin-top: -3vh;
 }
 
 .link a:hover{
     background-color: transparent;
-    color: rgb(28, 41, 3);
+    color: rgb(84, 67, 4);;
     transition: .5s;
+}
+
+.icons {
+    vertical-align: middle;
+    margin-left: 4px;
 }
 
    
