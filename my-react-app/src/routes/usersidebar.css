@@ -1,0 +1,65 @@
+.usersidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
+    background-color: #c0c016;
+    transition: transform 0.5s ease-in-out;
+    transform: translateX(-100%);
+  }
+  
+  .usersidebar.open {
+    transform: translateX(0);
+  }
+  
+  .usersidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .usersidebar li {
+    margin: 10px 0;
+  }
+  
+  .usersidebar a {
+    display: block;
+    padding: 10px;
+    color: #fff;
+    text-decoration: none;
+    transition: background-color 0.4s ease-in-out;
+    font: 1rem monospace;
+    font-weight: 900;
+  }
+  
+  .usersidebar a:hover {
+    background-color: #ebeb1d;
+  }
+  
+.userdashicon{
+    vertical-align: middle; 
+    margin-top: -1.5vh;
+    
+ }
+
+ .dashicon:hover {
+  color: rgb(217, 255, 0)
+ }
+
+ .dashicon:active {
+  color: rgb(217, 255, 0)
+ }
+
+ #userdash:hover {
+  background-color: #c0c016;
+ }
+
+ .userdash span {
+    font: 1.4rem cursive;
+    text-shadow: 2px 2px 2px white;
+    padding: 1px;
+ }
+
+
+ 

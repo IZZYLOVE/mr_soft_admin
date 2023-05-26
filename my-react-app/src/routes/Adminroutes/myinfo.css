@@ -1,0 +1,32 @@
+.toggle {
+    display: inline-block;
+    color: white; 
+ }
+ 
+ .mynav {
+     border-bottom: 2px solid #177489;
+     padding: 0.7rem;
+     background-color: #176f83;
+ }
+ 
+ .navicon {
+     vertical-align: middle;
+     margin: 5px;
+ 
+ }
+ 
+ .toggle .navicon:hover {
+     color: red;
+ }
+ 
+ .navdetails {
+     margin-left: 67rem;
+     float: right;
+     font: 1rem cursive;
+ }
+ 
+ .myheader h2 {
+     text-align: center;
+     font: 1.7rem monospace;
+     font-weight: 900;
+ }
