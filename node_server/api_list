@@ -1,57 +1,75 @@
+###
 ### USERS
+###
 # signup
+# methods: post
 {{RootURL}}api/v1/users/signup
 
 # login
+# methods: post
 {{RootURL}}api/v1/users/login
 
 # get all users
+# methods: get
 {{RootURL}}api/v1/users/
 
 # get/put one user
+# methods: get
 {{RootURL}}api/v1/users/:_id
 {{RootURL}}api/v1/users/646cf8dced7c13012963967a
 
 # forgot password
+# methods: post
 {{RootURL}}api/v1/users/forgotpassword
 
 # reset password
+# methods: patch
 {{RootURL}}api/v1/users/resetpassword/:token
 {{RootURL}}api/v1/users/resetpassword/f3a7b90365fcc8bcd85023def6dd830de5fb371811c3d713193873b1bab77b5a
 
+###
 ### courseS
-
-
+###
 # course stats 
+# methods: get
 {{RootURL}}api/v1/courses/course-stats
 
 # getAll/post courses
+# methods: get and post
 {{RootURL}}api/v1/courses
 
 # highest rated
+# methods: get
 {{RootURL}}api/v1/courses/highest-rated
 
 # getOne/put/patch/delete course
 # with course id
+# methods: get, put, patch
 {{RootURL}}api/v1/courses/:_id
 {{RootURL}}api/v1/courses/646b2ebe06fa59d06462a33e
 
 # Pagination serverside
+# methods: get
 {{RootURL}}api/v1/courses?page=2&limit=2
 
 # sorting by fields
 # - means decendind order 
 # sort=-price is in decending order
+# methods: get
 {{RootURL}}api/v1/courses?sort=-students,ratings
 
 # query by fields you want or the fields you dont want, there can be no mixup
 # by the fields you want
+# methods: get
 {{RootURL}}api/v1/courses?fields=name,ratings,students
 # by the fields you dont want
+# methods: get
 {{RootURL}}api/v1/courses?fields=-name,-ratings
 
 # filter by aggregation
+# methods: get
 {{RootURL}}api/v1/courses?alumni[gte]=10&students[gte]=90&ratings[lte]=7
 
 # filter by equality (ordinary filter)
+# methods: get
 {{RootURL}}api/v1/courses?alumni=10&students=90&ratings=5

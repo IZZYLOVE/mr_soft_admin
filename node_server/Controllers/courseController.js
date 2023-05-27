@@ -23,7 +23,7 @@ exports.getHighestRated = asyncErrorHandler(async (req, res, next) => {
 
 exports.getCourses = asyncErrorHandler(async (req, res, next) => {
 
-    let features = new ApiFeatures(Course.find(), req.query).filter().sort().limitfields().paginate()
+    let features = new ApiFeatures(Course.find(), req.query).filter().sort().limitfields().limitfields2().paginate()
  
     let courses = await features.query
 

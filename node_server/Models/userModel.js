@@ -29,6 +29,9 @@ const userSchema = new mongoose.Schema(
         "passwordResetToken": String, 
         // "passwordResetTokenExp": {type: Date, trim: true, select: false}, 
         "passwordResetTokenExp":  Date, 
+        "emailVerified" :  {type: Boolean, required: true, default: false,  immutable: true, trim: true},
+        "emailVerificationToken": String, 
+        "emailVerificationTokenExp":  Date, 
         "phone": {type: String, required: [true, 'please enter phone'], trim: true},
         "created": {type: Date, default: Date.now, immutable: true, trim: true,  select: false},
         "updated": {type: Date, default: Date.now, trim: true,  select: false},
@@ -64,6 +67,15 @@ userSchema.methods.createResetPasswordToken = function(){
     // we will save this info in the authController
     console.log(resetToken, this.passwordResetToken, this.passwordResetTokenExp)
     return resetToken // returns the plain resetToken to the authController to be ssent to the user
+}
+
+userSchema.methods.createEmailVerificationToken = function(){
+    const verifyToken = crypto.randomBytes(25).toString('hex')+' '+this.email
+    this.emailVerificationToken = crypto.createHash('sha256').update(verifyToken).digest('hex') // prepares the user document with the encrypted password rest token
+    this.emailVerificationTokenExp = Date.now() + (10 * 60 * 1000) // prepares the user document with the encrypted password rest token expiration time
+    // we will save this info in the authController
+    console.log(verifyToken, this.emailVerificationToken, this.emailVerificationTokenExp)
+    return verifyToken // returns the plain verifyToken to the authController to be ssent to the user
 }
 
 const User =  mongoose.model('User', userSchema)

@@ -5,7 +5,10 @@ const jwt = require('jsonwebtoken')
 // const bcrypt = require('bcrypt')
 const util = require('util')
 const sendEmail = require('./../Utils/email')
+const limitUserDetailsServeFields = require('./../Utils/limitUserDetailsServeFields')
 const crypto = require('crypto')
+const ApiFeatures = require('../Utils/ApiFeatures')
+
 
 
 const signToken = (_id, email, role) => {
@@ -21,9 +24,79 @@ const signToken = (_id, email, role) => {
 
 exports.signup = asyncErrorHandler(async (req, res, next) => {
     const newUser = await User.create(req.body)
-
-
     const token = signToken(newUser._id, newUser.email, newUser.role)
+    ///
+    //2 GENERATE A RANDOM TOKEN FOR THE USER
+    const VerificationToken= await newUser.createEmailVerificationToken();
+    await newUser.save({validateBeforeSave: false}) // this saves the encrypted token and the expiry date generated in user.createResetPasswordToken() and {validateBeforeSave: false} prevents validation 
+    console.log('EmailVerificationToken')
+    console.log(VerificationToken+'\n') 
+    
+    //4 SEND THE TOKEN TO THE USER VIA EMAIL 
+    const verifyUrl = `${req.protocol}://${req.get('host')}/api/v1/users/verifyemail/${VerificationToken}`
+    // const message = `We have recieved a password reset request. Please use the link below to reset your password\n\n ${resetUrl} \n\n
+    // this link will be valid for 10 munutes.`
+
+
+    const message = `<html><body>
+    <p>
+    Hi ${newUser.firstName} ${newUser.middleName} ${newUser.lastName},</p> 
+    
+    We have recieved your new account.
+    <p>
+    Please use the link below to verify your email:
+    </p>
+    
+    <table align='center' ><tr><td  align='center' style='	color:#FFF; cursor:pointer; padding: 10px 18px; border-radius:10px; background-color:#23BE30;'><b>${VerificationToken}</b>
+        </td></tr></table>
+    
+    <p>
+    
+    You can also click on 'verify email' below to verify your email.
+    </p>
+    
+    <table align='center' ><tr><td  align='center' style='	color:#FFF; cursor:pointer; padding: 10px 18px; border-radius:10px; background-color:#23BE30;'><a href='${verifyUrl}'><b>VERIFY EMAIL</b></a>
+        </td></tr></table>
+    
+    <p>
+    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    </p>
+    
+    WITH MRSOFT, </br>
+    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    
+    <p>
+    Thank you for chosing MRsoft.
+    </p>
+    
+    <p>
+    ${req.protocol}://${req.get('host')}
+    </p>
+    </body></html>"`
+
+
+
+    console.log(message+'\n') 
+    let emailverificationMessage;
+    try{
+        // await sendEmail({
+        //     email: user.email,
+        //     subject: "Password reset request",
+        //     message: message
+        // })
+        emailverificationMessage = `Email verification mail has been sent to  ${newUser.email}, pleae veryfy your email address.`
+    }
+    catch(err){
+        newUser.emailVerificationToken = undefined,
+        newUser.emailVerificationTokenExp = undefined,
+        await newUser.save({validateBeforeSave: false})
+ 
+        // return next(new CustomError(`There is an error sending password reset email. Please try again later`, 500))
+        emailverificationMessage = `Email verification mail failed.`
+        
+    }
+    ///
+    limitedUser = limitUserDetailsServeFields(newUser)
 
     res.status(201).json({ 
         status : "success",
@@ -31,7 +104,8 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
         resource : "user",
         user : "created",
         lenght : newUser.length,
-        // data : newUser
+        emailverificationMessage,
+        data : limitedUser
        })  
 })
 
@@ -48,7 +122,9 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
 
     // const user = await User.findOne({email: req.body.username, phone: req.body.username})// for phone or email login system
     // const user = await User.findOne({email: email})
-    const user = await User.findOne({email}).select('+password')
+    let user = await User.findOne({email}).select('+password')
+
+
     
     // const isMatch = await user.comparePasswordInDb(password, user.password)
     if(!user || !(await user.comparePasswordInDb(password, user.password))){
@@ -58,6 +134,9 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
 
     const token = signToken(user._id, user.email, user.role)
 
+    limitedUser = limitUserDetailsServeFields(user)
+
+    
 
     res.status(201).json({ 
         status : "success",
@@ -65,7 +144,7 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
         resource : "user",
         action: "loggedIn",
         lenght : user.length,
-        // data : user
+        data : limitedUser
        })  
 })
 
@@ -81,10 +160,7 @@ exports.protect = asyncErrorHandler(async (req, res, next) => {
         next(new CustomError('You are not logged in!', 401))
     }
     
-    //2 read the token and check if it exist
-    //we promisify a function to make it return a promise
-    //to promisy we inport the util library
-    jwt.verify(token, process.env.SECRETKEY)// wiil not return a promise
+
     const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRETKEY)// returns a promise
 
     //3 read the token and check if the user still exist
@@ -146,8 +222,51 @@ exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
     
     //4 SEND THE TOKEN TO THE USER VIA EMAIL 
     const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/users/resetpassword/${resetToken}`
-    const message = `We have recieved a password reset request. Please use the link below to reset your password\n\n ${resetUrl} \n\n
-    this link will be valid for 10 munutes.`
+    // const message = `We have recieved a password reset request. Please use the link below to reset your password\n\n ${resetUrl} \n\n
+    // this link will be valid for 10 munutes.`
+
+
+    const message = `<html><body>
+    <p>
+    Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
+    
+    We have recieved your password reset request.
+    <p>
+    If you need to change your password, your RESET code is:
+    </p>
+    
+    <table align='center' ><tr><td  align='center' style='	color:#FFF; cursor:pointer; padding: 10px 18px; border-radius:10px; background-color:#23BE30;'><b>${resetToken}</b>
+        </td></tr></table>
+    
+    <p>
+     This code expires after 10 munites from the request time.
+    
+    You can also click on 'reset password' below to change your password.
+    </p>
+    
+    <table align='center' ><tr><td  align='center' style='	color:#FFF; cursor:pointer; padding: 10px 18px; border-radius:10px; background-color:#23BE30;'><a href='${resetUrl}'><b>RESET PASSWORD</b></a>
+        </td></tr></table>
+    
+    <p>
+    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    </p>
+    
+    WITH MRSOFT, </br>
+    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    
+    <p>
+    Thank you for chosing MRsoft.
+    </p>
+    
+    <p>
+    ${req.protocol}://${req.get('host')}
+    </p>
+    </body></html>"`
+
+
+
+    console.log(message+'\n') 
+
 
     try{
         // await sendEmail({
@@ -213,9 +332,66 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
 
    const token = signToken(user._id, user.email, user.role)
 
+    ///
+    //4 SEND THE TOKEN TO THE USER VIA EMAIL 
+    const verifyUrl = `${req.protocol}://${req.get('host')}/api/v1/users/verifyemail/${VerificationToken}`
+    // const message = `We have recieved a password reset request. Please use the link below to reset your password\n\n ${resetUrl} \n\n
+    // this link will be valid for 10 munutes.`
+
+
+    const message = `<html><body>
+    <p>
+    Hi ${newUser.firstName} ${newUser.middleName} ${newUser.lastName},</p> 
+    
+    Your password has been reset succesffully.
+    <p>
+    Please notify us at support@mrsoft.com if you did not perform this password reset:
+    </p>
+    
+    
+    <p>
+    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    </p>
+    
+    WITH MRSOFT, </br>
+    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    
+    <p>
+    Thank you for chosing MRsoft.
+    </p>
+    
+    <p>
+    ${req.protocol}://${req.get('host')}
+    </p>
+    </body></html>"`
+
+
+
+    console.log(message+'\n') 
+    let emailverificationMessage;
+    try{
+        // await sendEmail({
+        //     email: user.email,
+        //     subject: "Password reset request",
+        //     message: message
+        // })
+        emailverificationMessage = `Password reset mail successfull.`
+    }
+    catch(err){
+        newUser.emailVerificationToken = undefined,
+        newUser.emailVerificationTokenExp = undefined,
+        await newUser.save({validateBeforeSave: false})
+ 
+        // return next(new CustomError(`There is an error sending password reset email. Please try again later`, 500))
+        emailverificationMessage = `Password reset mail failed.`
+        
+    }
+    ///
+
    res.status(201).json({ 
        status : "success",
        token,
+       emailverificationMessage,
        resource : "user",
        action : "password-reset and auto login"
       })  
@@ -227,7 +403,7 @@ exports.getUsers = asyncErrorHandler(async (req, res, next) => {
     let features = new ApiFeatures(User.find(), req.query).filter().sort().limitfields().paginate()
  
     let user = await features.query
-
+  limitedUser = limitUserDetailsServeFields(user)
     res.status(200).json({ 
         status : "success",
         resource : "users",
@@ -243,11 +419,13 @@ exports.getAuser = asyncErrorHandler(async (req, res, next) => {
             //return to prevent further execution of the rest of the codes
             return next(error)
         }
+        limitedUser = limitUserDetailsServeFields(user)
+
         res.status(200).json({ 
             status : "success",
             resource : "user",
             lenght : user.length,
-            data : user
+            data : limitedUser
         })  
 })
 
@@ -258,12 +436,14 @@ exports.patchUser= asyncErrorHandler(async (req, res, next) => {
             const error = new CustomError(`user with ID: ${req.params._id} is not found`, 404)
             return next(error)
         }
+        limitedUser = limitUserDetailsServeFields(user)
+
         res.status(200).json({ 
             status : "success",
             resource : "user",
             action: "patch",
             lenght : user.length,
-            data : user
+            data : limitedUser
         })  
 })
 
@@ -275,12 +455,14 @@ exports.putUser = asyncErrorHandler(async (req, res, next) => {
         const error = new CustomError(`User with ID: ${req.params._id} is not available`, 404)
         return next(error)
     }
+    limitedUser = limitUserDetailsServeFields(user)
+
     res.status(200).json({ 
         status : "success",
         resource : "user",
         action : "put",
         lenght : user.length,
-        data : user
+        data : limitedUser
     })  
 })
 
@@ -296,3 +478,52 @@ exports.deleteUser = asyncErrorHandler(async (req, res, next) => {
             message: 'deleted'
         })  
 })
+
+
+exports.verifyEmail = asyncErrorHandler(async (req, res, next) => {
+    const cryptotoken = crypto.createHash('sha256').update(req.params.token).digest('hex')
+   const user = await User.findOne({passwordResetToken: cryptotoken, passwordResetTokenExp: {$gt: Date.now()}}) 
+   
+   console.log('Password reset Token')
+   console.log(req.params.token+'\n')
+   console.log('req.body.password')
+   console.log(req.body.password+'\n')
+   console.log('req.body.confirmPassword')
+   console.log(req.body.confirmPassword+'\n') 
+
+
+   if(!user){
+        const userx = await User.findOne({passwordResetToken: cryptotoken}) 
+        if(userx){
+            // there is a pasward reset token, delete it
+            userx.password = req.body.password  
+            userx.passwordResetToken = undefined
+            userx.passwordResetTokenExp = undefined
+        }
+    
+
+    const error = new CustomError('Token is invalid or has expired', 404)
+    next(error)
+   }
+
+   user.password = req.body.password
+   user.confirmPassword = req.body.confirmPassword
+   user.passwordChangedAt = Date.now()
+   user.passwordResetToken = undefined
+   user.passwordResetTokenExp = undefined
+
+   user.save()// we want to allow validation
+
+   limitedUser = limitUserDetailsServeFields(user)
+
+   const token = signToken(user._id, user.email, user.role)
+
+   res.status(201).json({ 
+       status : "success",
+       token,
+       resource : "user",
+       action : "password-reset and auto login",
+       lenght : user.length,
+       data : limitedUser
+      })  
+}) 

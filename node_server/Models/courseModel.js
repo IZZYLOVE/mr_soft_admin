@@ -22,6 +22,7 @@ const courseSchema = new mongoose.Schema(
         message: "this stack does not exist"
         },
         trim: true},
+    "createdBy": {type: String, required: [true, 'please completethe hidden field createdBy'], trim: true},
 
     "technologies": {type: String, default: ['HTML'],
         enum: {
@@ -54,14 +55,6 @@ const courseSchema = new mongoose.Schema(
 
 
 // USING MONGOOSE MIDDLEWARE
-//pre hook
-courseSchema.pre('save', async function(req, next){
-    // this here points to the corrent document
-    // this.createdBy = "King"
-    this.createdBy = req.user.name
-    next();
-})
-
 //post hook
 courseSchema.post('save', async function(doc, next){
     const content = `A new course document with name ${doc.name} created by ${doc.createdBy} on ${doc.created}\n`

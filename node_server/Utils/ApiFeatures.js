@@ -41,7 +41,22 @@ class Apifeatures{
         }
         else{
             this.query = this.query.select('-__v')
+            this.query = this.query.select('-passwordResetToken')
+            this.query = this.query.select('-passwordResetTokenExp')
+            this.query = this.query.select('-emailVerificationToken')
+            this.query = this.query.select('-emailVerificationTokenExp')
         }
+        return this
+    }
+
+    limitfields2(){
+
+            this.query = this.query.select('-__v')
+            this.query = this.query.select('-passwordResetToken')
+            this.query = this.query.select('-passwordResetTokenExp')
+            this.query = this.query.select('-emailVerificationToken')
+            this.query = this.query.select('-emailVerificationTokenExp')
+        
         return this
     }
 
