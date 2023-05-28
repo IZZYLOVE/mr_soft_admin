@@ -5,13 +5,6 @@ const CustomError = require('../Utils/CustomError');
 const CustomErrorHandler = require('../Utils/CustomError')
 
 
-// PARAM MIDDLEWARES
-// exports.checkId = (req, res, next, value) => {
-    
-
-//     next()
-// }
-
 //ROUTE HANDLER FUNCTIONS
 exports.getHighestRated = asyncErrorHandler(async (req, res, next) => {
     //pre filling the sorting and limit
@@ -131,7 +124,7 @@ exports.getcourseStats = asyncErrorHandler(async (req, res, next) => {
 
         res.status(200).json({ 
             status : "success",
-            resource : "movies",
+            resource : "courses",
             action : "aggregatation",
             lenght : stats.length,
             data: stats
@@ -141,7 +134,7 @@ exports.getcourseStats = asyncErrorHandler(async (req, res, next) => {
 exports.getcoursesByStack = asyncErrorHandler(async (req, res, next) => {
         //allows us access to the aggregation pipeline
         const mystack = req.params.stack
-        const courses = await Movie.aggregate([
+        const courses = await Course.aggregate([
             {$unwind: '$stack'},
             { $group: {
                 _id: '$stack',
@@ -150,7 +143,7 @@ exports.getcoursesByStack = asyncErrorHandler(async (req, res, next) => {
             }},
             {$addFields: {stack: "$_id"}}, //adds a firld stack
             {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
-            {$sort: {movieCount: -1}}, // sort in decending order by setting -1
+            {$sort: {courseCount: -1}}, // sort in decending order by setting -1
             // {$limit: 6} // liniting response to 6
             { $match: {stack: mystack}},
 
@@ -159,7 +152,7 @@ exports.getcoursesByStack = asyncErrorHandler(async (req, res, next) => {
 
         res.status(200).json({ 
             status : "success",
-            resource : "movies",
+            resource : "courses",
             action : "aggregatation",
             lenght : courses.length,
             data: courses
@@ -170,7 +163,7 @@ exports.getcoursesByStack = asyncErrorHandler(async (req, res, next) => {
 exports.getcoursesByTechnology = asyncErrorHandler(async (req, res, next) => {
     //allows us access to the aggregation pipeline
     const mytechnology = req.params.technology
-    const courses = await Movie.aggregate([
+    const courses = await Course.aggregate([
         {$unwind: '$technology'},
         { $group: {
             _id: '$technology',
@@ -187,7 +180,7 @@ exports.getcoursesByTechnology = asyncErrorHandler(async (req, res, next) => {
 
     res.status(200).json({ 
         status : "success",
-        resource : "movies",
+        resource : "courses",
         action : "aggregatation",
         lenght : courses.length,
         data: courses

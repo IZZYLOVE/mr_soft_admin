@@ -79,11 +79,11 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     console.log(message+'\n') 
     let emailverificationMessage;
     try{
-        // await sendEmail({
-        //     email: user.email,
-        //     subject: "Password reset request",
-        //     message: message
-        // })
+        await sendEmail({
+            email: newUser.email,
+            subject: "Password reset request",
+            message: message
+        })
         emailverificationMessage = `Email verification mail has been sent to  ${newUser.email}, pleae veryfy your email address.`
     }
     catch(err){
@@ -269,11 +269,11 @@ exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
 
 
     try{
-        // await sendEmail({
-        //     email: user.email,
-        //     subject: "Password reset request",
-        //     message: message
-        // })
+        await sendEmail({
+            email: user.email,
+            subject: "Password reset request",
+            message: message
+        })
         res.status(200).json({ 
             status : "success",
             subject : "Password change request recievced",
@@ -370,11 +370,11 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
     console.log(message+'\n') 
     let emailverificationMessage;
     try{
-        // await sendEmail({
-        //     email: user.email,
-        //     subject: "Password reset request",
-        //     message: message
-        // })
+        await sendEmail({
+            email: user.email,
+            subject: "Password reset request",
+            message: message
+        })
         emailverificationMessage = `Password reset mail successfull.`
     }
     catch(err){
@@ -482,35 +482,15 @@ exports.deleteUser = asyncErrorHandler(async (req, res, next) => {
 
 exports.verifyEmail = asyncErrorHandler(async (req, res, next) => {
     const cryptotoken = crypto.createHash('sha256').update(req.params.token).digest('hex')
-   const user = await User.findOne({passwordResetToken: cryptotoken, passwordResetTokenExp: {$gt: Date.now()}}) 
+   const user = await User.findOne({emailVerificationToken: cryptotoken}) 
    
-   console.log('Password reset Token')
-   console.log(req.params.token+'\n')
-   console.log('req.body.password')
-   console.log(req.body.password+'\n')
-   console.log('req.body.confirmPassword')
-   console.log(req.body.confirmPassword+'\n') 
-
 
    if(!user){
-        const userx = await User.findOne({passwordResetToken: cryptotoken}) 
-        if(userx){
-            // there is a pasward reset token, delete it
-            userx.password = req.body.password  
-            userx.passwordResetToken = undefined
-            userx.passwordResetTokenExp = undefined
-        }
-    
-
-    const error = new CustomError('Token is invalid or has expired', 404)
+    const error = new CustomError('Verification token is invalid', 404)
     next(error)
    }
 
-   user.password = req.body.password
-   user.confirmPassword = req.body.confirmPassword
-   user.passwordChangedAt = Date.now()
-   user.passwordResetToken = undefined
-   user.passwordResetTokenExp = undefined
+   user.emailVerificationTokenExp = undefined
 
    user.save()// we want to allow validation
 
@@ -527,3 +507,72 @@ exports.verifyEmail = asyncErrorHandler(async (req, res, next) => {
        data : limitedUser
       })  
 }) 
+
+
+exports.approveUser = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.params._id)
+
+   if(!user){
+    const error = new CustomError(`user with ID: ${req.params._id} is not found`, 404)
+    next(error)
+   }
+
+   user.approved = true
+
+   await user.save({validateBeforeSave: false})
+
+
+
+    ///
+    //4 SEND THE NOTICE TO THE USER VIA EMAIL 
+
+
+    const message = `<html><body>
+    <p>
+    Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
+    
+    This is to notify you that your account with MRsoft International has been approved.
+
+    <p>
+    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    </p>
+    
+    WITH MRSOFT, </br>
+    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    
+    <p>
+    Thank you for chosing MRsoft.
+    </p>
+    
+    <p>
+    ${req.protocol}://${req.get('host')}
+    </p>
+    </body></html>"`
+
+
+
+    console.log(message+'\n') 
+    let userApprovalMessage;
+    try{
+        await sendEmail({
+            email: user.email,
+            subject: "Usere account approval",
+            message: message
+        })
+        userApprovalMessage = `Usere account approval mail successfull.`
+    }
+    catch(err){
+        // return next(new CustomError(`There is an error sending Usere account approval mail. Please try again later`, 500))
+        userApprovalMessage = `Usere account approval mail failed.`
+        
+    }
+    ///
+
+   res.status(201).json({ 
+       status : "success",
+       userApprovalMessage,
+       resource : "user",
+       action : "account approved"
+      })  
+}) 
+

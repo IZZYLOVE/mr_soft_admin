@@ -7,16 +7,16 @@ const crypto = require('crypto')
 const userSchema = new mongoose.Schema(
    
     {
-        "firstName": {type: String, required: [true, 'please enter your first name'], trim: true},
-        "middleName": {type: String, required: [true, 'please enter your middle name'], trim: true},
+        "firstName": {type: String, required: [true, 'Please enter your first name'], trim: true},
+        "middleName": {type: String, required: [true, 'Please enter your middle name'], trim: true},
         "lastName": {type: String, required: [true, 'please enter your last name'], trim: true},
         "photo": String,
-        "email": {type: String, unique: true, required: [true, 'please enter email'], lowercase: true, trim: true    
+        "email": {type: String, unique: true, required: [true, 'Please enter email'], lowercase: true, trim: true    
         , validate: [validator.isEmail, 'please enter a valid email']
         },
-        "password": {type: String, required: [true, 'please enter password'],  minlenght: [8, 'password must be at least 8 character'], select: false, minlenght: 8},
+        "password": {type: String, required: [true, 'Please enter password'],  minlenght: [8, 'password must be at least 8 character'], select: false, minlenght: 8},
         // "confirmPassword": {type: String, required: [true, 'please confirm your password'],  minlenght: [8, 'confirm password must be at least 8 character'], select: false, minlenght: 8},
-        "confirmPassword": {type: String, required: [true, 'please enter value for confirmPassword'],
+        "confirmPassword": {type: String, required: [true, 'Please enter value for confirmPassword'],
             validate: {
                 validator:function(val){ return val == this.password },
                 message : `Password and confirmPassword does not match! ${this.val} = ${this.password}`
@@ -32,7 +32,8 @@ const userSchema = new mongoose.Schema(
         "emailVerified" :  {type: Boolean, required: true, default: false,  immutable: true, trim: true},
         "emailVerificationToken": String, 
         "emailVerificationTokenExp":  Date, 
-        "phone": {type: String, required: [true, 'please enter phone'], trim: true},
+        "approved": {type: Boolean, required: true, default: false},
+        "phone": {type: String, required: [true, 'Please enter phone'], trim: true},
         "created": {type: Date, default: Date.now, immutable: true, trim: true,  select: false},
         "updated": {type: Date, default: Date.now, trim: true,  select: false},
     }

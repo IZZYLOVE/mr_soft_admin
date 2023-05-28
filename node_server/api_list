@@ -1,3 +1,5 @@
+RootURL = http://127.0.0.1:7300/
+
 ###
 ### USERS
 ###
@@ -26,6 +28,12 @@
 # methods: patch
 {{RootURL}}api/v1/users/resetpassword/:token
 {{RootURL}}api/v1/users/resetpassword/f3a7b90365fcc8bcd85023def6dd830de5fb371811c3d713193873b1bab77b5a
+
+# admin aprrove user
+# methods: patch
+{{RootURL}}api/v1/users/resetpassword/:_id
+{{RootURL}}api/v1/users/approve/646f9e0456bebdf78ed38a16
+
 
 ###
 ### courseS
@@ -62,7 +70,7 @@
 # by the fields you want
 # methods: get
 {{RootURL}}api/v1/courses?fields=name,ratings,students
-# by the fields you dont want
+# by the fields you dont want by adding negative to the fields
 # methods: get
 {{RootURL}}api/v1/courses?fields=-name,-ratings
 
@@ -73,3 +81,97 @@
 # filter by equality (ordinary filter)
 # methods: get
 {{RootURL}}api/v1/courses?alumni=10&students=90&ratings=5
+
+
+
+###
+### RATINGS
+###
+
+# getAll/post ratings
+# methods: get and post
+{{RootURL}}api/v1/ratings
+
+
+# highest rated
+# methods: get
+{{RootURL}}api/v1/ratings/highest-rated
+
+
+# getOne/put/patch/delete rating
+# with rating id
+# methods: get, put, patch
+{{RootURL}}api/v1/ratings/:_id
+{{RootURL}}api/v1/ratings/646b2ebe06fa59d06462a33e
+
+
+# Pagination serverside
+# methods: get
+{{RootURL}}api/v1/ratings?page=2&limit=2
+
+# sorting by fields
+# - means decendind order 
+# sort=-ratings is in decending order
+# methods: get
+{{RootURL}}api/v1/ratings?sort=-ratings
+
+
+# query by fields you want or the fields you dont want, there can be no mixup
+# by the fields you want
+# methods: get
+{{RootURL}}api/v1/ratings?fields=ratings
+# by the fields you dont want by adding negative to the fields
+# methods: get
+{{RootURL}}api/v1/ratings?fields=-ratings
+
+
+# filter by aggregation
+# methods: get
+{{RootURL}}api/v1/ratings?ratings[lte]=3
+
+
+# filter by equality (ordinary filter)
+# methods: get
+{{RootURL}}api/v1/ratings?ratings=5 
+
+
+###
+### ENQUIRIES
+###
+
+# getAll/post enquiries
+# methods: get and post
+{{RootURL}}api/v1/enquiries
+
+
+# getOne/put/patch/delete enquiry
+# with rating id
+# methods: get, put, patch
+{{RootURL}}api/v1/enquiries/:_id
+{{RootURL}}api/v1/enquiries/646b2ebe06fa59d06462a33e
+
+
+# Pagination serverside
+# methods: get
+{{RootURL}}api/v1/enquiries?page=2&limit=2
+
+
+# sorting by fields
+# - means decendind order 
+# sort=-enquiries is in decending order
+# methods: get
+{{RootURL}}api/v1/enquiries?sort=-stack,technology
+
+
+# query by fields you want or the fields you dont want, there can be no mixup
+# by the fields you want
+# methods: get
+{{RootURL}}api/v1/enquiries?fields=stack,technology
+# by the fields you dont want by adding negative to the fields
+# methods: get
+{{RootURL}}api/v1/enquiries?fields=-stack,-technology
+
+
+# filter by equality (ordinary filter)
+# methods: get
+{{RootURL}}api/v1/enquiries?stack=MEAN&technology=javaScript,email=izzyking@gmail.com

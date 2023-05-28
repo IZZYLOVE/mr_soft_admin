@@ -5,31 +5,30 @@ const fs = require('fs')
 
 const courseSchema = new mongoose.Schema(
         {
-    "courseId": {type: String, unique: true, required: [true, 'please enter course id'], trim: true},
+    "courseCode": {type: String, unique: true, required: [true, 'please enter course code'], trim: true},
 
-    "courseName": {type: String, unique: true, required: [true, 'please enter course name'], trim: true},
+    "courseName": {type: String, unique: true, required: [true, 'Please enter course name'], trim: true},
 
-    "description": {type: String, required: [true, 'please enter course description'], trim: true},
+    "description": {type: String, required: [true, 'Please enter course description'], trim: true},
 
-    "CourseMode":{type: String, required: [true, 'please enter course mode'], enum: ['Online', 'On-Site', 'Full-time', 'Part-time'], default: 'user', trim: true},
+    "CourseMode":{type: String, required: [true, 'Please enter course mode'], enum: ['Online', 'On-Site', 'Full-time', 'Part-time'], default: 'user', trim: true},
+    
     "Image": String,
 
-    "venue": {type: String, required: [true, 'please enter venue for course'], trim: true},
+    "venue": {type: String, required: [true, 'Please enter venue for course'], trim: true},
   
-    "stack": {type: String, default: ['drama'],
+    "stack": {type: String, default: ['MERN'],
         enum: {
-        values: ["JavaScript", "Php", "Python"],
-        message: "this stack does not exist"
+        values: ["MERN", "MEAN", "LAMP"],
+        message: "This stack does not exist"
         },
         trim: true},
-    "createdBy": {type: String, required: [true, 'please completethe hidden field createdBy'], trim: true},
+        // make a list of options with the values above
 
-    "technologies": {type: String, default: ['HTML'],
-        enum: {
-            values: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Express", "Node.js", "MongoDB", "Angular", "Vue", "PostgreSQL", "Linux", "Apache", "Mysql", "Php", "Pearl", "Python"],
-            message: "this technology does not exist"
-        },
-        trim: true},
+
+    "technologies": {type: Array, default: ['JavaScript'], trim: true},
+        // make a list of multiple selection options with the values below and generate an array with the selected options
+        // values: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Express", "Node.js", "MongoDB", "Angular", "Vue", "PostgreSQL", "Linux", "Apache", "Mysql", "Php", "Pearl", "Python"],
 
     "Availability": {
         type: Boolean,
@@ -40,12 +39,9 @@ const courseSchema = new mongoose.Schema(
 
     "students": {type: Number, default: 0, trim: true},
 
-    "ratings": {type: Number, required: true, 
-        validate: {
-            validator: function(value){ return value >= 1 && value <= 10 },
-            message: "Ratings must be range 1 to 10, your specified value is {VALUE}"
-        }, default: 1.0, trim: true},
+    "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
 
+    "ratings": {type: Number, default: 0, trim: true},
     "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
     "created": {type: Date, default: Date.now, immutable: true, trim: true},
     "updated": {type: Date, default: Date.now, trim: true,  select: false},
