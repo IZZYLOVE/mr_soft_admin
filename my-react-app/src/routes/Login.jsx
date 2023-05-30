@@ -28,7 +28,7 @@ export function Login() {
         </div>
         <button type="submit" class="butn">Login
         </button>
-        
+         <div className='no-account'>Dont have an account? <Link to='/register' className='reglink'>Register</Link></div>
             </form>
         </div>
     </div>

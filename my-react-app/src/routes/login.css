@@ -137,8 +137,12 @@
 
   .no-account a{
     font-weight: 900;
-    color: rgb(209, 209, 209);
+    color: rgb(255, 255, 255);
     text-decoration: none;
+  }
+
+  .no-account a:hover{
+    text-decoration: underline;
   }
 
   #loginicon {
