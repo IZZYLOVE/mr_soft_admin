@@ -1,11 +1,13 @@
 const CustomError = require('../Utils/CustomError')
 const User = require('./../Models/userModel')
+const Stats = require('./../Models/statsModal')
 const asyncErrorHandler = require('./../Utils/asyncErrorHandler')
 const jwt = require('jsonwebtoken')
 // const bcrypt = require('bcrypt')
 const util = require('util')
 const sendEmail = require('./../Utils/email')
-const limitUserDetailsServeFields = require('./../Utils/limitUserDetailsServeFields')
+const limitUserDetailsServeFields = require('../Utils/limitUserDetailsServeFields')
+const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 const crypto = require('crypto')
 const ApiFeatures = require('../Utils/ApiFeatures')
 
@@ -29,8 +31,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     //2 GENERATE A RANDOM TOKEN FOR THE USER
     const VerificationToken= await newUser.createEmailVerificationToken();
     await newUser.save({validateBeforeSave: false}) // this saves the encrypted token and the expiry date generated in user.createResetPasswordToken() and {validateBeforeSave: false} prevents validation 
-    console.log('EmailVerificationToken')
-    console.log(VerificationToken+'\n') 
+
     
     //4 SEND THE TOKEN TO THE USER VIA EMAIL 
     const verifyUrl = `${req.protocol}://${req.get('host')}/api/v1/users/verifyemail/${VerificationToken}`
@@ -205,7 +206,7 @@ exports.restrict = (...role) => {//wrapper function
 
 exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
 
-    //1 CONFIRM IF A USER WITH THAT EMAIOL EXIST IN DB
+    //1 CONFIRM IF A USER WITH THAT EMAIL EXIST IN DB
     // const user = await User.findOne({email: req.body.username, phone: req.body.username})// for phone or email login system
     // const user = await User.findOne({email: req.body.email, phone: req.body.email})// for phone or email
 
@@ -403,7 +404,12 @@ exports.getUsers = asyncErrorHandler(async (req, res, next) => {
     let features = new ApiFeatures(User.find(), req.query).filter().sort().limitfields().paginate()
  
     let user = await features.query
-  limitedUser = limitUserDetailsServeFields(user)
+
+    req.query.page && paginationCrossCheck(user.length)
+    
+
+    limitedUser = limitUserDetailsServeFields(user)
+    
     res.status(200).json({ 
         status : "success",
         resource : "users",
@@ -521,9 +527,41 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
 
    await user.save({validateBeforeSave: false})
 
+    // UPDATE OR CREATE STATS STARTS
+    let DATE = new Date()
+    let YY = DATE.getFullYear()
+    let mm = DATE.getMonth()
+    if(mm <= 9){
+        mm = `0${mm}`
+    }
+    let thisMonth = `${mm}/${YY}`
+    let stats = await Stats.findOne({month: thisMonth})
+    if(stats){
+        //Ppdate stats
+        console.log('Update stats')
+        stats.regCount += 1
+        stats.enquiryCount += 1
+        stats.updated = Date.now()
+        stats.save()// we want to allow validation
 
+        console.log('updared stats')
+        console.log(stats)
+    }
+    else{
+        //Create stats
+        console.log('Create stats')
+        let newStats = {
+            "month": thisMonth,
+            "regCount": 1
+        }
 
-    ///
+        const newstats = await Stats.create(newStats)
+        console.log('newstats')
+        console.log(newstats)
+    }
+    // UPDATE OR CREATE STATS ENDS
+
+    
     //4 SEND THE NOTICE TO THE USER VIA EMAIL 
 
 

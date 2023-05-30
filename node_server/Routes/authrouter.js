@@ -9,7 +9,8 @@ const router = express.Router()
  router.route('/forgotpassword').post(authController.forgotpassword)
  router.route('/verifyemail').post(authController.verifyEmail)
  router.route('/resetpassword/:token').patch(authController.resetpassword)
- router.route('/approve/:_id').patch(authController.protect,authController.restrict('admin'),authController.approveUser)
+//  router.route('/approve/:_id').patch(authController.protect,authController.restrict('admin'),authController.approveUser)
+ router.route('/approve/:_id').patch(authController.protect,authController.approveUser)
 
 
 

@@ -6,8 +6,10 @@ const fs = require('fs')
 const ratingSchema = new mongoose.Schema(
         {
     "userId": {type: String,  required: [true, 'please enter a valid user id'], trim: true},
+    // "userId": {type: String,  required: true},
 
     "courseId": {type: String,  required: [true, 'please enter a valid course id'], trim: true},
+    // "courseId": {type: String,  required: true},
 
     "ratings": {type: Number, required: true, 
         validate: {

@@ -3,6 +3,8 @@ const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
 const CustomErrorHandler = require('../Utils/CustomError')
+const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+
 
 
 //ROUTE HANDLER FUNCTIONS
@@ -19,6 +21,8 @@ exports.getCourses = asyncErrorHandler(async (req, res, next) => {
     let features = new ApiFeatures(Course.find(), req.query).filter().sort().limitfields().limitfields2().paginate()
  
     let courses = await features.query
+
+    req.query.page && paginationCrossCheck(courses.length)
 
     res.status(200).json({ 
         status : "success",
@@ -108,8 +112,9 @@ exports.getcourseStats = asyncErrorHandler(async (req, res, next) => {
         //allows us access to the aggregation pipeline
         const stats = await Course.aggregate([
             //match ratings
-            { $match: {ratings: {$gte: 4}}},
+            { $match: {ratings: {$gte: 2}}},
             { $group: {
+                _id: '$courseId',
                 avgRating: {$avg: '$ratings'},
                 avgAlumni: {$avg: '$alumni'},
                 minAlumni: {$min: '$alumni'},

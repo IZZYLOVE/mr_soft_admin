@@ -3,6 +3,9 @@ const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
 const CustomErrorHandler = require('../Utils/CustomError')
+const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+
+
 
 
 // PARAM MIDDLEWARES
@@ -23,9 +26,14 @@ exports.getHighestRated = asyncErrorHandler(async (req, res, next) => {
 
 exports.getRatings = asyncErrorHandler(async (req, res, next) => {
 
-    let features = new ApiFeatures(Rating.find(), req.query).filter().sort().limitfields().limitfields2().paginate()
+    let features = new ApiFeatures(Rating.find(), req.query, Rating).filter().sort().limitfields().limitfields2().paginate()
  
     let ratings = await features.query
+
+    console.log('req.query.page')
+    console.log(req.query.page) 
+
+    req.query.page && paginationCrossCheck(ratings.length)
 
     res.status(200).json({ 
         status : "success",

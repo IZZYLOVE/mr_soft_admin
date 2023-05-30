@@ -1,8 +1,11 @@
 const Enquiry = require('../Models/enquiryModel');
+const Stats = require('./../Models/statsModal')
 const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
 const CustomErrorHandler = require('../Utils/CustomError')
+const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+
 
 
 exports.getEnquiries = asyncErrorHandler(async (req, res, next) => {
@@ -10,6 +13,8 @@ exports.getEnquiries = asyncErrorHandler(async (req, res, next) => {
     let features = new ApiFeatures(Enquiry.find(), req.query).filter().sort().limitfields().limitfields2().paginate()
  
     let enquiries = await features.query
+
+    req.query.page && paginationCrossCheck(enquiries.length)
 
     res.status(200).json({ 
         status : "success",
@@ -21,6 +26,50 @@ exports.getEnquiries = asyncErrorHandler(async (req, res, next) => {
 
 exports.postEnquiry = asyncErrorHandler(async (req, res, next) => {
     const enquiry = await Enquiry.create(req.body) 
+
+
+    // UPDATE OR CREATE STATS STARTS
+    let listEnquiry = (await Enquiry.find({email: req.body.email})).length
+
+    console.log('listEnquiry')
+    console.log(listEnquiry)
+
+    if(listEnquiry <= 1){// this is a new individual, hence enquiry is valid
+        let DATE = new Date()
+        let YY = DATE.getFullYear()
+        let mm = DATE.getMonth()
+        if(mm <= 9){
+            mm = `0${mm}`
+        }
+        let thisMonth = `${mm}/${YY}`
+        let stats = await Stats.findOne({month: thisMonth})
+        console.log('stats')
+        console.log(stats)
+        if(stats){
+            //Ppdate stats
+            console.log('Update stats')
+            stats.enquiryCount += 1
+            stats.updated = Date.now()
+            stats.save()// we want to allow validation
+
+            console.log('updared stats')
+            console.log(stats)
+        }
+        else{
+            //Create stats
+            console.log('Create stats')
+            let newStats = {
+                "month": thisMonth,
+                "enquiryCount": 1
+            }
+
+            const newstats = await Stats.create(newStats)
+            console.log('newstats')
+            console.log(newstats)
+        }
+    }
+    // UPDATE OR CREATE STATS ENDS
+
     res.status(201).json({ 
         status : "success",
         resource : "enquiry",

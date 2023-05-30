@@ -175,3 +175,28 @@ RootURL = http://127.0.0.1:7300/
 # filter by equality (ordinary filter)
 # methods: get
 {{RootURL}}api/v1/enquiries?stack=MEAN&technology=javaScript,email=izzyking@gmail.com
+
+
+###
+### STATISTICS
+###
+
+# lstest stats
+# methods: get
+{{RootURL}}api/v1/stats/lateststats
+
+# getAll/post stats
+# methods: get 
+{{RootURL}}api/v1/stats
+
+
+# getOne/delete stats
+# with stats id
+# methods: get, delete
+{{RootURL}}api/v1/stats/:_id
+{{RootURL}}api/v1/stats/646b2ebe06fa59d06462a33e
+
+
+# Pagination serverside
+# methods: get
+{{RootURL}}api/v1/stats?page=2&limit=2

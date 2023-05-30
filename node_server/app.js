@@ -6,6 +6,7 @@ const courseRouter = require('./Routes/courseroutes')
 const authRouter = require('./Routes/authrouter')
 const ratingRouter = require('./Routes/ratingroutes')
 const enquiryRouter = require('./Routes/enquirtroutes')
+const statsRouter = require('./Routes/statsroutes')
 
 const CustomError = require('./Utils/CustomError')
 const globalErrorHandler = require('./Controllers/errorController')
@@ -44,6 +45,8 @@ app.use('/api/v1/users', authRouter)// mounting user/auth route
 app.use('/api/v1/courses', courseRouter)// mounting course route
 app.use('/api/v1/ratings', ratingRouter)// mounting rating route
 app.use('/api/v1/enquiries', enquiryRouter)// mounting enquiry route
+app.use('/api/v1/stats', statsRouter)// mounting stats route
+
 
 
 

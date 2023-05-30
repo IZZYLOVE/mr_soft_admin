@@ -67,8 +67,9 @@ class Apifeatures{
         this.query = this.query.skip(skips).limit(limit)
         
      
+        // we used paginationCrossCheck() in thecontrollers to replace the elow commented out validation
         // if(this.queryStr.page){
-        //     const countx = await Movie.countDocuments()
+        //     // const countx = await Movie.countDocuments()
         //     if(skips >= countx){
         //         throw new Error('this page is not found')  
         //     }
