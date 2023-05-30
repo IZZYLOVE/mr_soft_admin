@@ -1,54 +1,54 @@
 .Home {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background: url(../assets/img2.png) no-repeat;
-    background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url(../assets/img2.png) no-repeat;
+  background-size: cover;
 }
+
 .Header {
-    font: 1.5rem cursive;
-    margin-left: 9vw;
-    font-weight: 900;
-    padding: 1rem;
-    color: rgb(255, 255, 255);
-    background-position: center;
-    cursor: pointer;
+  font: 1.5rem cursive;
+  margin-left: 9vw;
+  font-weight: 900;
+  padding: 1rem;
+  color: rgb(255, 255, 255);
+  background-position: center;
+  cursor: pointer;
 }
 
 .Header h2 {
-     margin-left: -7.7rem;
-     margin-top: -5vh;
+  margin-left: -7.7rem;
+  margin-top: -5vh;
 }
 
 .Header h6 {
-    font: 1rem monospace;
+  font: 1rem monospace;
 }
 
-.link a{
-    font: 1rem monospace;
-    text-decoration: none;
-    color: rgb(175, 175, 175);
-    background: rgb(84, 67, 4);
-    border: 1px solid rgb(84, 67, 4);
-    border-radius: 4px;
-    padding: 0.6rem 1rem 0.6rem 1.4rem;
-    margin: 0 0 0 -1rem;
+.link a {
+  font: 1rem monospace;
+  text-decoration: none;
+  color: rgb(175, 175, 175);
+  background: rgb(84, 67, 4);
+  border: 1px solid rgb(84, 67, 4);
+  border-radius: 4px;
+  padding: 0.6rem 1rem 0.6rem 1.4rem;
+  margin: 0 0 0 -1rem;
 }
 
 .link {
-    margin-top: -3vh;
+  margin-top: -3vh;
 }
 
-.link a:hover{
-    background-color: transparent;
-    color: rgb(84, 67, 4);;
-    transition: .5s;
+.link a:hover {
+  background-color: transparent;
+  color: rgb(84, 67, 4);
+  transition: .5s;
 }
 
 .icons {
-    vertical-align: middle;
-    margin-left: 4px;
+  vertical-align: middle;
+  margin-left: 4px;
 }
 
-   
