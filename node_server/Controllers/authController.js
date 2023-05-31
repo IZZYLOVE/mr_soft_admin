@@ -100,6 +100,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     limitedUser = limitUserDetailsServeFields(newUser)
 
     res.status(201).json({ 
+        
         status : "success",
         token,
         resource : "user",
