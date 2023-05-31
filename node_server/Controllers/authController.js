@@ -64,7 +64,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     WITH MRSOFT, </br>
-    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
     
     <p>
     Thank you for chosing MRsoft.
@@ -253,7 +253,7 @@ exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     WITH MRSOFT, </br>
-    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
     
     <p>
     Thank you for chosing MRsoft.
@@ -300,14 +300,6 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
     const cryptotoken = crypto.createHash('sha256').update(req.params.token).digest('hex')
    const user = await User.findOne({passwordResetToken: cryptotoken, passwordResetTokenExp: {$gt: Date.now()}}) 
    
-   console.log('Password reset Token')
-   console.log(req.params.token+'\n')
-   console.log('req.body.password')
-   console.log(req.body.password+'\n')
-   console.log('req.body.confirmPassword')
-   console.log(req.body.confirmPassword+'\n') 
-
-
    if(!user){
         const userx = await User.findOne({passwordResetToken: cryptotoken}) 
         if(userx){
@@ -355,7 +347,7 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     WITH MRSOFT, </br>
-    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
     
     <p>
     Thank you for chosing MRsoft.
@@ -519,7 +511,7 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
     const user = await User.findById(req.params._id)
 
    if(!user){
-    const error = new CustomError(`user with ID: ${req.params._id} is not found`, 404)
+    const error = new CustomError(`User with ID: ${req.params._id} is not found`, 404)
     next(error)
    }
 
@@ -576,7 +568,7 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     WITH MRSOFT, </br>
-    YOU YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
     
     <p>
     Thank you for chosing MRsoft.
@@ -614,3 +606,109 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
       })  
 }) 
 
+
+
+exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.params._id)
+
+   if(!user){
+    const error = new CustomError(`User with ID: ${req.params._id} is not found`, 404)
+    next(error)
+   }
+
+
+   const oldstatus = user.status
+   
+   user.status = req.body.status 
+   user.updated = new Date()
+
+
+
+   await user.save({validateBeforeSave: false})
+
+    // UPDATE OR CREATE STATS STARTS
+    let DATE = new Date()
+    let YY = DATE.getFullYear()
+    let mm = DATE.getMonth()
+    if(mm <= 9){
+        mm = `0${mm}`
+    }
+    let thisMonth = `${mm}/${YY}`
+    let stats = await Stats.findOne({month: thisMonth})
+    if(stats){
+        //Ppdate stats
+        console.log('Update stats')
+        stats.regCount += 1
+        stats.enquiryCount += 1
+        stats.updated = Date.now()
+        stats.save()// we want to allow validation
+
+        console.log('updared stats')
+        console.log(stats)
+    }
+    else{
+        //Create stats
+        console.log('Create stats')
+        let newStats = {
+            "month": thisMonth,
+            "regCount": 1
+        }
+
+        const newstats = await Stats.create(newStats)
+        console.log('newstats')
+        console.log(newstats)
+    }
+    // UPDATE OR CREATE STATS ENDS
+
+    
+    //4 SEND THE NOTICE TO THE USER VIA EMAIL 
+
+
+    const message = `<html><body>
+    <p>
+    Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
+    
+    This is to notify you that your account status with MRsoft International has been changed to ${req.body.status}.
+
+    <p>
+    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    </p>
+    
+    WITH MRSOFT, </br>
+    YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    
+    <p>
+    Thank you for chosing MRsoft.
+    </p>
+    
+    <p>
+    ${req.protocol}://${req.get('host')}
+    </p>
+    </body></html>"`
+
+
+
+    console.log(message+'\n') 
+    let userApprovalMessage;
+    try{
+        await sendEmail({
+            email: user.email,
+            subject: "Usere account approval",
+            message: message
+        })
+        userApprovalMessage = `Usere account approval mail successfull.`
+    }
+    catch(err){
+        // return next(new CustomError(`There is an error sending Usere account approval mail. Please try again later`, 500))
+        userApprovalMessage = `Usere account approval mail failed.`
+        
+    }
+    ///
+
+   res.status(201).json({ 
+       status : "success",
+       userApprovalMessage,
+       resource : "user",
+       action : "account approved"
+      })  
+}) 

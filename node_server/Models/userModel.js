@@ -22,8 +22,8 @@ const userSchema = new mongoose.Schema(
                 message : `Password and confirmPassword does not match! ${this.val} = ${this.password}`
             }
         },
-        "role": {type: String, enum: ['user', 'admin', 'owner'], default: 'user'
-        },
+        "role": {type: String, enum: ['user', 'admin', 'owner'], default: 'user'},
+        "status": {type: String, enum: ['none', 'alumni', 'student', 'deffered'], default: 'none'},
         "passwordChangedAt": {type: Date, default: Date.now, trim: true},
         // "passwordResetToken": {type: String, trim: true}, 
         "passwordResetToken": String, 

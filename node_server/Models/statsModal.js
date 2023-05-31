@@ -8,6 +8,11 @@ const statsSchema = new mongoose.Schema(
     "month": {type: String,  unique: true, required: [true, 'Please enter a valid email'], trim: true},// email
     "enquiryCount": {type: Number, default: 0, trim: true},
     "regCount": {type: Number, default: 0, trim: true},
+
+    "alumni": {type: Number, default: 0, trim: true},
+    "students": {type: Number, default: 0, trim: true},
+    "deffered": {type: Number, default: 0, trim: true},
+
     "created": {type: Date, default: Date.now, immutable: true, trim: true},
     "updated": {type: Date, default: Date.now, trim: true},
 

@@ -35,6 +35,12 @@ RootURL = http://127.0.0.1:7300/
 {{RootURL}}api/v1/users/approve/646f9e0456bebdf78ed38a16
 
 
+# admin set user status
+# methods: patch
+{{RootURL}}api/v1/users/setuserstatus/:_id
+{{RootURL}}api/v1/users/setuserstatus/646f9e0456bebdf78ed38a16
+
+
 ###
 ### courseS
 ###

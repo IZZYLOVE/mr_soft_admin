@@ -38,8 +38,11 @@ const courseSchema = new mongoose.Schema(
     "alumni": {type: Number, default: 0, trim: true},
 
     "students": {type: Number, default: 0, trim: true},
+    
+    "deffered": {type: Number, default: 0, trim: true},
 
     "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
+    
 
     "ratings": {type: Number, default: 0, trim: true},
     "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
