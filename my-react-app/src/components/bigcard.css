@@ -1,0 +1,30 @@
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.bigcard {
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 2rem 1rem 2rem 1rem;
+}
+
+.bigcard-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.bigcard-content {
+    padding: 20px;
+}
+
+.bigcard-description {
+    font-size: 1rem;
+    text-align: center;
+    color: #666;
+}

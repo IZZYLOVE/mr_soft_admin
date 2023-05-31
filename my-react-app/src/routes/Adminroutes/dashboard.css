@@ -20,7 +20,7 @@
  
  .navdetails {
      margin-left: 67rem;
-     float: right;
+     vertical-align: super;
      font: 1rem cursive;
  }
  

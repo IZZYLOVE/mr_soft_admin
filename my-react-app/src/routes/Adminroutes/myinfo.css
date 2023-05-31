@@ -9,17 +9,17 @@
      background-color: #176f83;
  }
  
- .navicon {
+ .mynavicon {
      vertical-align: middle;
      margin: 5px;
  
  }
  
- .toggle .navicon:hover {
+ .toggle .mynavicon:hover {
      color: red;
  }
  
- .navdetails {
+ .mynavdetails {
      margin-left: 67rem;
      float: right;
      font: 1rem cursive;

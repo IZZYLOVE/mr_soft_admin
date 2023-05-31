@@ -17,9 +17,9 @@ export function Userinfo() {
     <div className="user-dashboard">
       <Usersidebar isOpen={sidebarOpen} onClose={toggleSidebar} />
 
-      <div className="usernav">
+      <div className="userinav">
         <div onClick={toggleSidebar} className='toggle'><Icon icon="ic:outline-legend-toggle" width='30' id='navicon'/>
-           <span className='usernavdetails'>
+           <span className='userinavdetails'>
             <Link to='/userinfo'>Users@gmail.com </Link>
             </span>
         </div>

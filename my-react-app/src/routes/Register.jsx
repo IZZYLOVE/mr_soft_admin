@@ -1,50 +1,112 @@
 import './register.css'
+import React, { useState } from 'react';
+
+const Rooturl =  'http://127.0.0.1:7300/'
 
 export function Register() {
+    const [formData, setFormData] = useState({
+        firstname: '',
+        middlename:'',
+        email: '',
+        password:'',
+        confirmpassword:'',
+      });
+
+      const handleChange = (event) => {
+        setFormData({
+          ...formData,
+          [event.target.name]: event.target.value,
+        });
+      };
+
+      const handleSubmit = (event) => {
+        event.preventDefault();
+        let fdx = JSON.stringify(formData)
+        console.log(fdx)
+        fetch(`${Rooturl}api/v1/users/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData)
+          
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Handle the response from the backend if needed
+            console.log(data)
+          })
+          .catch((error) => {
+            // Handle any errors
+          });
+      };
+
+
+
     return <div className='regbody'>
      <div class="regwrapper">
         <div class="regform">
             <h2>Register</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
 
 <div className='firstrow'>
 
       <div class="input-box">
-            <input type="text" name="First-name" required />  
-            <label>First-name*</label>   
+            <input type="text" 
+            name="firstname" 
+            value={formData.firstname}
+            onChange={handleChange}   
+            required />  
+            <label>First-name*</label>
+           
        </div>
         
        <div class="input-box">
-            <input type="text" name="Middle-name" required />  
+            <input type="text" 
+            name="middlename" 
+            value={formData.middlename}
+            onChange={handleChange}   
+            required />  
             <label>Middlename-name*</label>   
        </div>
 
        <div class="input-box">
-            <input type="text" name="Last-name" required />  
+            <input type="text" 
+            name="lastname" 
+            value={formData.lastname}
+            onChange={handleChange}   
+            required />  
             <label>Last-name*</label>   
        </div>
 </div>
 
-<div className='secondrow'>      
+<div className='secondrow'>  
         <div class="input-box">
-            <input type="text" name="name" required />  
-            <label>Username*</label>   
-        </div>
-
-        <div class="input-box">
-            <input type="text" name="email" required />  
+            <input type="text" 
+            name="email"
+            value={formData.email}
+            onChange={handleChange}    
+            required />  
             <label>Email*</label>   
         </div>
 </div> 
 
 <div className='thirdrow'>
         <div class="input-box">
-            <input type="password" name="password" required />  
+            <input type="password" 
+            name="password" 
+            value={formData.password}
+            onChange={handleChange}   
+            required />  
             <label>Password*</label>   
         </div>
 
         <div class="input-box">
-            <input type="password" name="Confirm-password" required />  
+            <input type="password" 
+            name="confirmpassword" 
+            value={formData.confirmpassword}
+            onChange={handleChange}   
+            required />  
             <label>Confirm-password*</label>   
        </div>
 </div> 

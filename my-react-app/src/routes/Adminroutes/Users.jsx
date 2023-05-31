@@ -14,13 +14,13 @@ export function Users() {
     <div className="admin-dashboard">
       <Adminsidebar isOpen={sidebarOpen} onClose={toggleSidebar} />
 
-      <div className="usernav">
+      <div id="usernav">
         <div onClick={toggleSidebar} className='toggle'><Icon icon="ic:outline-legend-toggle" width='30' id='navicon'/>
-           <span className='navdetails'>Admin-Email <Icon icon="mdi:user-circle" className='navicon' width='30'/></span>
+           <span className='usernavdetails'>Admin-Email <Icon icon="mdi:user-circle" className='usernavicon' width='30'/></span>
         </div>
       </div>
 
-      <div className='Content'>
+      <div className='usercontent'>
        <h2>Users</h2> 
       </div>
     </div>

@@ -1,4 +1,5 @@
 import {Card} from "../../components/Card"
+import {Bigcard} from "../../components/Bigcard"
 import React, { useState } from 'react';
 import { Adminsidebar } from '../Adminsidebar';
 import { Icon } from '@iconify/react';
@@ -18,14 +19,14 @@ export function Admindashboard() {
       <div className="adminav">
         <div onClick={toggleSidebar} className='toggle'>
           <Icon icon="ic:outline-legend-toggle" width='30' className='navicon' />
-          <span className='navdetails'>Admin-Email <Icon icon="mdi:user-circle" className='navicon' width='30'/></span>
+          <span className='navdetails'>Admin-Email</span>
         </div>
       </div>
 
       <div className='Content'>
         <h2>Welcome, Admin</h2> 
-        <Card title="Project1" text="This project is built with Js, ReactJs, Sass, HTML, css etc."/>
-        
+        <Card title="Project1" text="#"/>
+        <Bigcard title="Project2" text="#"/>
         </div>
       </div>
   );

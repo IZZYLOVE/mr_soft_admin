@@ -126,7 +126,7 @@
   text-decoration: underline;
 }
 
-#loginicon {
+#loginicon a{
   margin: 0px 0px 0px 18px;
   color: rgba(207, 206, 206, 0.8);
 }

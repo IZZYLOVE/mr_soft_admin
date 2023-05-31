@@ -3,7 +3,6 @@
     color: white;
     background-color: black;
     padding: 1rem;
-    margin-top: 30rem;
   }
   
   .footer .text {
@@ -15,7 +14,6 @@
     /* Styles for screens with a maximum width of 767px */
   
     .footer {
-      margin-top: 10rem;
       padding: 0.5rem;
     }
   
