@@ -6,7 +6,7 @@ import { Icon } from '@iconify/react';
 export function Login() {
     return < div className='body'>
     <div class="wrapper">
-    <Link to='/'><Icon icon="material-symbols:home-outline" id='loginicon' width='30px'/></Link>
+    <Link to='/'><Icon icon="#" id='loginicon' width='30px'/></Link>
         <div class="form">
             <h2>Login</h2>
             <form action="#">
