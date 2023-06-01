@@ -2,6 +2,10 @@
 const express = require('express')
 let app = express()
 
+//to allow us send and recieve data through url we use cors
+const cors = require('cors');
+app.use(cors())
+
 const courseRouter = require('./Routes/courseroutes')
 const authRouter = require('./Routes/authrouter')
 const ratingRouter = require('./Routes/ratingroutes')

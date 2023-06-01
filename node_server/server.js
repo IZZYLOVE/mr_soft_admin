@@ -2,7 +2,6 @@
 const mongoose = require('mongoose')
 const dotenv = require('dotenv')
 dotenv.config({path: './config.env'})
-const cors = require('cors');
 
 process.on('uncaughtException', (err) => {// this should be at the top, before we require app,  to be able to catch unccaught exceptions
     console.log(err.name, err.message)
@@ -16,11 +15,11 @@ const app = require('./app')
 // console.log(app.get('env'))//env set by express
 // console.log(process.env)//env set by node js 
 
-app.use(cors())
 
-//  Add CORS headers
+
+// //  Add CORS headers
 // app.use((req, res, next) => {
-//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000', 'http://127.0.0.1:3000'  );
 //     next();
 //   });
 
