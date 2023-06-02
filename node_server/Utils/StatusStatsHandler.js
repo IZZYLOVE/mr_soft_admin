@@ -1,10 +1,6 @@
-const Course = require('./../Models/courseModel')
-const Stats = require('./../Models/statsModal')
+const Coursex = require('./../Models/courseModel')
+const Statsx = require('./../Models/statsModal')
 
-
-// "alumni": {type: Number, default: 0, trim: true},
-// "students": {type: Number, default: 0, trim: true},
-// "deffered": {type: Number, default: 0, trim: true},
 
 module.exports = async (oldz, newz, courseId) => {
   let DATE = new Date()
@@ -14,48 +10,151 @@ module.exports = async (oldz, newz, courseId) => {
       mm = `0${mm}`
   }
   let thisMonth = `${mm}/${YY}`
-  const stats = await Stats.findOne({month: thisMonth})
-  const course = await Course.findById(courseId)
+  const statsx = await Statsx.findOne({month: thisMonth})
+  const coursex = await Coursex.findById(courseId)
+  const now = Date.now()
 
-    switch(old.toUpperCase()){
+    switch(oldz.toUpperCase()){
         case "STUDENT":
             if(oldz !== newz && newz !== 'none'){
               if(newz === "deffered"){
                 // UPDATE OR CREATE STATS STARTS
 
-                if(stats){
-                    //Ppdate stats
+                if(statsx){
+                    //Update stats
                     console.log('Update stats')
-                    stats.alumni += 1
-                    stats.students += 1
-                    stats.deffered += 1
-                    stats.updated = Date.now()
-                    stats.save()// we want to allow validation
+                    // stats.alumni += 1
+                    statsx.students -= 1
+                    statsx.deffered += 1
+                    statsx.updated = now
+                    statsx.save()// we want to allow validation
 
                     console.log('updated stats')
-                    console.log(stats)
+                    console.log(statsx)
                 }
                 else{
                     //Create stats
+                    let StatsRecord = await Statsx.find()
+                    let lastStatsRecord = { ...StatsRecord[StatsRecord.length - 1]}
+
                     console.log('Create stats')
                     let newStats = {
-                        "month": thisMonth,
-                        "regCount": 1
+                        "month": thisMonth, 
+                        "students": lastStatsRecord.students - 1,
+                        "deffered": lastStatsRecord.deffered + 1,
+                        "alumni": lastStatsRecord.deffered - 1
                     }
 
-                    const newstats = await Stats.create(newStats)
+                    const newstats = await Statsx.create(newStats)
                     console.log('newstats')
                     console.log(newstats)
                 }
                 // UPDATE OR CREATE STATS ENDS
+
+                // UPDATE OR COURSES STATUS STARTS
+                // stats.alumni += 1
+                coursex.students -= 1
+                coursex.deffered += 1
+                coursex.updated = now
+                coursex.save()// we want to allow validation
+                // UPDATE OR COURSES STATUS ENDs
               }
             }
-          return(newz) 
+          return(newz) // returns the new user stats to the authcontroller to update the user stats
+
         case "DEFFERED":
-          return({...cartItems, [itemId]:cartItems[itemId]-1})      
+            if(oldz !== newz && newz !== 'none'){
+              if(newz === "student"){
+                // UPDATE OR CREATE STATS STARTS
+
+                if(statsx){
+                    //Update stats
+                    console.log('Update stats')
+                    // statsx.alumni += 1
+                    statsx.students += 1
+                    statsx.deffered -= 1
+                    statsx.updated = now
+                    statsx.save()// we want to allow validation
+
+                    console.log('updated stats')
+                    console.log(statsx)
+                }
+                else{
+                    //Create stats
+                    let StatsRecord = await Statsx.find()
+                    let lastStatsRecord = { ...StatsRecord[StatsRecord.length - 1]}
+
+                    console.log('Create stats')
+                    let newStats = {
+                        "month": thisMonth, 
+                        "students": lastStatsRecord.students,
+                        "deffered": lastStatsRecord.deffered,
+                        "alumni": lastStatsRecord.deffered
+                    }
+
+                    const newstats = await Statsx.create(newStats)
+                    console.log('newstats')
+                    console.log(newstats)
+                }
+                // UPDATE OR CREATE STATS ENDS
+
+                // UPDATE OR COURSES STATUS STARTS
+                // coursex.alumni += 1
+                coursex.students += 1
+                coursex.deffered -= 1
+                coursex.updated = now
+                coursex.save()// we want to allow validation
+                // UPDATE OR COURSES STATUS ENDs
+              }
+            }
+            return(newz)  // returns the new user stats to the authcontroller to update the user stats   
         case "ALUMNI":
-          return({...cartItems, [itemId]:newcount})
+          if(oldz !== newz && newz !== 'none'){
+            if(newz === "student"){
+              // UPDATE OR CREATE STATS STARTS
+
+              if(statsx){
+                  //Update stats
+                  console.log('Update stats')
+                  statsx.alumni -= 1
+                  statsx.students += 1
+                  // statsx.deffered += 1
+                  statsx.updated = now
+                  statsx.save()// we want to allow validation
+
+                  console.log('updated stats')
+                  console.log(statsx)
+              }
+              else{
+                  //Create stats
+                  let StatsRecord = await Statsx.find()
+                  let lastStatsRecord = { ...StatsRecord[StatsRecord.length - 1]}
+
+                  console.log('Create stats')
+                  let newStats = {
+                      "month": thisMonth, 
+                      "students": lastStatsRecord.students + 1,
+                      "alumni": lastStatsRecord.deffered - 1,
+                      "deffered": lastStatsRecord.deffered
+                  }
+
+                  const newstats = await Statsx.create(newStats)
+                  console.log('newstats')
+                  console.log(newstats)
+              }
+              // UPDATE OR CREATE STATS ENDS
+
+              // UPDATE OR COURSES STATUS STARTS
+              coursex.alumni += 1
+              // coursex.students -= 1
+              coursex.deffered += 1
+              coursex.updated = now
+              coursex.save()// we want to allow validation
+              // UPDATE OR COURSES STATUS ENDs
+            }
+          }
+          return(newz) // returns the new user stats to the authcontroller to update the user stats
         default:
-          return(old)
+          return(oldz) // returns the old user stats to the authcontroller since no valid change made
       } 
 }

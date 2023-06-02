@@ -2,6 +2,7 @@ const CustomError = require('../Utils/CustomError')
 const User = require('./../Models/userModel')
 const Stats = require('./../Models/statsModal')
 const asyncErrorHandler = require('./../Utils/asyncErrorHandler')
+const StatusStatsHandler = require('./../Utils/StatusStatsHandler')
 const jwt = require('jsonwebtoken')
 // const bcrypt = require('bcrypt')
 const util = require('util')
@@ -100,7 +101,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     limitedUser = limitUserDetailsServeFields(newUser)
 
     res.status(201).json({ 
-        
+
         status : "success",
         token,
         resource : "user",
@@ -432,7 +433,7 @@ exports.patchUser= asyncErrorHandler(async (req, res, next) => {
     // const user = await user.find({_id: req.param._id})
         const user = await User.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
         if(!user){
-            const error = new CustomError(`user with ID: ${req.params._id} is not found`, 404)
+            const error = new CustomError(`User with ID: ${req.params._id} is not found`, 404)
             return next(error)
         }
         limitedUser = limitUserDetailsServeFields(user)
@@ -540,12 +541,19 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
         console.log('updared stats')
         console.log(stats)
     }
-    else{
+    else{        
         //Create stats
+        let statsRecord = await Stats.find()
+        let lastStatsRecord = { ...statsRecord[statsRecord.length - 1]}
+
         console.log('Create stats')
         let newStats = {
-            "month": thisMonth,
-            "regCount": 1
+            "month": thisMonth, 
+            "regCount": 1,
+            "students": lastStatsRecord.students + 1,
+            "alumni": lastStatsRecord.deffered - 1,
+            "deffered": lastStatsRecord.deffered
+
         }
 
         const newstats = await Stats.create(newStats)
@@ -620,47 +628,17 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
 
    const oldstatus = user.status
    
-   user.status = req.body.status 
+//    user.status = req.body.status 
+   //(oldz, newz, courseId)
+   let retUserStatrus = await StatusStatsHandler(oldstatus, req.body.status, )
+
+   user.status = retUserStatrus 
+
    user.updated = new Date()
 
 
 
    await user.save({validateBeforeSave: false})
-
-    // UPDATE OR CREATE STATS STARTS
-    let DATE = new Date()
-    let YY = DATE.getFullYear()
-    let mm = DATE.getMonth()
-    if(mm <= 9){
-        mm = `0${mm}`
-    }
-    let thisMonth = `${mm}/${YY}`
-    let stats = await Stats.findOne({month: thisMonth})
-    if(stats){
-        //Ppdate stats
-        console.log('Update stats')
-        stats.regCount += 1
-        stats.enquiryCount += 1
-        stats.updated = Date.now()
-        stats.save()// we want to allow validation
-
-        console.log('updared stats')
-        console.log(stats)
-    }
-    else{
-        //Create stats
-        console.log('Create stats')
-        let newStats = {
-            "month": thisMonth,
-            "regCount": 1
-        }
-
-        const newstats = await Stats.create(newStats)
-        console.log('newstats')
-        console.log(newstats)
-    }
-    // UPDATE OR CREATE STATS ENDS
-
     
     //4 SEND THE NOTICE TO THE USER VIA EMAIL 
 
@@ -670,6 +648,98 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
     Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
     
     This is to notify you that your account status with MRsoft International has been changed to ${req.body.status}.
+
+    <p>
+    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    </p>
+    
+    WITH MRSOFT, </br>
+    YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    
+    <p>
+    Thank you for chosing MRsoft.
+    </p>
+    
+    <p>
+    ${req.protocol}://${req.get('host')}
+    </p>
+    </body></html>"`
+
+
+
+    console.log(message+'\n') 
+    let userApprovalMessage;
+    try{
+        await sendEmail({
+            email: user.email,
+            subject: "Usere account approval",
+            message: message
+        })
+        userApprovalMessage = `Usere account approval mail successfull.`
+    }
+    catch(err){
+        // return next(new CustomError(`There is an error sending Usere account approval mail. Please try again later`, 500))
+        userApprovalMessage = `Usere account approval mail failed.`
+        
+    }
+    ///
+
+   res.status(201).json({ 
+       status : "success",
+       userApprovalMessage,
+       resource : "user",
+       action : "account approved"
+      })  
+}) 
+
+
+exports.setusercourse = asyncErrorHandler(async (req, res, next) => {
+    const user = await User.findById(req.params._id)
+
+   if(!user){
+    const error = new CustomError(`User with ID: ${req.params._id} is not found`, 404)
+    next(error)
+   }
+
+   let isRecord = false
+   user.Courses && user.Courses.map((dataz, i) => {
+    if(dataz.courseCode == req.body.courseCode){
+        console.log('isRecord ')
+        dataz.courseStatus = req.body.courseStatus;  
+        isRecord = true
+        console.log(isRecord)
+        user.Courses[i] = {...dataz}
+    }
+
+   })
+
+   if(isRecord === false){
+    user.Courses = [...user.Courses, {courseCode: req.body.courseCode, courseStatus: req.body.courseStatus}]
+   }
+
+//    const oldstatus = user.status
+   
+   // user.status = req.body.status 
+   // (oldz, newz, courseId)
+
+//    let retUserStatrus = await StatusStatsHandler(oldstatus, req.body.status, )
+
+//    user.status = retUserStatrus 
+
+   user.updated = new Date()
+
+
+
+   await user.save({validateBeforeSave: false})
+    
+    //4 SEND THE NOTICE TO THE USER VIA EMAIL 
+
+
+    const message = `<html><body>
+    <p>
+    Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
+    
+    This is to notify you that your course status on course code ${req.body.courseCode} with MRsoft International has been changed to ${req.body.courseStatus}.
 
     <p>
     For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>

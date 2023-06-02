@@ -2,7 +2,7 @@
 const express = require('express')
 let app = express()
 
-//to allow us send and recieve data through url we use cors
+// To support cors and allow us send and recieve data through url we use cors
 const cors = require('cors');
 app.use(cors())
 
