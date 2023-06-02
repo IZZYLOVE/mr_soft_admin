@@ -8,6 +8,7 @@ export function Register() {
         firstname: '',
         middlename:'',
         email: '',
+        phone: '',
         password:'',
         confirmpassword:'',
       });
@@ -89,6 +90,16 @@ export function Register() {
             required />  
             <label>Email*</label>   
         </div>
+
+        <div class="input-box">
+            <input type="number" 
+            name="phone" 
+            value={formData.phone}
+            onChange={handleChange}   
+            required />  
+            <label>Phone*</label>
+        </div>
+
 </div> 
 
 <div className='thirdrow'>
