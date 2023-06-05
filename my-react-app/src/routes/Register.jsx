@@ -5,11 +5,13 @@ const Rooturl =  'http://127.0.0.1:7300/'
 
 export function Register() {
     const [formData, setFormData] = useState({
-        firstname: '',
-        middlename:'',
+        firstName: '',
+        middleName:'',
+        lastName:'',
         email: '',
+        phone: '',
         password:'',
-        confirmpassword:'',
+        confirmPassword:'',
       });
 
       const handleChange = (event) => {
@@ -53,7 +55,7 @@ export function Register() {
 
       <div class="input-box">
             <input type="text" 
-            name="firstname" 
+            name="firstName" 
             value={formData.firstname}
             onChange={handleChange}   
             required />  
@@ -63,7 +65,7 @@ export function Register() {
         
        <div class="input-box">
             <input type="text" 
-            name="middlename" 
+            name="middleName" 
             value={formData.middlename}
             onChange={handleChange}   
             required />  
@@ -72,7 +74,7 @@ export function Register() {
 
        <div class="input-box">
             <input type="text" 
-            name="lastname" 
+            name="lastName" 
             value={formData.lastname}
             onChange={handleChange}   
             required />  
@@ -89,6 +91,16 @@ export function Register() {
             required />  
             <label>Email*</label>   
         </div>
+
+        <div class="input-box">
+            <input type="number" 
+            name="phone" 
+            value={formData.phone}
+            onChange={handleChange}   
+            required />  
+            <label>Phone*</label>
+        </div>
+
 </div> 
 
 <div className='thirdrow'>
@@ -103,7 +115,7 @@ export function Register() {
 
         <div class="input-box">
             <input type="password" 
-            name="confirmpassword" 
+            name="confirmPassword" 
             value={formData.confirmpassword}
             onChange={handleChange}   
             required />  
