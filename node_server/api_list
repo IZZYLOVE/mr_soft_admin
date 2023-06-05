@@ -187,7 +187,7 @@ RootURL = http://127.0.0.1:7300/
 ### STATISTICS
 ###
 
-# lstest stats
+# latest stats
 # methods: get
 {{RootURL}}api/v1/stats/lateststats
 
@@ -206,3 +206,16 @@ RootURL = http://127.0.0.1:7300/
 # Pagination serverside
 # methods: get
 {{RootURL}}api/v1/stats?page=2&limit=2
+
+
+###
+### FILES
+###
+
+# single file upload
+# methods: patch or put
+{{RootURL}}api/v1/files/singlefile
+
+# multiple files upload
+# methods: patch or put
+{{RootURL}}api/v1/files/multiplefiles

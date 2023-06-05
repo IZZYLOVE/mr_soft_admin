@@ -523,18 +523,17 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
 
     // UPDATE OR CREATE STATS STARTS
     let DATE = new Date()
+    console.log('DATE')
+    console.log(DATE)
     let YY = DATE.getFullYear()
-    let mm = DATE.getMonth()
-    if(mm <= 9){
-        mm = `0${mm}`
-    }
+    let mm = String(DATE).split(' ')[1] // to get th second element of the generated array
     let thisMonth = `${mm}/${YY}`
     let stats = await Stats.findOne({month: thisMonth})
     if(stats){
         //Ppdate stats
         console.log('Update stats')
         stats.regCount += 1
-        stats.enquiryCount += 1
+        // stats.enquiryCount += 1 // not required
         stats.updated = Date.now()
         stats.save()// we want to allow validation
 
@@ -546,12 +545,16 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
         let statsRecord = await Stats.find()
         let lastStatsRecord = { ...statsRecord[statsRecord.length - 1]}
 
+        if(statsRecord.length === 0){ // if there is no stats record
+            lastStatsRecord.students = lastStatsRecord.deffered = lastStatsRecord.deffered = 0
+        }
+
         console.log('Create stats')
         let newStats = {
             "month": thisMonth, 
             "regCount": 1,
             "students": lastStatsRecord.students + 1,
-            "alumni": lastStatsRecord.deffered - 1,
+            "alumni": lastStatsRecord.alumni,
             "deffered": lastStatsRecord.deffered
 
         }
@@ -598,11 +601,11 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
             subject: "Usere account approval",
             message: message
         })
-        userApprovalMessage = `Usere account approval mail successfull.`
+        userApprovalMessage = `User account approval mail successfull.`
     }
     catch(err){
         // return next(new CustomError(`There is an error sending Usere account approval mail. Please try again later`, 500))
-        userApprovalMessage = `Usere account approval mail failed.`
+        userApprovalMessage = `User account approval mail failed.`
         
     }
     ///
@@ -626,11 +629,28 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
    }
 
 
-   const oldstatus = user.status
-   
-//    user.status = req.body.status 
-   //(oldz, newz, courseId)
-   let retUserStatrus = await StatusStatsHandler(oldstatus, req.body.status, )
+    //  const oldStatus = user.status
+   let isRecord = false
+   user.Courses && user.Courses.map((dataz, i) => {
+        if(dataz.courseCode == req.body.courseCode){
+            console.log('isRecord ')
+            oldStatus = dataz.courseStatus
+            dataz.courseStatus = req.body.courseStatus;  
+            isRecord = true
+            console.log(isRecord)
+            user.Courses[i] = {...dataz}
+        }
+   })
+
+   if(isRecord === false){
+    user.Courses = [...user.Courses, {courseCode: req.body.courseCode, courseStatus: req.body.courseStatus}]
+   }
+
+    // UPDATE STATS
+    // the forth parameter is set to false to find by course code else it will find by course id
+    const retUserStatrus = await StatusStatsHandler(oldStatus, req.body.status, req.body.courseCode, false)
+
+    // let retUserStatrus = await StatusStatsHandler(oldstatus, req.body.status, )
 
    user.status = retUserStatrus 
 
@@ -641,8 +661,6 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
    await user.save({validateBeforeSave: false})
     
     //4 SEND THE NOTICE TO THE USER VIA EMAIL 
-
-
     const message = `<html><body>
     <p>
     Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
@@ -675,11 +693,11 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
             subject: "Usere account approval",
             message: message
         })
-        userApprovalMessage = `Usere account approval mail successfull.`
+        userApprovalMessage = `User account approval notification mail successfull.`
     }
     catch(err){
         // return next(new CustomError(`There is an error sending Usere account approval mail. Please try again later`, 500))
-        userApprovalMessage = `Usere account approval mail failed.`
+        userApprovalMessage = `User account approval notification mail failed.`
         
     }
     ///
@@ -702,9 +720,11 @@ exports.setusercourse = asyncErrorHandler(async (req, res, next) => {
    }
 
    let isRecord = false
+   let oldStatus = 'newcourse'
    user.Courses && user.Courses.map((dataz, i) => {
     if(dataz.courseCode == req.body.courseCode){
         console.log('isRecord ')
+        oldStatus = dataz.courseStatus
         dataz.courseStatus = req.body.courseStatus;  
         isRecord = true
         console.log(isRecord)
@@ -717,24 +737,25 @@ exports.setusercourse = asyncErrorHandler(async (req, res, next) => {
     user.Courses = [...user.Courses, {courseCode: req.body.courseCode, courseStatus: req.body.courseStatus}]
    }
 
-//    const oldstatus = user.status
-   
-   // user.status = req.body.status 
-   // (oldz, newz, courseId)
-
-//    let retUserStatrus = await StatusStatsHandler(oldstatus, req.body.status, )
-
-//    user.status = retUserStatrus 
+    // UPDATE STATS
+    // the forth parameter is set to false to find by course code else it will find by course id
+    const result = await StatusStatsHandler(oldStatus, req.body.status, req.body.courseCode, false)
 
    user.updated = new Date()
-
-
-
-   await user.save({validateBeforeSave: false})
+   
+   
+   
+   //  SAVE USER CHANGES
+   if(result){
+        await user.save({validateBeforeSave: false})
+    }
+   else{
+        const error = new CustomError(`Sorry, to the status of a new course can only be 'student' and not a new ${req.params._id}`, 403)
+        next(error)
+    }
+   
     
     //4 SEND THE NOTICE TO THE USER VIA EMAIL 
-
-
     const message = `<html><body>
     <p>
     Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
@@ -760,25 +781,24 @@ exports.setusercourse = asyncErrorHandler(async (req, res, next) => {
 
 
     console.log(message+'\n') 
-    let userApprovalMessage;
+    let userSetCorseMessage;
     try{
         await sendEmail({
             email: user.email,
             subject: "Usere account approval",
             message: message
         })
-        userApprovalMessage = `Usere account approval mail successfull.`
+        userSetCorseMessage = `User course status change notification mail successfull.`
     }
     catch(err){
         // return next(new CustomError(`There is an error sending Usere account approval mail. Please try again later`, 500))
-        userApprovalMessage = `Usere account approval mail failed.`
-        
+        userSetCorseMessage = `User course status change notification mail failed.`   
     }
     ///
 
    res.status(201).json({ 
        status : "success",
-       userApprovalMessage,
+       userSetCorseMessage,
        resource : "user",
        action : "account approved"
       })  

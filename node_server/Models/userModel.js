@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema(
         },
         "role": {type: String, enum: ['user', 'admin', 'owner'], default: 'user'},
         "Courses": {type: Array}, // using array of objects to account for a situation where a user runs more than one course,[{courseCode: val, courseStatus: val}]
+            // valuesOptions: ["HTML", "CSS", "JavaScript", "TypeScript"],
+            // valuesOptions: ["done", "CSS", "JavaScript", "TypeScript"],
+
+        "gender": {type: String, enum: ['Male', 'Female'], default: 'Male'},
         "status": {type: String, enum: ['none', 'alumni', 'student', 'deffered'], default: 'none'},
         "passwordChangedAt": {type: Date, default: Date.now, trim: true},
         // "passwordResetToken": {type: String, trim: true}, 

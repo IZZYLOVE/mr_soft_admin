@@ -45,7 +45,9 @@ else{
 //db connection
 mongoose.connect(URL, {
         useUnifiedTopology: true,
-        useNewUrlParser: true
+        useNewUrlParser: true,
+        // useCreateIndex: true,
+        // useFindAndModify: true
     })
     const connection = mongoose.connection
     connection.once('open', () => {

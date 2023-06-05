@@ -1,19 +1,24 @@
 //INPORT EXPRESS
 const express = require('express')
+const path = require('path')
+const bodyParserx = require('body-parser')
 let app = express()
 
 // To support cors and allow us send and recieve data through url we use cors
 const cors = require('cors');
 app.use(cors())
+app.use(bodyParserx.json()) 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 
 const courseRouter = require('./Routes/courseroutes')
 const authRouter = require('./Routes/authrouter')
 const ratingRouter = require('./Routes/ratingroutes')
 const enquiryRouter = require('./Routes/enquirtroutes')
 const statsRouter = require('./Routes/statsroutes')
+const filesRouter = require('./Routes/fileuploadroutes')
 
 const CustomError = require('./Utils/CustomError')
-const globalErrorHandler = require('./Controllers/errorController')
+const globalErrorHandler = require('./Controllers/errorController');
 
 
 
@@ -50,6 +55,7 @@ app.use('/api/v1/courses', courseRouter)// mounting course route
 app.use('/api/v1/ratings', ratingRouter)// mounting rating route
 app.use('/api/v1/enquiries', enquiryRouter)// mounting enquiry route
 app.use('/api/v1/stats', statsRouter)// mounting stats route
+app.use('/api/v1/files', filesRouter)// mounting stats route
 
 
 

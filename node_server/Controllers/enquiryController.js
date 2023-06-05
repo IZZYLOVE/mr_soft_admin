@@ -37,10 +37,8 @@ exports.postEnquiry = asyncErrorHandler(async (req, res, next) => {
     if(listEnquiry <= 1){// this is a new individual, hence enquiry is valid
         let DATE = new Date()
         let YY = DATE.getFullYear()
-        let mm = DATE.getMonth()
-        if(mm <= 9){
-            mm = `0${mm}`
-        }
+        let mm = String(DATE).split(' ')[1] // to get th second element of the generated array
+
         let thisMonth = `${mm}/${YY}`
         let stats = await Stats.findOne({month: thisMonth})
         console.log('stats')
