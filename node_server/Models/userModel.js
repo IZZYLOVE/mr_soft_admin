@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
         "firstName": {type: String, required: [true, 'Please enter your first name'], trim: true},
         "middleName": {type: String, required: [true, 'Please enter your middle name'], trim: true},
         "lastName": {type: String, required: [true, 'please enter your last name'], trim: true},
-        "photo": String,
+        "profileImg": Object,
         "email": {type: String, unique: true, required: [true, 'Please enter email'], lowercase: true, trim: true    
         , validate: [validator.isEmail, 'please enter a valid email']
         },

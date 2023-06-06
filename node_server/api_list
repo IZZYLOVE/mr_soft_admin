@@ -209,13 +209,15 @@ RootURL = http://127.0.0.1:7300/
 
 
 ###
-### FILES
+### USER FILES
 ###
 
+# linkprofileimage
 # single file upload
 # methods: patch or put
-{{RootURL}}api/v1/files/singlefile
+{{RootURL}}api/v1/files/linkprofileimage
 
-# multiple files upload
+# unlinkprofileimage
 # methods: patch or put
-{{RootURL}}api/v1/files/multiplefiles
+{{RootURL}}api/v1/files/unlinkprofileimage/:_id
+{{RootURL}}api/v1/files/unlinkprofileimage/646f9e5c56bebdf78ed38a18
