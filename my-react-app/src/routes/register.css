@@ -153,4 +153,27 @@
     margin: 0 0 5rem 0;
   }
 
-  
+ /* Styling for select input */
+.select-input-box select {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  border: 1px solid #666565;
+  border-radius: 4px;
+  background-color: #8c8b8b;
+  transition: border-color 0.3s ease;
+}
+
+/* Styling for select input on focus */
+.select-input-box select:focus {
+  outline: none;
+  border-color: #1490f6;
+}
+
+/* Styling for select input when disabled */
+.select-input-box select:disabled {
+  background-color: #f9f9f9;
+  cursor: not-allowed;
+}

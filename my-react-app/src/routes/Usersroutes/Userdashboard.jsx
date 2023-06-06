@@ -4,7 +4,7 @@ import { Icon } from '@iconify/react';
 import { Link } from 'react-router-dom';
 import './userdashboard.css'
 
-export function Userdashboard() {
+export function Userdashboard({formData}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => {
@@ -18,7 +18,7 @@ export function Userdashboard() {
       <div className="usernav">
         <div onClick={toggleSidebar} className='toggle'><Icon icon="ic:outline-legend-toggle" width='30' id='navicon'/>
            <span className='usernavdetails'>
-            <Link to='/userinfo'>Users@gmail.com </Link>
+            <Link to='/userinfo'></Link>
             </span>
         </div>
       </div>
@@ -27,12 +27,7 @@ export function Userdashboard() {
        <h2>Welcome 'User' </h2> 
           <div className="card">
             <div className="card1">
-            {/* <p><b>Courses to choose from:</b> </p>  
-            <p>Python<input type="checkbox" name="python" id="python" /></p>
-            <p>JavaScript<input type="checkbox" name="javascript" id="python" /></p>
-            <p>HTML<input type="checkbox" name="python" id="python" /></p>
-            <p>CSS<input type="checkbox" name="python" id="python" /></p>
-            <button>Select</button> */}
+           
             </div>
 
           </div>
