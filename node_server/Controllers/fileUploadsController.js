@@ -1,13 +1,15 @@
-// const SingleFile = require('./../Models/singleFileModel')
-// const MultipleFiles = require('./../Models/multipleFilesModel')
+// const CustomError = require('../Utils/CustomError');
+const asyncErrorHandler = require('../Utils/asyncErrorHandler');
+
 const User = require('./../Models/userModel')
 
 
 
 
-exports.linkProfileImage = async(req, res, next) => {
+
+exports.linkProfileImage = asyncErrorHandler(async(req, res, next) => {
+    
     const user = await User.findById(req.body.userId)
-    try{
         const file = {
             fileName: req.file.originalname,
             filePath: `${req.protocol}://${req.get('host')}/${req.file.path}`,
@@ -20,17 +22,13 @@ exports.linkProfileImage = async(req, res, next) => {
         await user.save({validateBeforeSave: false})
 
         res.status(201).send('File Uploaded successfully')
-        
-    }
-    catch(error){
-        res.status(400).send(error.message) 
-    }
-}
+})
 
 
-exports.unlinkProfileImage = async(req, res, next) => {
+exports.unlinkProfileImage = asyncErrorHandler(async(req, res, next) => {
+
     const user = await User.findById(req.params._id)
-    try{
+
         const file = undefined
 
         user.profileImg = file
@@ -38,12 +36,8 @@ exports.unlinkProfileImage = async(req, res, next) => {
         await user.save({validateBeforeSave: false})
 
         res.status(201).send('File unlinked successfully')
-        
-    }
-    catch(error){
-        res.status(400).send(error.message) 
-    }
-}
+
+})
 
 
 
