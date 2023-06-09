@@ -1,0 +1,64 @@
+.info-container {
+    border: 2px solid black;
+    position: relative;
+    width: 400px;
+    height: auto;
+    border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 3rem 6rem 3rem;
+    margin: 2rem auto;
+    margin-bottom: 16rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    background-color: #f9f9f9;
+  }
+  
+  .info-container h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .info-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  .info-container input,
+  .info-container select {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 0.3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .info-container button {
+    padding: 0.7rem 1.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    background-color: #47aeae;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+  
+  .info-container button:hover {
+    background-color: #61c2c2;
+  }
+  .info-container button:active {
+    background-color: #2b7676;
+  }
+  
+  .infomainimg {
+    width: 300px;
+    margin-left: 10px;
+    border-radius: 1rem;
+  }
+
+  .error {
+    color: red;
+  }
+  
+  

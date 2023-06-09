@@ -3,14 +3,10 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Home } from './routes/Home';
 import { Login } from './routes/Login';
 import { Register } from './routes/Register';
-import { Admindashboard } from './routes/Adminroutes/Admindashboard';
-import { Myinfo } from './routes/Adminroutes/Myinfo';
-import { Adminsidebar } from './routes/Adminsidebar';
+import { Admin } from './Component/Admin';
+import { User } from './Component/User';
 import { Footer } from './routes/Footer';
-import { Users } from './routes/Adminroutes/Users';
-import { Usersidebar } from './routes/Usersidebar';
-import { Userdashboard } from './routes/Usersroutes/Userdashboard';
-import { Userinfo } from './routes/Usersroutes/Userinfo';
+
 
 function App() {
   return (
@@ -19,13 +15,8 @@ function App() {
     <Route path="/" element={<Home />} />
     <Route path="login" element={<Login />} />
     <Route path="register" element={<Register />} />
-    <Route path="admindashboard" element={<Admindashboard />} />
-    <Route path="myinfo" element={<Myinfo />} />
-    <Route path="users" element={<Users />} />
-    <Route path="adminsidebar" element={<Adminsidebar />} />
-    <Route path="usersidebar" element={<Usersidebar />} />
-    <Route path="userdashboard" element={<Userdashboard />} />
-    <Route path="userinfo" element={<Userinfo />} />
+    <Route path="admin/*" element={<Admin />} />
+    <Route path="user/*" element={<User />} />
     </Routes>
      <Footer/>
     </BrowserRouter>

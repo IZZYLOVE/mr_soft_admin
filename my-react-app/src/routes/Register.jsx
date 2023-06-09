@@ -1,10 +1,12 @@
 import './register.css'
 import React, { useState } from 'react';
 import { BeatLoader } from 'react-spinners';
+import { useNavigate } from 'react-router-dom';
 
 const Rooturl = 'http://127.0.0.1:7300/';
 
 export function Register() {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -62,7 +64,10 @@ export function Register() {
       // Handle the response from the backend if needed
 
       await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert('Form submitted successfully');
+      console.log('Form submitted successfully');
+        // Redirect to user dashboard
+        navigate('/userdashboard');
+
     } catch (error) {
       // Handle any errors
       console.error('Form submission error:', error);

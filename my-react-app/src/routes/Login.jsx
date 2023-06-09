@@ -1,8 +1,11 @@
 import './login.css';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import React, { useState } from 'react';
 import { BeatLoader } from 'react-spinners';
+
+const Rooturl = 'http://127.0.0.1:7300/';
 
 export function Login() {
   const [isLoading, setIsLoading] = useState(false);
@@ -11,6 +14,7 @@ export function Login() {
     password: '',
   });
   const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setFormData({
@@ -24,7 +28,8 @@ export function Login() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('api/v1/users/login', {
+      console.log(formData)
+      const response = await fetch(`${Rooturl}api/v1/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,10 +38,9 @@ export function Login() {
       });
 
       if (response.ok) {
-        const { token } = await response.json();
-        localStorage.setItem('token', token);
         await new Promise((resolve) => setTimeout(resolve, 2000));
-        alert('Form submitted successfully');
+        // Redirect to the landing page
+        navigate.push('/userdashboard');
       } else {
         const { error } = await response.json();
         setError(error);
