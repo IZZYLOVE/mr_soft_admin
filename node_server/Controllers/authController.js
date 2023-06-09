@@ -26,7 +26,7 @@ const signToken = (_id, email, role) => {
 }
 
 exports.signup = asyncErrorHandler(async (req, res, next) => {
-    const newUser = await User.create(req.body)
+    let newUser = await User.create(req.body)
     const token = signToken(newUser._id, newUser.email, newUser.role)
     ///
     //2 GENERATE A RANDOM TOKEN FOR THE USER
@@ -99,6 +99,9 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     }
     ///
     limitedUser = limitUserDetailsServeFields(newUser)
+    
+    console.log('limited user obj')
+    console.log(limitedUser)
 
     res.status(201).json({ 
 
@@ -139,7 +142,8 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
 
     limitedUser = limitUserDetailsServeFields(user)
 
-    
+    console.log('limited user obj')
+    console.log(limitedUser)
 
     res.status(201).json({ 
         status : "success",

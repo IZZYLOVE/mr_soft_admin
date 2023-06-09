@@ -1,10 +1,14 @@
 import './register.css'
 import React, { useState } from 'react';
 import { BeatLoader } from 'react-spinners';
+import { useNavigate }  from 'react-router-dom';
+
+
 
 const Rooturl = 'http://127.0.0.1:7300/';
 
 export function Register() {
+  const redirectTo = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -60,12 +64,22 @@ export function Register() {
       console.log(data);
       console.log(data.token);
       // Handle the response from the backend if needed
+      localStorage.setItem(`${Rooturl}token`, data.token)
+      localStorage.setItem(`${Rooturl}User.serialized`, JSON.stringify(data.data))
 
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert('Form submitted successfully');
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
+      alert('Registration successful, you have been successfully logged in and will be redirected to your dashboard');
+
+      if(data.data.role === 'admin'){
+        redirectTo(`/Admin`)
+      }
+      else{
+        redirectTo(`/User`)
+      }
+
     } catch (error) {
       // Handle any errors
-      console.error('Form submission error:', error);
+      console.error('Registration failed:', error);
     }
     setIsLoading(false);
   };

@@ -27,7 +27,7 @@ function App() {
     <Route path="userdashboard" element={<Userdashboard />} />
     <Route path="userinfo" element={<Userinfo />} />
     </Routes>
-     <Footer/>
+    <Footer/>
     </BrowserRouter>
   )
 }

@@ -34,7 +34,6 @@ const requestedAt = function(req, res, next){
 
 
 // USING MIDDLESWARES
-
 //NOTE: a middleware will be applied to all endpoints/route handlers below/after it 
 //to allow us add request body to post request
 app.use(express.json()) //middleware
@@ -49,7 +48,6 @@ app.use(requestedAt) //middleware
 
 
 // USING ROUTES
-
 app.use('/api/v1/users', authRouter)// mounting user/auth route 
 app.use('/api/v1/courses', courseRouter)// mounting course route
 app.use('/api/v1/ratings', ratingRouter)// mounting rating route
@@ -64,15 +62,6 @@ app.use('/api/v1/files', filesRouter)// mounting stats route
 
 //DEFAULT ROUTE
 app.all('*', (req, res, next) =>{
-    // return res.status(404).json({
-    //     status : "fail",
-    //     message : `Cant't find ${req.originalUrl}`
-    // })
-
-    // const err = new Error(`Cant't find ${req.originalUrl}`)
-    // err.status = 'fail'
-    // err.statusCode = 404
-
     const err = new CustomError(`Cant't find ${req.originalUrl}`, 404)
     next(err)// call the global error handling middleware 
 })
