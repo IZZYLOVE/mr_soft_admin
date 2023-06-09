@@ -1,0 +1,31 @@
+
+.usernav .usernavdetails {
+  display: flex;
+  align-items: center;
+}
+
+.usernav .usernavdetails a {
+  margin-left: 1rem;
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.usernav .usernavdetails a:hover {
+  text-decoration: underline;
+}
+
+.image-field {
+  display: flex;
+  align-items: center;
+  border: 1px solid white;
+  background-color: white;
+  border-radius: 1.5rem;
+  padding: 12px;
+}
+
+.image-field a{
+  color: black;
+
+}

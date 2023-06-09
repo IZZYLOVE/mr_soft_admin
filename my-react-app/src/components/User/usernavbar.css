@@ -1,0 +1,14 @@
+.toggle {
+    display: inline-block;
+    color: white;
+  }
+  
+  .usernav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem;
+    background-color: #898917;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  

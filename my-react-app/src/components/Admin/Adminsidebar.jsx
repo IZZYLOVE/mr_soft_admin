@@ -16,13 +16,13 @@ export function Adminsidebar(props) {
         </li>
         
         <li>
-          <Link to="/Admindashboard" onClick={onClose}>
-            Dashboard
+          <Link to="stats" onClick={onClose}>
+            Stats
           </Link>
         </li>
         
         <li>
-          <Link to="/myinfo" onClick={onClose}>
+          <Link to="myinfo" onClick={onClose}>
             My Info 
           </Link>
         </li>

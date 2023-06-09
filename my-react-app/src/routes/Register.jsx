@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { BeatLoader } from 'react-spinners';
 import { useNavigate }  from 'react-router-dom';
 
-
-
 const Rooturl = 'http://127.0.0.1:7300/';
 
 export function Register() {
-  const redirectTo = useNavigate();
+
+  const navigate = useNavigate();
+
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
@@ -67,14 +67,13 @@ export function Register() {
       localStorage.setItem(`${Rooturl}token`, data.token)
       localStorage.setItem(`${Rooturl}User.serialized`, JSON.stringify(data.data))
 
-      // await new Promise((resolve) => setTimeout(resolve, 2000));
       alert('Registration successful, you have been successfully logged in and will be redirected to your dashboard');
 
       if(data.data.role === 'admin'){
-        redirectTo(`/Admin`)
+        navigate(`/Admin`)
       }
       else{
-        redirectTo(`/User`)
+        navigate(`/User`)
       }
 
     } catch (error) {
