@@ -43,7 +43,7 @@ const handleCardRedirection = (path) => {
 		<div className="main_flex_container">
 			<div className="father1">
 			<div className="flex_container">
-				<div className="box box1" onClick={() => handleCardRedirection('students') } title='Shows the total number of active students'>ACTIVE STUDENTS <br /> { students }</div>
+				<div className="box box1" onClick={() => handleCardRedirection('students') } title='Shows the total number of active students'>ACTIVE STUDENTS <br  /> { students }</div>
 				<div className="box box2" onClick={() => handleCardRedirection('deffered') } title='Shows the total number of deffered students'>DEFFERED STUDENTS <br /> { deffered } </div>
 			</div>
 			</div>

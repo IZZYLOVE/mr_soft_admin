@@ -12,11 +12,6 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.card-title {
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
 
 .card-content {
     padding: 20px;
@@ -78,19 +73,27 @@ flex-wrap: wrap;
 
 .box1{
 	flex-grow: 1;
+	font-weight: bolder;
+	font: 1rem cursive;
 }
 
 .box2{
 	flex-grow: 1;
+	font-weight: bold;
+	font: 1rem cursive;
 }
 
 
 .box3{
 	flex-grow: 1;
+	font-weight: bold;
+	font: 1rem cursive;
 }
 
 .box4{
 	flex-grow: 1;
+	font-weight: bold;
+	font: 1rem cursive;
 }
 
 

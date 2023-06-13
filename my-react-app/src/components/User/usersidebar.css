@@ -4,7 +4,7 @@
     left: 0;
     height: 100%;
     width: 250px;
-    background-color: #c0c016;
+    background-color: #177489;
     transition: transform 0.5s ease-in-out;
     transform: translateX(-100%);
   }
@@ -34,7 +34,7 @@
   }
   
   .usersidebar a:hover {
-    background-color: #ebeb1d;
+    background-color: #22b3d3;
   }
   
 .userdashicon{
@@ -43,29 +43,27 @@
     
  }
 
- .dashicon:hover {
-  color: rgb(217, 255, 0)
+ .userdashicon:hover {
+  color: #c62323;
  }
 
  .dashicon:active {
-  color: rgb(217, 255, 0)
+  color: #23a9c7;
  }
 
  #userdash:hover {
-  background-color: #c0c016;
+  background-color: #26badc;
  }
 
- .userdash span {
-    font: 1.4rem cursive;
-    text-shadow: 2px 2px 2px white;
-    padding: 1px;
+ .userdashicon span:hover {
+    color:#177489;
  }
 
  .UserSideBareScroll {
   max-height: 60vh;
   overflow-y: scroll;
-  border-top: 1px solid #898917;
-  border-bottom: 1px solid #898917;
+  border-top: 1px solid #177489;
+  border-bottom: 1px solid #177489;
 }
 
 .UserSideBareScroll::-webkit-scrollbar{

@@ -28,7 +28,7 @@ export function Adminsidebar(props) {
       <ul>
       <li>
           <Link to="#" onClick={onClose} className='dash' id='dash'>
-            <Icon icon="ic:outline-legend-toggle" className='dashicon' width='30'/><span>Admin-Dashboard</span> 
+            <Icon Icon icon="tabler:xbox-x" className='dashicon' width='30'/><span>Admin-Dashboard</span> 
           </Link>
         </li>
 
