@@ -1,11 +1,14 @@
 import './register.css'
-import React, { useState } from 'react';
+import React, { useState, useContext} from 'react';
 import { BeatLoader } from 'react-spinners';
 import { useNavigate }  from 'react-router-dom';
+import { AppContext } from '../Context/App_Context';
 
-const Rooturl = 'http://127.0.0.1:7300/';
+
 
 export function Register() {
+  const { API_base_url, StoredToken, StoredUserObj} = useContext(AppContext)
+
 
   const navigate = useNavigate();
 
@@ -52,7 +55,7 @@ export function Register() {
     }
 
     try {
-      const response = await fetch(`${Rooturl}api/v1/users/signup`, {
+      const response = await fetch(`${API_base_url}api/v1/users/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -64,8 +67,8 @@ export function Register() {
       console.log(data);
       console.log(data.token);
       // Handle the response from the backend if needed
-      localStorage.setItem(`${Rooturl}token`, data.token)
-      localStorage.setItem(`${Rooturl}User.serialized`, JSON.stringify(data.data))
+      StoredToken(data.token) 
+      StoredUserObj(data.data)
 
       alert('Registration successful, you have been successfully logged in and will be redirected to your dashboard');
 

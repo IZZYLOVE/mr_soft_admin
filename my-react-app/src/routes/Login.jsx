@@ -1,13 +1,14 @@
 import './login.css';
-import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { BeatLoader } from 'react-spinners';
+import { AppContext } from '../Context/App_Context';
 
-const Rooturl = 'http://127.0.0.1:7300/';
 
 export function Login() {
+
+  const { API_base_url, handleAlreadyLoggedIn, StoredToken, StoredUserObj} = useContext(AppContext)
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -15,6 +16,15 @@ export function Login() {
   });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  ///
+  useEffect(() => {
+    let path = handleAlreadyLoggedIn()
+    path && navigate(`/${path}`)
+    return () => {
+    };
+  }, [ API_base_url, handleAlreadyLoggedIn, navigate]);
+  ///
 
   const handleChange = (event) => {
     setFormData({
@@ -28,8 +38,7 @@ export function Login() {
     setIsLoading(true);
 
     try {
-      console.log(formData)
-      const response = await fetch(`${Rooturl}api/v1/users/login`, {
+      const response = await fetch(`${API_base_url}api/v1/users/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -37,15 +46,16 @@ export function Login() {
         body: JSON.stringify(formData),
       });
 
-      if (response.ok) {
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        
-        // Redirect to the landing page
-        navigate.push('/userdashboard');
-      } else {
-        const { error } = await response.json();
-        setError(error);
+      const data = await response.json();
+      StoredToken(data.token) 
+      StoredUserObj(data.data)
+      if(data.data.role === 'admin'){
+        navigate(`/Admin`)
       }
+      else{
+        navigate(`/User`)
+      }
+
     } catch (error) {
       console.error('Error during login:', error);
       setError('Incorrect credentials...');

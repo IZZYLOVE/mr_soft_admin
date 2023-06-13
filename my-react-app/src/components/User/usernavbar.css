@@ -1,8 +1,8 @@
-.toggle {
+/* .toggle {
     display: inline-block;
     color: white;
   }
-  
+   */
   .usernav {
     display: flex;
     align-items: center;
@@ -12,3 +12,15 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
   
+  .usernavHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #898917;
+
+}
+
+.usernavHeader li{
+    display: inline-block;
+}

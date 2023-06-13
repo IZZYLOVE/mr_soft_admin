@@ -1,18 +1,20 @@
-import React, { useState } from 'react';
-import { Usersidebar } from '../Usersidebar';
-import { Icon } from '@iconify/react';
+import React, { useContext, useState, useEffect } from 'react';
+// import { Usersidebar } from '../Usersidebar';
 import './userimg.css'
-import { Link } from 'react-router-dom';
+import { AppContext } from '../../Context/App_Context';
+         
 
-const Rooturl = 'http://127.0.0.1:7300/';
+export function ChangeProfileImage() {
+  const { API_base_url, setPageTitle } = useContext(AppContext)
+  
+  useEffect(() => {
+    setPageTitle('CHANGE PROFILE IMAGE')
+    return () => {
+    };
+  }, [ setPageTitle ]);
+  
 
-export function Userimg() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-
-  const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
-  };
 
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
@@ -26,7 +28,7 @@ export function Userimg() {
         const formData = new FormData();
         formData.append('image', selectedImage);
 
-        const response = await fetch(`${Rooturl}api/v1/files/linkprofileimage`, {
+        const response = await fetch(`${API_base_url}api/v1/files/linkprofileimage`, {
           method: 'POST',
           body: formData,
         });
@@ -46,17 +48,6 @@ export function Userimg() {
 
   return (
     <div className="user-dashboard">
-      <Usersidebar isOpen={sidebarOpen} onClose={toggleSidebar} />
-
-      <div className="usernav">
-        <div onClick={toggleSidebar} className='toggle'>
-          <Icon icon="ic:outline-legend-toggle" width='30' id='navicon' />
-
-          <span className='usernavdetails'>
-            <Link to='/userinfo'></Link>
-          </span>
-        </div>
-      </div>
 
       <div className='infocontent'>
         <div className="info-container">

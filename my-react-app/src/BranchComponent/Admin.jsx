@@ -5,11 +5,12 @@ import './main.css'
 
 
 export function Admin() {
-    return <div className="main">
-        <Routes>
-        {/* <Route path="/" element={<AdminNavbar/>} /> */}
-        <Route path="/*" element={<Admindashboard/>} />
-        </Routes>   
-        </div>
+    return (
+        <main className="main">
+            <Routes>
+                <Route path="/*" element={<Admindashboard/>} />
+            </Routes>   
+        </main>
+    )
             
 }
