@@ -1,18 +1,18 @@
 import { useContext, useEffect } from 'react';
 import { AppContext } from '../../Context/App_Context';
 
-export function News() {
+export function Feeds() {
     const { setPageTitle } = useContext(AppContext)
     
     useEffect(() => {
-        setPageTitle('NEWS')
+        setPageTitle('FEEDS')
         return () => {
         };
       }, [ setPageTitle ]);
 
     return (
         <div className="myheader">
-            <h2>NEWS</h2>
+            <h2>FEEDS</h2>
         </div>
     )
 }

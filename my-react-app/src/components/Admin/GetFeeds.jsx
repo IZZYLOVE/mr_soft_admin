@@ -2,11 +2,11 @@ import { useContext, useEffect } from 'react';
 import { AppContext } from '../../Context/App_Context';
 // import './myinfo.css'
 
-export function GetNews() {
+export function GetFeeds() {
   const { setPageTitle } = useContext(AppContext)
   
   useEffect(() => {
-    setPageTitle('GET NEWS')
+    setPageTitle('GET FEEDS')
     return () => {
     };
   }, [ setPageTitle ]);
@@ -14,7 +14,7 @@ export function GetNews() {
     return <>
 
       <div className="myheader">
-          <h2>ADMIN GETS NEWS</h2>
+          <h2>ADMIN GETS FEEDs</h2>
       </div>
     
     </>

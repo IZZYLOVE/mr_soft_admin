@@ -45,8 +45,8 @@ const handleLogout = () => {
     <div className="UserSideBareScroll">
       <ul>
         <li>
-          <Link to="./news" onClick={onClose}>
-            News
+          <Link to="./feeds" onClick={onClose}>
+            Feeds
           </Link>
         </li>
 
@@ -75,7 +75,7 @@ const handleLogout = () => {
         </li>
 
         <li>
-          <Link to="./profileimage" onClick={onClose}>
+          <Link to="./userprofile" onClick={onClose}>
             Profile Image
           </Link>
         </li>
@@ -97,7 +97,7 @@ const handleLogout = () => {
 
          <li onClick={ handleLogout } >
          <Link >
-            Log_out
+            Log out
           </Link>
         </li>
       </ul>

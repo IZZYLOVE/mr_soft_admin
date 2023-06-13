@@ -2,7 +2,7 @@ import { Route, Routes} from 'react-router-dom';
 import './userdashboard.css';
 import { Usernavbar } from './Usernavbar';
 import { UserProfile } from './UserProfile';
-import { News } from './News';
+import { Feeds } from './Feeds';
 import { UserCourses } from './UserCourses';
 import { AddCourse } from './AddCourse';
 import { UserProfileUpdate } from './UserProfileUpdate';
@@ -62,7 +62,7 @@ export function Userdashboard({ formData }) {
       <Route path="/updateprofile" element={<UserProfileUpdate/>} />
       <Route path="/userchangeprofileimage" element={<ChangeProfileImage/>} />
       <Route path="/usersupport" element={<UserSupport/>} />
-      <Route path="/*" element={<News/>} />
+      <Route path="/*" element={<Feeds/>} />
       </Routes>
       
     

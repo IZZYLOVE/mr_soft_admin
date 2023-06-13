@@ -18,8 +18,8 @@ import { Graduates } from "./Graduates";
 import { CreateCourse } from "./CreateCourse";
 import { AdminProfileUpdate } from "./AdminProfileUpdate";
 import { AdminProfileImage } from "./AdminProfileImage";
-import { CreateNews } from "./CreateNews";
-import { GetNews } from "./GetNews";
+import { CreateFeed, CreateNews } from "./CreateFeed";
+import { GetFeeds, GetNews } from "./GetFeeds";
 import { AdminSupport } from "./AdminSupport";
 import { AdminChangeProfileImage } from "./AdminChangeProfileImage";
 
@@ -187,8 +187,8 @@ export function Admindashboard() {
             <Route path="/removeuser" element={<RemoveUser/>} />
             <Route path="/graduates" element={<Graduates/>} />
             <Route path="/createcourse" element={<CreateCourse/>} />
-            <Route path="/createnews" element={<CreateNews/>} />
-            <Route path="/getnews" element={<GetNews/>} />
+            <Route path="/createfeed" element={<CreateFeed/>} />
+            <Route path="/getfeeds" element={<GetFeeds/>} />
             <Route path="/adminsupport" element={<AdminSupport/>} />
             <Route path="/*" element={<Stats/>} />
           </Routes>

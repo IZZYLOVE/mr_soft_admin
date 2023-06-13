@@ -124,14 +124,14 @@ export function Adminsidebar(props) {
         </li>
 
         <li>
-          <Link to="./createnews" onClick={onClose}>
-            Create News
+          <Link to="./createfeed" onClick={onClose}>
+            Create Feed
           </Link>
         </li>
 
         <li>
-          <Link to="./getnews" onClick={onClose}>
-             News
+          <Link to="./getfeeds" onClick={onClose}>
+             Feeds
           </Link>
         </li>
 
@@ -159,7 +159,7 @@ export function Adminsidebar(props) {
 
         <li onClick={ handleLogout }  >
           <Link >
-            Log_out
+            Log out
           </Link>
           
         </li>
