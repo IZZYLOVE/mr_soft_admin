@@ -1,6 +1,6 @@
 .info-container {
     border: 2px solid black;
-    position: relative;
+    /* position: relative; */
     width: 400px;
     height: auto;
     border-radius: 1rem;

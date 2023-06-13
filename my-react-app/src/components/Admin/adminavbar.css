@@ -1,47 +1,40 @@
 .toggle {
-    display: inline-block;
+    /* display: inline-block; */
     color: white;
  }
 
- .adminav {
-     border-bottom: 2px solid #177489;
-     padding: 9px 2px 8px 2px ;
-     background-color: #176f83;
- }
- 
- .navicon {
-     vertical-align: middle;
-     margin: 5px;
- }
- 
+
+ .adminnavHeader{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #177489;
+
+}
+
+.adminnavHeader li{
+    display: inline-block;
+}
+
  .toggle .navicon:hover {
      color: red;
  }
  
- .navdetails {
-     margin-left: 67rem;
-     vertical-align: super;
-     font: 1rem cursive;
+ .gobackpad{
+    padding-right: 10px;
  }
  
- .Content h2 {
-     text-align: center;
-     font: 1.7rem monospace;
-     font-weight: 900;
- }
- 
- @media screen and (max-width: 767px) {
-    .toggle {
-       display: block;
-       margin-bottom: 10px;
-    }
- }
- 
- @media screen and (max-width: 991px) {
-    .navdetails {
-       margin-left: 0;
-       float: none;
-       text-align: center;
-    }
- }
- 
+
+ .navBarImg{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+	background: rgb(0, 0, 0);
+
+}
+
+.navBarImg:hover
+{
+	border: 1px solid #5EC852;
+}

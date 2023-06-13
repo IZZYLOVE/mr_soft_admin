@@ -5,11 +5,10 @@ import './main.css'
 
 export function User() {
      return (
-        <div className="main">
-        <Routes>
-        <Route path="/" element={<Userdashboard/>} />
-
-        </Routes>   
-        </div>
+        <main className="main">
+            <Routes>
+                <Route path="/*" element={<Userdashboard/>} />
+            </Routes>   
+        </main>
      )
 }
