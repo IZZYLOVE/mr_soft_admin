@@ -29,7 +29,7 @@ const handleLogout = () => {
       <ul>
       <li>
           <Link to="#" onClick={onClose} className='userdash' id='userdash'>
-          <Icon icon="ic:outline-legend-toggle" className='userdashicon' width='30'/><span>User-Dashboard</span> 
+           <Icon icon="tabler:xbox-x" className='userdashicon' width='30'/><span>User-Dashboard</span>
           </Link>
         </li>
         
