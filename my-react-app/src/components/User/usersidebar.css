@@ -4,7 +4,7 @@
     left: 0;
     height: 100%;
     width: 250px;
-    background-color: #177489;
+    background-color: #1ba9c9;
     transition: transform 0.5s ease-in-out;
     transform: translateX(-100%);
   }
