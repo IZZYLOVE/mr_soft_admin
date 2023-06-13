@@ -11,6 +11,8 @@ const limitUserDetailsServeFields = require('../Utils/limitUserDetailsServeField
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 const crypto = require('crypto')
 const ApiFeatures = require('../Utils/ApiFeatures')
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
+
 
 
 
@@ -159,16 +161,8 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
 exports.protect = asyncErrorHandler(async (req, res, next) => {
     //1 read the token and check if it exist
     const testToken = req.headers.authorization
-    let token
-    if(testToken && testToken.startsWith('Bearer')){
-       token = testToken.split(' ')[1] // to get th second element of the generated array
-    }
-    if(!token){
-        next(new CustomError('You are not logged in!', 401))
-    }
-    
 
-    const decodedToken = await util.promisify(jwt.verify)(token, process.env.SECRETKEY)// returns a promise
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
 
     //3 read the token and check if the user still exist
     const user = await User.findById({'_id': decodedToken._id})
@@ -431,6 +425,26 @@ exports.getAuser = asyncErrorHandler(async (req, res, next) => {
             lenght : user.length,
             data : limitedUser
         })  
+})
+
+exports.getMyProfile = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+
+    const user = await User.findById(decodedToken._id)
+    if(!user){
+        const error = new CustomError(`User with ID: ${decodedToken._id} is not found`, 404)
+        //return to prevent further execution of the rest of the codes
+        return next(error)
+    }
+    limitedUser = limitUserDetailsServeFields(user)
+
+    res.status(200).json({ 
+        status : "success",
+        resource : "user",
+        lenght : user.length,
+        data : limitedUser
+    })  
 })
 
 exports.patchUser= asyncErrorHandler(async (req, res, next) => {

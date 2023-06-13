@@ -8,7 +8,7 @@ const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 
 exports.latestStats = asyncErrorHandler(async (req, res, next) => {
     //pre filling the sorting and limit
-    req.query.limit = '12'
+    req.query.limit = '6'
     req.query.sort = '-created'
     next()
 })

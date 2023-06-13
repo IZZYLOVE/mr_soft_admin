@@ -13,7 +13,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
 const courseRouter = require('./Routes/courseroutes')
 const authRouter = require('./Routes/authrouter')
 const ratingRouter = require('./Routes/ratingroutes')
-const enquiryRouter = require('./Routes/enquirtroutes')
+const enquiryRouter = require('./Routes/enquiryroutes')
 const statsRouter = require('./Routes/statsroutes')
 const filesRouter = require('./Routes/fileuploadroutes')
 

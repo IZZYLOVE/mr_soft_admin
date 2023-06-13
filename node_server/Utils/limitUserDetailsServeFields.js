@@ -6,7 +6,6 @@ module.exports = (user) => {
         }
         user[el] && delete user[el]
     })
-    console.log('limited user obj out')
-    console.log(user)
+
     return user
 }

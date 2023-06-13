@@ -15,7 +15,8 @@ const router = express.Router()
  router.route('/approve/:_id').patch(authController.protect,authController.restrict('admin'),authController.approveUser)
  router.route('/setuserstatus/:_id').patch(authController.protect,authController.restrict('admin'),authController.setUserStatus)
 
-
+ router.route('/myprofile')
+    .get(authController.protect,authController.getMyProfile)
 
 router.route('/:_id')
     .put(authController.protect,authController.putUser)
@@ -26,5 +27,6 @@ router.route('/:_id')
 
 router.route('/')
     .get(authController.protect,authController.getUsers)
+
 
  module.exports = router     

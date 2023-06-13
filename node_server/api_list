@@ -11,6 +11,11 @@ RootURL = http://127.0.0.1:7300/
 # methods: post
 {{RootURL}}api/v1/users/login
 
+# User profile
+# The Bearer profile
+# methods: get
+{{RootURL}}api/v1/users/myprofile
+
 # get all users
 # methods: get
 {{RootURL}}api/v1/users/
@@ -39,6 +44,32 @@ RootURL = http://127.0.0.1:7300/
 # methods: patch
 {{RootURL}}api/v1/users/setuserstatus/:_id
 {{RootURL}}api/v1/users/setuserstatus/646f9e0456bebdf78ed38a16
+
+
+# admin get ACTIVE STUDENTS
+# methods: get
+{{RootURL}}api/v1/users?status=student
+
+
+# admin get DEFFERED DEFFERED
+# methods: get
+{{RootURL}}api/v1/users?status=deffered
+
+
+# admin get GRADUATED STUDENTS
+# methods: get
+{{RootURL}}api/v1/users?status=alumni
+
+
+# admin get MONTH'S REGISTRATIONS
+# methods: get
+{{RootURL}}api/v1/users?month=Jun/2023
+
+
+# admin get MONTH'S PROSPECTS
+# methods: get
+{{RootURL}}api/v1/enquiries?month=Jun/2023
+
 
 
 ###
@@ -141,6 +172,7 @@ RootURL = http://127.0.0.1:7300/
 {{RootURL}}api/v1/ratings?ratings=5 
 
 
+
 ###
 ### ENQUIRIES
 ###
@@ -183,6 +215,8 @@ RootURL = http://127.0.0.1:7300/
 {{RootURL}}api/v1/enquiries?stack=MEAN&technology=javaScript,email=izzyking@gmail.com
 
 
+
+
 ###
 ### STATISTICS
 ###
@@ -206,6 +240,7 @@ RootURL = http://127.0.0.1:7300/
 # Pagination serverside
 # methods: get
 {{RootURL}}api/v1/stats?page=2&limit=2
+
 
 
 ###

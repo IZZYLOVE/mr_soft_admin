@@ -3,6 +3,11 @@ const bcrypt = require('bcrypt')
 const validator = require('validator')
 const crypto = require('crypto')
 
+let DATE = new Date()
+let YY = DATE.getFullYear()
+let mm = String(DATE).split(' ')[1] // to get th second element of the generated array
+
+let thisMonth = `${mm}/${YY}`
 
 const userSchema = new mongoose.Schema(
    
@@ -29,6 +34,7 @@ const userSchema = new mongoose.Schema(
 
         "gender": {type: String, enum: ['Male', 'Female'], default: 'Male'},
         "status": {type: String, enum: ['none', 'alumni', 'student', 'deffered'], default: 'none'},
+            // the options list should not contain none
         "passwordChangedAt": {type: Date, default: Date.now, trim: true},
         // "passwordResetToken": {type: String, trim: true}, 
         "passwordResetToken": String, 
@@ -39,6 +45,7 @@ const userSchema = new mongoose.Schema(
         "emailVerificationTokenExp":  Date, 
         "approved": {type: Boolean, required: true, default: false},
         "phone": {type: String, required: [true, 'Please enter phone'], trim: true},
+        "month": {type: String, default: thisMonth, immutable: true, trim: true},
         "created": {type: Date, default: Date.now, immutable: true, trim: true,  select: false},
         "updated": {type: Date, default: Date.now, trim: true,  select: false},
     }

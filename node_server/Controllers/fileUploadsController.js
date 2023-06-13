@@ -1,5 +1,6 @@
 // const CustomError = require('../Utils/CustomError');
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
 
 const User = require('./../Models/userModel')
 
@@ -8,8 +9,10 @@ const User = require('./../Models/userModel')
 
 
 exports.linkProfileImage = asyncErrorHandler(async(req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
     
-    const user = await User.findById(req.body.userId)
+    const user = await User.findById(decodedToken._id)
         const file = {
             fileName: req.file.originalname,
             filePath: `${req.protocol}://${req.get('host')}/${req.file.path}`,
@@ -26,8 +29,10 @@ exports.linkProfileImage = asyncErrorHandler(async(req, res, next) => {
 
 
 exports.unlinkProfileImage = asyncErrorHandler(async(req, res, next) => {
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
 
-    const user = await User.findById(req.params._id)
+
+    const user = await User.findById(decodedToken._id)
 
         const file = undefined
 

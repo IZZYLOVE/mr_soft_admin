@@ -17,6 +17,10 @@ const enquirySchema = new mongoose.Schema(
         trim: true},
         // make a list of options with the values above
 
+    "prospect": String, 
+    
+    "month": String, 
+
     "technologies": {type: Array, default: ['JavaScript'], trim: true},
         // make a list of multiple selection options with the values below and generate an array with the selected options
         // values: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Express", "Node.js", "MongoDB", "Angular", "Vue", "PostgreSQL", "Linux", "Apache", "Mysql", "Php", "Pearl", "Python"],

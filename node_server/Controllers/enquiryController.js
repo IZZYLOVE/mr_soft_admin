@@ -25,8 +25,6 @@ exports.getEnquiries = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.postEnquiry = asyncErrorHandler(async (req, res, next) => {
-    const enquiry = await Enquiry.create(req.body) 
-
 
     // UPDATE OR CREATE STATS STARTS
     let listEnquiry = (await Enquiry.find({email: req.body.email})).length
@@ -34,17 +32,21 @@ exports.postEnquiry = asyncErrorHandler(async (req, res, next) => {
     console.log('listEnquiry')
     console.log(listEnquiry)
 
-    if(listEnquiry <= 1){// this is a new individual, hence enquiry is valid
+    if(listEnquiry < 1){// this is a new individual, hence a valid prospect
         let DATE = new Date()
         let YY = DATE.getFullYear()
         let mm = String(DATE).split(' ')[1] // to get th second element of the generated array
-
         let thisMonth = `${mm}/${YY}`
+
+        // Add the following two fields to the request body
+        req.body.prospect = true
+        req.body.month = thisMonth
+
         let stats = await Stats.findOne({month: thisMonth})
         console.log('stats')
         console.log(stats)
         if(stats){
-            //Ppdate stats
+            //Update stats
             console.log('Update stats')
             stats.enquiryCount += 1
             stats.updated = Date.now()
@@ -68,6 +70,8 @@ exports.postEnquiry = asyncErrorHandler(async (req, res, next) => {
     }
     // UPDATE OR CREATE STATS ENDS
 
+
+    const enquiry = await Enquiry.create(req.body) // create the enquiry
     res.status(201).json({ 
         status : "success",
         resource : "enquiry",
