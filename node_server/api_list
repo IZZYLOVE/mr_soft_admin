@@ -220,4 +220,4 @@ RootURL = http://127.0.0.1:7300/
 # unlinkprofileimage
 # methods: patch or put
 {{RootURL}}api/v1/files/unlinkprofileimage/:_id
-{{RootURL}}api/v1/files/unlinkprofileimage/646f9e5c56bebdf78ed38a18
+{{RootURL}}api/v1/files/unlinkprofileimage/646f9e5c56bebdf78ed38a18xxxx

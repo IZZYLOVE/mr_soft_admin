@@ -34,7 +34,7 @@ export function AdminNavbar() {
       userImage = <img className='navBarImg' src={profileImage()} alt="Profile pixels" />
     }
 
-    let back = <Icon icon="mdi:user-circle" className='usernavicon' width='30'/>
+    let back = <Icon icon="ep:back" className='usernavicon' width='30'/>
 
 
 
