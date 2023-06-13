@@ -21,7 +21,7 @@ export function Register() {
     phone: '',
     password: '',
     confirmPassword: '',
-    gender: '', // New gender field
+    gender: '', 
   });
 
   const handleChange = (event) => {

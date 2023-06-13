@@ -24,3 +24,7 @@
 .usernavHeader li{
     display: inline-block;
 }
+
+.usernavicon:active {
+  color: red;
+}

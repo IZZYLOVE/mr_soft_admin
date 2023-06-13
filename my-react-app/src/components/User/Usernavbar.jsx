@@ -28,7 +28,7 @@ export function Usernavbar() {
   // let NavTitile = `${getStoredUserObj().firstName.toUpperCase()} ${getStoredUserObj().middleName.toUpperCase()} ${getStoredUserObj().lastName.toUpperCase()}`
   let NavTitile = pageTitle
 
-  let back = <Icon icon="mdi:user-circle" className='usernavicon' width='30'/>
+  let back = <Icon icon="ep:back" className='usernavicon' width='30'/>
 
   let userImage = <Icon icon="mdi:user-circle" className='usernavicon' width='30'/>
   if(profileImage() !== undefined){
