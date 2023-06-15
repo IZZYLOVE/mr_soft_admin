@@ -18,18 +18,35 @@ import { Graduates } from "./Graduates";
 import { CreateCourse } from "./CreateCourse";
 import { AdminProfileUpdate } from "./AdminProfileUpdate";
 import { AdminProfileImage } from "./AdminProfileImage";
-import { CreateFeed, CreateNews } from "./CreateFeed";
-import { GetFeeds, GetNews } from "./GetFeeds";
+import { CreateFeed } from "./CreateFeed";
+import { GetFeeds } from "./GetFeeds";
 import { AdminSupport } from "./AdminSupport";
 import { AdminChangeProfileImage } from "./AdminChangeProfileImage";
 
 export function Admindashboard() {
-  const { API_base_url, userRole, setChartLabel, setChartData1, setChartData2, setChartData3, setChartData4, StoredUserObj, getStoredToken } = useContext(AppContext)
+  const { API_base_url, isLoggedIn,  userRole, setChartLabel, setChartData1, setChartData2, setChartData3, setChartData4, StoreUserObj, getStoredToken } = useContext(AppContext)
   const navigate = useNavigate();
-  // let statsData = useRef([])
+  let tempHandleGetMultipleData = useRef( )
+  let tempIsLoggedIn = useRef( )
+
   let done = useRef(false)
 
-  if(userRole() !== 'admin' ){ // ensures only admin is allowed
+
+  useEffect(() => {
+    const handleIsLoggedIn = () => {
+      if(isLoggedIn() === false){
+        navigate(`/`)
+      }
+      return(true)
+    };
+    handleIsLoggedIn()
+    return () => {
+    };
+  }, [ isLoggedIn, navigate ]);
+
+
+  
+  if(isLoggedIn() && userRole() !== 'admin' ){ // ensures only admin is allowed
     navigate(`/`)
   }
 
@@ -39,27 +56,15 @@ export function Admindashboard() {
   const data3 = []
   const data4 = []
 
-  // const ChartDataArr = []
 
 
   const handleSetChartData = () => {
-    console.log("ChartDataArr sttt")
     setChartLabel(labels)
     setChartData1(data1)
     setChartData2(data2)
     setChartData3(data3)
     setChartData4(data4)
-
-    // ChartDataArr.push(labels)
-    // ChartDataArr.push(data1)
-    // ChartDataArr.push(data2)
-    // ChartDataArr.push(data3)
-    // ChartDataArr.push(data4)
-
-    // console.log("ChartDataArr")
-    // console.log(ChartDataArr)
-
-    // setChartData(ChartDataArr)
+    console.log("Chart data set")
     done.current = true
     return(done.current)
   };
@@ -74,11 +79,7 @@ export function Admindashboard() {
       data3.push(data.regCount)
       data4.push(data.enquiryCount)
       
-      console.log("handleSetStatsArrays ran")
-
       if((Data.length -1) === i){
-        console.log("calling handleSetChartData")
-
         return(handleSetChartData())
       }
       return('done')
@@ -112,12 +113,8 @@ export function Admindashboard() {
           }))
           // data is  an array
 
-          StoredUserObj(data[0].data)
+          data[0].data && StoreUserObj(data[0].data)
           handleSetStatsArrays(data[1].data.reverse())
-          // console.log("data[0].data")
-          // console.log(data[0].data)
-          // console.log("data[1].data.reverse()")
-          // console.log(data[1].data)
  
         }
         catch(e){
@@ -127,44 +124,25 @@ export function Admindashboard() {
       }
       fetchData()
 
-
-  //   let url = `${API_base_url}api/v1/stats/lateststats`
-  //   const fetchData = async (url) => {
-  //     await fetch(url , {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'authorization': `Bearer ${getStoredToken()}`,
-  //       },
-  //       // body: JSON.stringify(formData),
-  //     })
-  //     .then(res => {
-  //       if(!res.ok){
-  //         throw Error('could not fetch the data for that resource')
-  //       }
-  //       return res.json();
-  //     })
-  //     .then(data => {
-  //       statsData.current = data.data
-  //       handleSetStatsArrays(data.data.reverse())
-  //     })
-  //   }
-  // fetchData(url)
-
   };
+
+
+  // remove useEffect dependency of handleGetMultipleData() if used in useEffect
+  tempHandleGetMultipleData.current = handleGetMultipleData
+  tempIsLoggedIn.current = isLoggedIn
 
 
 
   useEffect(() => {
     console.log("useEffect ran")
-    handleGetMultipleData()
+    tempIsLoggedIn.current() && tempHandleGetMultipleData.current()
     if(done.current === true){
       done.current = false
     }
 
     return () => {
     };
-  }, [  ]); // adding handleGetStatsData to dependency array results in an infinit loop, neglect the warning
+  }, [  ]); 
 
 
     return (

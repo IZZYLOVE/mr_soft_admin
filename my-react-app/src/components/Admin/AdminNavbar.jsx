@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function AdminNavbar() {
     // const { getStoredUserObj, profileImage, pageTitle } = useContext(AppContext)
-    const { profileImage, pageTitle } = useContext(AppContext)
+    const { profileImage, pageTitle, isLoggedIn } = useContext(AppContext)
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -30,7 +30,7 @@ export function AdminNavbar() {
 
     let userImage = <Icon icon="mdi:user-circle" className='usernavicon' width='30' alt="Icon"  />
     
-    if(profileImage() !== undefined){
+    if(isLoggedIn() && profileImage() !== undefined){
       userImage = <img className='navBarImg' src={profileImage()} alt="Profile pixels" />
     }
 

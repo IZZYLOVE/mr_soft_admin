@@ -11,17 +11,18 @@ import { Icon } from '@iconify/react';
 
 
 export function Home() {
-    const { API_base_url, handleAlreadyLoggedIn } = useContext(AppContext)
+    const { API_base_url, handleAlreadyLoggedIn, isLoggedIn } = useContext(AppContext)
     const navigate = useNavigate();
+
 
 
 
   useEffect(() => {
     let path = handleAlreadyLoggedIn()
-    path && navigate(`/${path}`)
+    isLoggedIn() && path && navigate(`/${path}`)
     return () => {
     };
-  }, [ API_base_url, handleAlreadyLoggedIn, navigate]);
+  }, [ API_base_url, handleAlreadyLoggedIn, isLoggedIn, navigate]);
 ///
 
 

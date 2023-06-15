@@ -8,7 +8,7 @@ import { AppContext } from '../Context/App_Context';
 
 export function Login() {
 
-  const { API_base_url, handleAlreadyLoggedIn, StoredToken, StoredUserObj} = useContext(AppContext)
+  const { API_base_url, handleAlreadyLoggedIn, StoreToken, StoreUserObj} = useContext(AppContext)
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
@@ -47,8 +47,8 @@ export function Login() {
       });
 
       const data = await response.json();
-      StoredToken(data.token) 
-      StoredUserObj(data.data)
+      StoreToken(data.token) 
+      StoreUserObj(data.data)
       if(data.data.role === 'admin'){
         navigate(`/Admin`)
       }

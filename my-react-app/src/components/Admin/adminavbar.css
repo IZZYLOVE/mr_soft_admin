@@ -1,6 +1,7 @@
 .toggle {
     /* display: inline-block; */
     color: white;
+    
  }
 
 
@@ -8,7 +9,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1rem;
+    padding: 5px;
     background-color: #177489;
 
 }

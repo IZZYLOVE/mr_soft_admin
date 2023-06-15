@@ -1,24 +1,25 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import { useNavigate } from 'react-router-dom';
 
 import './adminsidebar.css';
 import { AppContext } from '../../Context/App_Context';
 
-const Rooturl = 'http://127.0.0.1:7300/';
 
 
 export function Adminsidebar(props) {
-  const { getStoredUserObj } = useContext(AppContext)
+  const { getStoredUserObj, logout, isLoggedIn } = useContext(AppContext)
 
   const navigate = useNavigate();
 
+    let namex
+   if(isLoggedIn() && getStoredUserObj()){
+    namex = `${getStoredUserObj().firstName.toUpperCase()} ${getStoredUserObj().middleName.toUpperCase()} ${getStoredUserObj().lastName.toUpperCase()}`
+   } 
 
   const handleLogout = () => {  
-    localStorage.removeItem(`${Rooturl}token`)
-    localStorage.removeItem(`${Rooturl}User.serialized`)
-    navigate(`/`)
+    logout()
+     navigate(`/`)
   } 
 
   const { isOpen, onClose } = props;
@@ -37,7 +38,7 @@ export function Adminsidebar(props) {
           <Link >
           {"GREETINGS"}
           <br />
-            {`${getStoredUserObj().firstName.toUpperCase()} ${getStoredUserObj().middleName.toUpperCase()} ${getStoredUserObj().lastName.toUpperCase()}`}
+            { namex }
           </Link>
         </li>
       </ul>
@@ -143,7 +144,7 @@ export function Adminsidebar(props) {
         </li>
 
         {
-          getStoredUserObj().role === 'admin' &&
+          isLoggedIn() && getStoredUserObj().role === 'admin' &&
           (
           <li>
             <Link to="/User" onClick={onClose}>

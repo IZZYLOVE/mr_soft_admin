@@ -65,9 +65,22 @@
   overflow-y: scroll;
   border-top: 1px solid #176f83;
   border-bottom: 1px solid #176f83;
+  /* scrollbar-width: thin; */
+  /* scrollbar-color: thumbcolor backgroundcolor; */
+  /* scrollbar-color: black transparent; */
 }
 
 .AdminSideBareScroll::-webkit-scrollbar{
-  width: 0px;
+  width: 2px;
+
 }
- 
+.AdminSideBareScroll::-webkit-scrollbar-track{
+  width: 2px;
+  border-radius: 2px;
+  background-color: aqua;
+}
+.AdminSideBareScroll::-webkit-slider-thumb{
+  width: 4px;
+  border-radius: 2px;
+  background-color: #fff;
+}
