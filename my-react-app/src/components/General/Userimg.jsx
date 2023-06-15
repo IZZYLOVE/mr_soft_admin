@@ -27,6 +27,8 @@ export function ChangeProfileImage() {
       try {
         const formData = new FormData();
         formData.append('image', selectedImage);
+        console.log('formData')
+        console.log(formData)
 
         // let headerObj = {
         //   method: 'GET',

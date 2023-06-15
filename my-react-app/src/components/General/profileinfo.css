@@ -14,9 +14,10 @@
 }
 
 .profilemain p{
+  
   background-color: rgb(241, 241, 241);
   border-radius: 1rem;
-  padding: 1rem 45rem 1rem 1rem;
+  padding: 1rem;
   cursor: pointer;
 }
 
@@ -45,4 +46,41 @@
     padding-left: 1.5rem;
     padding-right: 4rem;
   }
+}
+
+.userprofileImg{
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgb(0, 0, 0);
+  margin: 7px;
+
+}
+.myheader #span{
+ float: right;
+ cursor: pointer;
+}
+
+.myheader #span a:active{
+  color: red;
+}
+
+.myheader #span a:hover{
+  color: green;
+}
+
+.myheader #span a{
+  text-decoration: none;
+  color: rgb(132, 132, 132);
+  
+}
+
+
+.profileicon {
+    vertical-align: bottom;
+}
+
+.navBarImg:hover
+{
+border: 1px solid #5EC852;
 }

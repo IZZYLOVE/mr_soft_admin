@@ -1,22 +1,31 @@
 import { useContext, useEffect } from 'react';
 import { AppContext } from '../../Context/App_Context';
 import { Icon } from '@iconify/react';
+import {Link} from "react-router-dom"
 import './profileinfo.css';
 
 export function ProfileInfo() {
-  const { setPageTitle, getStoredUserObj } = useContext(AppContext);
+  const { setPageTitle, getStoredUserObj,  profileImage, } = useContext(AppContext);
+
+
+  let userImage = <Icon icon="mdi:user-circle" className='' width='300' alt="Icon"  />
+      if(profileImage() !== undefined){
+      userImage = <img className='userprofileImg' src={profileImage()} alt="Profile pixels" />
+    }
 
   useEffect(() => {
     setPageTitle('PROFILE INFO');
     return () => {};
   }, [setPageTitle]);
 
+
   return (
     <div className="myheader">
+       <span id='span'><Link to="../profileupdate">Edit profile<Icon icon="tabler:edit" className='profileicon' width='30'/></Link></span> 
       <div className="profile">
         {/* Icon component */}
-        <div className="profilesidebar">
-          <Icon icon="mdi:user-circle" width="200" alt="Icon" className="profileimg" />
+        <div className="profilesidebar" >
+        { userImage }
         </div>
 
         {/* Profile information component */}
