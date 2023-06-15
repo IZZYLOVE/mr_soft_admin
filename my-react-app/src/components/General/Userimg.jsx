@@ -5,7 +5,7 @@ import { AppContext } from '../../Context/App_Context';
          
 
 export function ChangeProfileImage() {
-  const { API_base_url, setPageTitle } = useContext(AppContext)
+  const { API_base_url, setPageTitle, getStoredToken } = useContext(AppContext)
   
   useEffect(() => {
     setPageTitle('CHANGE PROFILE IMAGE')
@@ -28,8 +28,20 @@ export function ChangeProfileImage() {
         const formData = new FormData();
         formData.append('image', selectedImage);
 
+        // let headerObj = {
+        //   method: 'GET',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     'authorization': `Bearer ${getStoredToken()}`,
+        //   },
+        //   // body: JSON.stringify(formData),
+        // }
+
+        console.log('formData')
+        console.log(formData)
         const response = await fetch(`${API_base_url}api/v1/files/linkprofileimage`, {
-          method: 'POST',
+          method: 'PATCH',
+          authorization: `Bearer ${getStoredToken()}`,
           body: formData,
         });
 

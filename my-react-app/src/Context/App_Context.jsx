@@ -25,7 +25,6 @@ export const AppContextProvider = (props) => {
 
     const [pageTitle, setPageTitle] = useState('');
 
-
     const StoredToken = (token) => { 
       localStorage.setItem(`${API_base_url}token`, token)
      return(token)
