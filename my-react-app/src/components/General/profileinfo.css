@@ -13,16 +13,23 @@
   order: 2; /* Displayed second on desktop view */
 }
 
-.profilemain p{
+.sonx p, .profilemain p{
   background-color: rgb(241, 241, 241);
   border-radius: 1rem;
-  padding: 1rem 45rem 1rem 1rem;
+  padding: 1rem 1rem 1rem 1rem;
+  width: 100%;
   cursor: pointer;
+  margin: 20px;
+  box-sizing: border-box;
 }
 
-.profilemain p span {
+
+
+.sonx p span, .profilemain p span {
   font: 0.9rem cursive;
   color: green;
+  width: 100%;
+
 }
 
 @media (max-width: 600px) {
@@ -40,9 +47,48 @@
     order: 2; 
   }
 
-  .profilemain p{
-    padding: 0.7rem;
-    padding-left: 1.5rem;
-    padding-right: 4rem;
-  }
+
 }
+
+
+
+/* //CCC FLEX*/
+/* BLOCK 2 */
+.fatherx
+{
+display: flex;
+background-color: purple;
+flex-grow: 1;
+}
+.sonx{
+  /* background-color: aqua; */
+	  display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100px;	
+    margin: 0px 20px;
+}
+
+.son1x
+{
+flex-grow:1;
+flex-basis:320px ;
+}
+
+.son2x
+{
+	flex-grow: 10;
+	flex-basis:350px ;
+}
+
+.son3x
+{
+	flex-basis:100% ;
+	flex-grow: 1;
+}
+
+/* //CCC FLEX ENDS */
+#Overideflexdirection1, #Overideflexdirection2, #Overideflexdirection3 {
+  flex-direction: column;
+}
+
