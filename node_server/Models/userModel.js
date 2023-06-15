@@ -41,6 +41,7 @@ const userSchema = new mongoose.Schema(
         // "passwordResetTokenExp": {type: Date, trim: true, select: false}, 
         "passwordResetTokenExp":  Date, 
         "emailVerified" :  {type: Boolean, required: true, default: false,  immutable: true, trim: true},
+        "address": String, 
         "emailVerificationToken": String, 
         "emailVerificationTokenExp":  Date, 
         "approved": {type: Boolean, required: true, default: false},
