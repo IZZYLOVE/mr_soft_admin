@@ -19,11 +19,11 @@
 
 .Header h2 {
   margin-left: -7.7rem;
-  margin-top: -5vh;
+  margin-top: 1vh;
 }
 
 .Header h6 {
-  font: 1rem monospace;
+  font: 1.4rem monospace;
 }
 
 .link a {
@@ -33,12 +33,12 @@
   background: rgb(84, 67, 4);
   border: 1px solid rgb(84, 67, 4);
   border-radius: 4px;
-  padding: 0.6rem 1rem 0.6rem 1.4rem;
-  margin: 0 0 0 -1rem;
+  padding: 0.6rem 5rem 0.6rem 5.4rem;
+  margin: 0 0 0 -4.5rem;
 }
 
 .link {
-  margin-top: -3vh;
+  margin-top: 3vh;
 }
 
 .link a:hover {
@@ -52,3 +52,26 @@
   margin-left: 4px;
 }
 
+/* Media Queries for Mobile View */
+@media (max-width: 600px) {
+  .Home {
+    align-items: flex-start; 
+    padding: 2rem; 
+  }
+
+  .Header {
+    margin-left: 0; 
+    text-align: center;
+  }
+
+  .Header h2 {
+    margin-left: 0; 
+    margin-top: 1rem; 
+  }
+
+  .link a {
+    padding: 1rem ;
+    margin-left: 0.8rem; 
+    text-align: center; 
+  }
+}

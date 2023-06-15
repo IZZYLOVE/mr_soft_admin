@@ -47,26 +47,26 @@ flex-wrap: wrap;
 .box1{
 	flex-grow: 1;
 	font-weight: bolder;
-	font: 1rem cursive;
+	color: rgb(108, 108, 108);
 }
 
 .box2{
 	flex-grow: 1;
 	font-weight: bold;
-	font: 1rem cursive;
+	color: rgb(108, 108, 108);
 }
 
 
 .box3{
 	flex-grow: 1;
 	font-weight: bold;
-	font: 1rem cursive;
+	color: rgb(108, 108, 108);
 }
 
 .box4{
 	flex-grow: 1;
 	font-weight: bold;
-	font: 1rem cursive;
+	color: rgb(108, 108, 108);
 }
 
 

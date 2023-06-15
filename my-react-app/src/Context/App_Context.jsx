@@ -22,7 +22,6 @@ export const AppContextProvider = (props) => {
 
     const [pageTitle, setPageTitle] = useState('');
 
-
     const logout = () => { 
       localStorage.removeItem(`${API_base_url}token`)
       localStorage.removeItem(`${API_base_url}User.serialized`)

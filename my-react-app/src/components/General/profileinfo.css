@@ -1,0 +1,48 @@
+
+.profile {
+  display: flex;
+  align-items: center;
+}
+
+.profilesidebar {
+  order: 1; /* Displayed first on desktop view */
+  margin-right: 20px;
+}
+
+.profilemain {
+  order: 2; /* Displayed second on desktop view */
+}
+
+.profilemain p{
+  background-color: rgb(241, 241, 241);
+  border-radius: 1rem;
+  padding: 1rem 45rem 1rem 1rem;
+  cursor: pointer;
+}
+
+.profilemain p span {
+  font: 0.9rem cursive;
+  color: green;
+}
+
+@media (max-width: 600px) {
+  .profile {
+    flex-direction: column;
+    align-items: center; 
+  }
+
+  .profilesidebar {
+    order: 1; /* Displayed first on mobile view */
+    margin-bottom: 20px;
+  }
+
+  .profilemain {
+    order: 2; 
+  }
+
+  .profilemain p{
+    padding: 0.7rem;
+    padding-left: 1.5rem;
+    padding-right: 4rem;
+  }
+}
