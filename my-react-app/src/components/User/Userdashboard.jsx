@@ -1,4 +1,4 @@
-import { Route, Routes} from 'react-router-dom';
+import { Route, Routes, useNavigate } from 'react-router-dom';
 import './userdashboard.css';
 import { Usernavbar } from './Usernavbar';
 import { UserProfile } from './UserProfile';
@@ -15,9 +15,25 @@ import { useContext, useEffect } from 'react';
 
 
 export function Userdashboard({ formData }) {  
-  const { API_base_url, StoredUserObj, getStoredToken } = useContext(AppContext)
+  const { API_base_url, isLoggedIn, StoreUserObj, getStoredToken } = useContext(AppContext)
+  const navigate = useNavigate();
 
 
+
+
+
+  useEffect(() => {
+    const handleIsLoggedIn = () => {
+      console.log('handleIsLoggedIn ran')
+      if(isLoggedIn() === false){
+        navigate(`/`)
+      }
+      return(true)
+    };
+    handleIsLoggedIn()
+    return () => {
+    };
+  }, [ isLoggedIn, navigate ]);
 
 
   
@@ -39,16 +55,14 @@ export function Userdashboard({ formData }) {
         return res.json();
       })
       .then(data => {
-        // console.log('data.data')
-        // console.log(data.data)
-        StoredUserObj(data.data)
+        data.data && StoreUserObj(data.data)
       })
     }
-  fetchData(url)
+    isLoggedIn() && fetchData(url)
 
     return () => {
     };
-  }, [ API_base_url, StoredUserObj, getStoredToken ]); // adding handleGetStatsData to dependency array results in an infinit loop, neglect the warning
+  }, [ API_base_url, StoreUserObj, getStoredToken, isLoggedIn ]); // adding handleGetStatsData to dependency array results in an infinit loop, neglect the warning
 
 
 

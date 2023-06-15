@@ -1,7 +1,4 @@
 import React, { createContext, useState } from 'react'
-// import Swal from "sweetalert2"
-
-//import { myReducer } from '../components/reducer/myReducer';
 
 
 export const AppContext  = createContext(null);
@@ -25,12 +22,19 @@ export const AppContextProvider = (props) => {
 
     const [pageTitle, setPageTitle] = useState('');
 
-    const StoredToken = (token) => { 
+    const logout = () => { 
+      localStorage.removeItem(`${API_base_url}token`)
+      localStorage.removeItem(`${API_base_url}User.serialized`)
+      console.log('logged out')
+   }
+
+
+    const StoreToken = (token) => { 
       localStorage.setItem(`${API_base_url}token`, token)
      return(token)
    }
 
-   const StoredUserObj = (object) => {   
+   const StoreUserObj = (object) => {   
       localStorage.setItem(`${API_base_url}User.serialized`, JSON.stringify(object))
      return(object)
    }
@@ -49,33 +53,57 @@ export const AppContextProvider = (props) => {
       const userObj = JSON.parse(localStorage.getItem(`${API_base_url}User.serialized`)) 
       return(userObj.role )
     }
+
+
     
     const profileImage = () => {   
       const userObj = JSON.parse(localStorage.getItem(`${API_base_url}User.serialized`)) 
-      if(userObj.profileImg){
+      if(userObj && userObj.profileImg){
         return(userObj.profileImg.filePath)
       }
       return(undefined)
     }
 
+
+    const isLoggedIn = () => {   
+      const token = getStoredToken()
+      const userObj = getStoredUserObj()
+      let islogedin = false
+      if(token === undefined || userObj === undefined || !token || !userObj ){ 
+        logout() }
+      else{ 
+        islogedin = true
+      }
+      return(islogedin)
+    }
+
     const handleAlreadyLoggedIn = () => {  
       const token = getStoredToken()
       const userObj = getStoredUserObj()
-      let path
-         if(token && userObj){ 
-                 if(userObj.role === 'admin'){
+      
+      
+      if(token === undefined || userObj === undefined || !token || !userObj ){ logout() }
+      else{ 
+           let path = './'
+                 if(userObj.role === 'super'){
                    path = `Admin`
                  }
-                  else{
-                   path = `User`
+                 else if(userObj.role === 'admin'){
+                   path = `Admin`
                  }
+                 else if(userObj.role === 'user'){
+                  path = `User`
+                }
+                else{
+                  path = `./`
+                 }
+          return (path)
          }
-         return (path)
      } 
 
     
 const contextValue = {API_base_url, handleAlreadyLoggedIn, getStoredToken, getStoredUserObj, userRole, ChartData, APP_NAME, ChartData1, ChartData2, ChartData3, ChartData4, ChartLabel, setChartData,
-  setChartData1, setChartData2, setChartData3, setChartData4, setChartLabel, pageTitle, setPageTitle, profileImage, StoredToken, StoredUserObj
+  setChartData1, setChartData2, setChartData3, setChartData4, setChartLabel, pageTitle, setPageTitle, profileImage, StoreToken, StoreUserObj, logout, isLoggedIn
 }
 
   return (
