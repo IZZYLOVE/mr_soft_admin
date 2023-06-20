@@ -1,0 +1,161 @@
+*
+{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+}
+
+.tex
+{
+    text-align: center;
+}
+
+.container {
+    margin-top: 3.5rem;
+}
+
+.container h1{
+    font: 2rem monospace;
+    font-weight: 900;
+    color: rgb(88, 88, 88);
+}
+
+.container h3{
+    font: 1rem monospace;
+    font-weight: 700;
+    margin-top: 12px;
+    color: rgb(88, 88, 88);
+}
+
+.form-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+
+  .form-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+
+  .form-container label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+
+  .form-container input[type="text"],
+  .form-container input[type="email"],
+  .form-container textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+
+  .form-container button[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  
+  .form-container button[type="submit"]:hover {
+    background-color: #45a049;
+  }
+  
+  /* Form input fields on focus */
+  .form-container input[type="text"]:focus,
+  .form-container input[type="email"]:focus,
+  .form-container textarea:focus {
+    outline: none;
+    border-color: #4CAF50;
+  }
+  
+form h3 {
+    text-align: center;
+    margin-bottom: 3px;
+}
+
+.cards {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8rem;
+    
+}
+
+.cards div{
+    display: inline-block;
+    margin: 1.3rem;
+    border-radius: 1rem;
+    box-shadow: 1px 1px 1px 1px rgb(189, 189, 189);
+}
+
+.card1 {
+   
+    border-top: 0.6rem solid rgb(73, 181, 98);
+    }
+
+.card1 .con-input-box{
+    
+    display: grid;
+}    
+
+.card2 {
+    border-top: 0.6rem solid rgb(73, 181, 98);
+    padding: 3rem 2rem 8rem 2rem;
+}
+
+.card1, .card2 p{
+ color: rgb(88, 88, 88);
+}
+
+.message-box {
+    padding: 1rem 1rem 3rem 1rem;
+}
+
+.card2 {
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .card2 h3 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .con-info {
+    margin-bottom: 10px;
+    box-shadow: 7px 7px 7px white;
+    padding: 0.9rem;
+  }
+  
+  .con-info p {
+    margin: 5px 0;
+  }
+
+@media  (max-width: 600px) {
+
+    .cards {
+        flex-direction: column;
+    }
+
+    .container h3{
+        font: 0.7rem monospace;
+        font-weight: 700;
+        margin-top: 12px;
+    }
+    
+}
+

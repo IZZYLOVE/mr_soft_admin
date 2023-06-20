@@ -33,6 +33,7 @@ export function Home() {
             <h6>Welcome</h6> 
             <h2>TO MRSOFT INTL</h2>
             <div className='link'><Link to="login">Login<Icon icon="mdi:user-circle" className='icons'/></Link></div>
+            <div className='link2' id='colink'><Link to='Contact' className='conlink'>Contact<Icon icon="tabler:phone" className='icons' id='icons' /></Link></div>
         </div>
     </div>
     </>

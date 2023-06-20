@@ -37,7 +37,22 @@
   margin: 0 0 0 -4.5rem;
 }
 
+.link2 a{
+  font: 1rem monospace;
+  text-decoration: none;
+  color: rgb(175, 175, 175);
+  background-color: rgb(197, 76, 6);
+  border: 1px solid rgb(197, 76, 6);
+  border-radius: 4px;
+  padding: 0.6rem 4rem 0.6rem 5.4rem;
+  margin: 0 0 0 -4.5rem;
+}
+
 .link {
+  margin-top: 3vh;
+}
+
+.link2 {
   margin-top: 3vh;
 }
 
@@ -47,9 +62,15 @@
   transition: .5s;
 }
 
+.link2 a:hover {
+  background-color: transparent;
+  transition: .5s;
+}
+
 .icons {
   vertical-align: middle;
   margin-left: 4px;
+  
 }
 
 /* Media Queries for Mobile View */
@@ -70,7 +91,7 @@
   }
 
   .link a {
-    padding: 1rem ;
+    padding: 0.7rem ;
     margin-left: 0.8rem; 
     text-align: center; 
   }
