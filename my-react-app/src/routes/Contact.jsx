@@ -47,7 +47,7 @@ export function Contact() {
               <label htmlFor="message">Message:</label>
               <br />
               <textarea
-                id="message"
+                id="message" className='textarea'
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows="4"
