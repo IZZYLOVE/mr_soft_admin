@@ -1,74 +1,74 @@
-RootURL = http://127.0.0.1:7300/
+API_base_url = http://127.0.0.1:7300/
 
 ###
 ### USERS
 ###
 # signup
 # methods: post
-{{RootURL}}api/v1/users/signup
+{{API_base_url}}api/v1/users/signup
 
 # login
 # methods: post
-{{RootURL}}api/v1/users/login
+{{API_base_url}}api/v1/users/login
 
 # User profile
 # The Bearer profile
 # methods: get
-{{RootURL}}api/v1/users/myprofile
+{{API_base_url}}api/v1/users/myprofile
 
 # get all users
 # methods: get
-{{RootURL}}api/v1/users/
+{{API_base_url}}api/v1/users/
 
 # get/put one user
 # methods: get
-{{RootURL}}api/v1/users/:_id
-{{RootURL}}api/v1/users/646cf8dced7c13012963967a
+{{API_base_url}}api/v1/users/:_id
+{{API_base_url}}api/v1/users/646cf8dced7c13012963967a
 
 # forgot password
 # methods: post
-{{RootURL}}api/v1/users/forgotpassword
+{{API_base_url}}api/v1/users/forgotpassword
 
 # reset password
 # methods: patch
-{{RootURL}}api/v1/users/resetpassword/:token
-{{RootURL}}api/v1/users/resetpassword/f3a7b90365fcc8bcd85023def6dd830de5fb371811c3d713193873b1bab77b5a
+{{API_base_url}}api/v1/users/resetpassword/:token
+{{API_base_url}}api/v1/users/resetpassword/f3a7b90365fcc8bcd85023def6dd830de5fb371811c3d713193873b1bab77b5a
 
 # admin aprrove user
 # methods: patch
-{{RootURL}}api/v1/users/resetpassword/:_id
-{{RootURL}}api/v1/users/approve/646f9e0456bebdf78ed38a16
+{{API_base_url}}api/v1/users/resetpassword/:_id
+{{API_base_url}}api/v1/users/approve/646f9e0456bebdf78ed38a16
 
 
 # admin set user status
 # methods: patch
-{{RootURL}}api/v1/users/setuserstatus/:_id
-{{RootURL}}api/v1/users/setuserstatus/646f9e0456bebdf78ed38a16
+{{API_base_url}}api/v1/users/setuserstatus/:_id
+{{API_base_url}}api/v1/users/setuserstatus/646f9e0456bebdf78ed38a16
 
 
 # admin get ACTIVE STUDENTS
 # methods: get
-{{RootURL}}api/v1/users?status=student
+{{API_base_url}}api/v1/users?status=student
 
 
 # admin get DEFFERED DEFFERED
 # methods: get
-{{RootURL}}api/v1/users?status=deffered
+{{API_base_url}}api/v1/users?status=deffered
 
 
 # admin get GRADUATED STUDENTS
 # methods: get
-{{RootURL}}api/v1/users?status=alumni
+{{API_base_url}}api/v1/users?status=alumni
 
 
 # admin get MONTH'S REGISTRATIONS
 # methods: get
-{{RootURL}}api/v1/users?month=Jun/2023
+{{API_base_url}}api/v1/users?month=Jun/2023
 
 
 # admin get MONTH'S PROSPECTS
 # methods: get
-{{RootURL}}api/v1/enquiries?month=Jun/2023
+{{API_base_url}}api/v1/enquiries?month=Jun/2023
 
 
 
@@ -77,47 +77,47 @@ RootURL = http://127.0.0.1:7300/
 ###
 # course stats 
 # methods: get
-{{RootURL}}api/v1/courses/course-stats
+{{API_base_url}}api/v1/courses/course-stats
 
 # getAll/post courses
 # methods: get and post
-{{RootURL}}api/v1/courses
+{{API_base_url}}api/v1/courses
 
 # highest rated
 # methods: get
-{{RootURL}}api/v1/courses/highest-rated
+{{API_base_url}}api/v1/courses/highest-rated
 
 # getOne/put/patch/delete course
 # with course id
 # methods: get, put, patch
-{{RootURL}}api/v1/courses/:_id
-{{RootURL}}api/v1/courses/646b2ebe06fa59d06462a33e
+{{API_base_url}}api/v1/courses/:_id
+{{API_base_url}}api/v1/courses/646b2ebe06fa59d06462a33e
 
 # Pagination serverside
 # methods: get
-{{RootURL}}api/v1/courses?page=2&limit=2
+{{API_base_url}}api/v1/courses?page=2&limit=2
 
 # sorting by fields
 # - means decendind order 
 # sort=-price is in decending order
 # methods: get
-{{RootURL}}api/v1/courses?sort=-students,ratings
+{{API_base_url}}api/v1/courses?sort=-students,ratings
 
 # query by fields you want or the fields you dont want, there can be no mixup
 # by the fields you want
 # methods: get
-{{RootURL}}api/v1/courses?fields=name,ratings,students
+{{API_base_url}}api/v1/courses?fields=name,ratings,students
 # by the fields you dont want by adding negative to the fields
 # methods: get
-{{RootURL}}api/v1/courses?fields=-name,-ratings
+{{API_base_url}}api/v1/courses?fields=-name,-ratings
 
 # filter by aggregation
 # methods: get
-{{RootURL}}api/v1/courses?alumni[gte]=10&students[gte]=90&ratings[lte]=7
+{{API_base_url}}api/v1/courses?alumni[gte]=10&students[gte]=90&ratings[lte]=7
 
 # filter by equality (ordinary filter)
 # methods: get
-{{RootURL}}api/v1/courses?alumni=10&students=90&ratings=5
+{{API_base_url}}api/v1/courses?alumni=10&students=90&ratings=5
 
 
 
@@ -127,49 +127,49 @@ RootURL = http://127.0.0.1:7300/
 
 # getAll/post ratings
 # methods: get and post
-{{RootURL}}api/v1/ratings
+{{API_base_url}}api/v1/ratings
 
 
 # highest rated
 # methods: get
-{{RootURL}}api/v1/ratings/highest-rated
+{{API_base_url}}api/v1/ratings/highest-rated
 
 
 # getOne/put/patch/delete rating
 # with rating id
 # methods: get, put, patch
-{{RootURL}}api/v1/ratings/:_id
-{{RootURL}}api/v1/ratings/646b2ebe06fa59d06462a33e
+{{API_base_url}}api/v1/ratings/:_id
+{{API_base_url}}api/v1/ratings/646b2ebe06fa59d06462a33e
 
 
 # Pagination serverside
 # methods: get
-{{RootURL}}api/v1/ratings?page=2&limit=2
+{{API_base_url}}api/v1/ratings?page=2&limit=2
 
 # sorting by fields
 # - means decendind order 
 # sort=-ratings is in decending order
 # methods: get
-{{RootURL}}api/v1/ratings?sort=-ratings
+{{API_base_url}}api/v1/ratings?sort=-ratings
 
 
 # query by fields you want or the fields you dont want, there can be no mixup
 # by the fields you want
 # methods: get
-{{RootURL}}api/v1/ratings?fields=ratings
+{{API_base_url}}api/v1/ratings?fields=ratings
 # by the fields you dont want by adding negative to the fields
 # methods: get
-{{RootURL}}api/v1/ratings?fields=-ratings
+{{API_base_url}}api/v1/ratings?fields=-ratings
 
 
 # filter by aggregation
 # methods: get
-{{RootURL}}api/v1/ratings?ratings[lte]=3
+{{API_base_url}}api/v1/ratings?ratings[lte]=3
 
 
 # filter by equality (ordinary filter)
 # methods: get
-{{RootURL}}api/v1/ratings?ratings=5 
+{{API_base_url}}api/v1/ratings?ratings=5 
 
 
 
@@ -179,40 +179,40 @@ RootURL = http://127.0.0.1:7300/
 
 # getAll/post enquiries
 # methods: get and post
-{{RootURL}}api/v1/enquiries
+{{API_base_url}}api/v1/enquiries
 
 
 # getOne/put/patch/delete enquiry
 # with rating id
 # methods: get, put, patch
-{{RootURL}}api/v1/enquiries/:_id
-{{RootURL}}api/v1/enquiries/646b2ebe06fa59d06462a33e
+{{API_base_url}}api/v1/enquiries/:_id
+{{API_base_url}}api/v1/enquiries/646b2ebe06fa59d06462a33e
 
 
 # Pagination serverside
 # methods: get
-{{RootURL}}api/v1/enquiries?page=2&limit=2
+{{API_base_url}}api/v1/enquiries?page=2&limit=2
 
 
 # sorting by fields
 # - means decendind order 
 # sort=-enquiries is in decending order
 # methods: get
-{{RootURL}}api/v1/enquiries?sort=-stack,technology
+{{API_base_url}}api/v1/enquiries?sort=-stack,technology
 
 
 # query by fields you want or the fields you dont want, there can be no mixup
 # by the fields you want
 # methods: get
-{{RootURL}}api/v1/enquiries?fields=stack,technology
+{{API_base_url}}api/v1/enquiries?fields=stack,technology
 # by the fields you dont want by adding negative to the fields
 # methods: get
-{{RootURL}}api/v1/enquiries?fields=-stack,-technology
+{{API_base_url}}api/v1/enquiries?fields=-stack,-technology
 
 
 # filter by equality (ordinary filter)
 # methods: get
-{{RootURL}}api/v1/enquiries?stack=MEAN&technology=javaScript,email=izzyking@gmail.com
+{{API_base_url}}api/v1/enquiries?stack=MEAN&technology=javaScript,email=izzyking@gmail.com
 
 
 
@@ -223,23 +223,23 @@ RootURL = http://127.0.0.1:7300/
 
 # latest stats
 # methods: get
-{{RootURL}}api/v1/stats/lateststats
+{{API_base_url}}api/v1/stats/lateststats
 
 # getAll/post stats
 # methods: get 
-{{RootURL}}api/v1/stats
+{{API_base_url}}api/v1/stats
 
 
 # getOne/delete stats
 # with stats id
 # methods: get, delete
-{{RootURL}}api/v1/stats/:_id
-{{RootURL}}api/v1/stats/646b2ebe06fa59d06462a33e
+{{API_base_url}}api/v1/stats/:_id
+{{API_base_url}}api/v1/stats/646b2ebe06fa59d06462a33e
 
 
 # Pagination serverside
 # methods: get
-{{RootURL}}api/v1/stats?page=2&limit=2
+{{API_base_url}}api/v1/stats?page=2&limit=2
 
 
 
@@ -250,9 +250,71 @@ RootURL = http://127.0.0.1:7300/
 # linkprofileimage
 # single file upload
 # methods: patch or put
-{{RootURL}}api/v1/files/linkprofileimage
+{{API_base_url}}api/v1/files/linkprofileimage
 
 # unlinkprofileimage
 # methods: patch or put
-{{RootURL}}api/v1/files/unlinkprofileimage/:_id
-{{RootURL}}api/v1/files/unlinkprofileimage/646f9e5c56bebdf78ed38a18xxxx
+{{API_base_url}}api/v1/files/unlinkprofileimage
+
+###
+### FEEDS
+###
+
+# getAll/post feeds
+# methods: get and post 
+{{API_base_url}}api/v1/feeds
+
+
+# getOne/delete/put/patch feeds
+# with feeds id
+# methods: get, put, patch, delete
+{{API_base_url}}api/v1/feeds/:_id
+{{API_base_url}}api/v1/feeds/646b2ebe06fa59d06462a33e
+
+
+###
+### SUPPORT
+###
+
+# getAll/post supports
+# methods: get and post 
+{{API_base_url}}api/v1/supports
+
+
+# getOne/delete/put/patch supports
+# with supports id
+# methods: get, put, patch, delete
+{{API_base_url}}api/v1/supports/:_id
+{{API_base_url}}api/v1/supports/646b2ebe06fa59d06462a33e
+
+
+###
+### SUPPORT TICKETS
+###
+
+# getAll/post supporttickets
+# methods: get and post 
+{{API_base_url}}api/v1/supporttickets
+
+
+# getOne/delete/put/patch supporttickets
+# with supporttickets id
+# methods: get, put, patch, delete
+{{API_base_url}}api/v1/supporttickets/:_id
+{{API_base_url}}api/v1/supporttickets/646b2ebe06fa59d06462a33e
+
+
+###
+### FEEDS
+###
+
+# getAll/post feeds
+# methods: get and post 
+{{API_base_url}}api/v1/feeds
+
+
+# getOne/delete/put/patch feeds
+# with supporttickets id
+# methods: get, put, patch, delete
+{{API_base_url}}api/v1/feeds/:_id
+{{API_base_url}}api/v1/feeds/646b2ebe06fa59d06462a33e

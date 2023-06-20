@@ -3,6 +3,10 @@ const bcrypt = require('bcrypt')
 const validator = require('validator')
 const crypto = require('crypto')
 
+const fs = require('fs')
+const AutoLogFile = require('../Utils/AutoLogFile')
+// const logFile = await AutoLogFile()
+
 let DATE = new Date()
 let YY = DATE.getFullYear()
 let mm = String(DATE).split(' ')[1] // to get th second element of the generated array
@@ -52,6 +56,12 @@ const userSchema = new mongoose.Schema(
     }
 )
 
+// USING MONGOOSE MIDDLEWARE
+userSchema.pre(/^find/, async function(next){
+    this.startTime = Date.now()
+    next()
+})
+
 userSchema.pre('save', async function(next){
     if(!this.isModified('password')) return next();
     this.password = await bcrypt.hash(this.password, 12);
@@ -65,6 +75,7 @@ userSchema.methods.comparePasswordInDb = async function(password, passwordDb){
     return await bcrypt.compare(password, passwordDb) 
 }
 
+
 //check if the user has changed password since the token was issued
 userSchema.methods.isPasswordChanged = async function(jwtTimeStamp){
     if(this.passwordChangedAt){
@@ -73,6 +84,7 @@ userSchema.methods.isPasswordChanged = async function(jwtTimeStamp){
     }
     return false
 }
+
 
 userSchema.methods.createResetPasswordToken = function(){
     const resetToken = crypto.randomBytes(32).toString('hex')
@@ -91,6 +103,30 @@ userSchema.methods.createEmailVerificationToken = function(){
     console.log(verifyToken, this.emailVerificationToken, this.emailVerificationTokenExp)
     return verifyToken // returns the plain verifyToken to the authController to be ssent to the user
 }
+
+
+//post hook
+userSchema.post('save', async function(doc, next){
+    const logFile = await AutoLogFile()
+    const content = `A new User document created with ${doc.userId} on ${doc.created}\n`
+    fs.writeFileSync(logFile, content, {flag: 'a'},(err) => {
+        console.log(err.message)
+    })
+    next()
+})
+
+
+userSchema.post(/^find/, async function(docs,next){
+    // this here points to the corrent querry
+    this.endTime = Date.now()
+    const logFile = await AutoLogFile()
+const content = `Action took  ${this.endTime - this.startTime} in milliseconds to create the documents, on ${new Date}\n`
+    fs.writeFileSync(logFile, content, {flag: 'a'},(err) => {
+        console.log(err.message)
+    })
+    next()
+})
+
 
 const User =  mongoose.model('User', userSchema)
 module.exports = User

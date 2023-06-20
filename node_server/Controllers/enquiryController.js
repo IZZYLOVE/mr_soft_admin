@@ -3,7 +3,6 @@ const Stats = require('./../Models/statsModal')
 const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
-const CustomErrorHandler = require('../Utils/CustomError')
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 
 

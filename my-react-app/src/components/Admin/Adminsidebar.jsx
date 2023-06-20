@@ -113,7 +113,7 @@ export function Adminsidebar(props) {
         </li>
 
         <li>
-          <Link to="./adminchangeprofileimage" onClick={onClose}>
+          <Link to="./changeprofileimage" onClick={onClose}>
             Change Profile Image
           </Link>
         </li>

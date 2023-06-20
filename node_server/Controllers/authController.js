@@ -12,6 +12,7 @@ const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 const crypto = require('crypto')
 const ApiFeatures = require('../Utils/ApiFeatures')
 const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
+const SetUploadsfilePathHandler = require('../Utils/SetUploadsfilePathHandler')
 
 
 
@@ -729,8 +730,11 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
 }) 
 
 
-exports.setusercourse = asyncErrorHandler(async (req, res, next) => {
-    const user = await User.findById(req.params._id)
+exports.setUserCourse = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+
+    const user = await User.findById(decodedToken._id)
 
    if(!user){
     const error = new CustomError(`User with ID: ${req.params._id} is not found`, 404)
@@ -768,7 +772,7 @@ exports.setusercourse = asyncErrorHandler(async (req, res, next) => {
         await user.save({validateBeforeSave: false})
     }
    else{
-        const error = new CustomError(`Sorry, to the status of a new course can only be 'student' and not a new ${req.params._id}`, 403)
+    const error = new CustomError(`Sorry, only an approved and current student can set a new course, You do not yet meet this requirement`, 403)
         next(error)
     }
    
@@ -821,3 +825,140 @@ exports.setusercourse = asyncErrorHandler(async (req, res, next) => {
        action : "account approved"
       })  
 }) 
+
+
+exports.adminSetUserCourse = asyncErrorHandler(async (req, res, next) => {
+    
+    const user = await User.findById(req.body.student_id)
+
+   if(!user){
+    const error = new CustomError(`User with ID: ${req.body.student_id} is not found`, 404)
+    next(error)
+   }
+
+   let isRecord = false
+   let oldStatus = 'newcourse'
+   user.Courses && user.Courses.map((dataz, i) => {
+    if(dataz.courseCode == req.body.courseCode){
+        console.log('isRecord ')
+        oldStatus = dataz.courseStatus
+        dataz.courseStatus = req.body.courseStatus;  
+        isRecord = true
+        console.log(isRecord)
+        user.Courses[i] = {...dataz}
+    }
+
+   })
+
+   if(isRecord === false){
+    user.Courses = [...user.Courses, {courseCode: req.body.courseCode, courseStatus: req.body.courseStatus}]
+   }
+
+    // UPDATE STATS
+    // the forth parameter is set to false to find by course code else it will find by course id
+    const result = await StatusStatsHandler(oldStatus, req.body.status, req.body.courseCode, false)
+
+   user.updated = new Date()
+   
+   
+   
+   //  SAVE USER CHANGES
+   if(result){
+        await user.save({validateBeforeSave: false})
+    }
+   else{
+        const error = new CustomError(`Sorry, only an approved and current student can set a new course, the sellected user does'n meet this requirement`, 403)
+        next(error)
+    }
+   
+    
+    //4 SEND THE NOTICE TO THE USER VIA EMAIL 
+    const message = `<html><body>
+    <p>
+    Hi ${user.firstName} ${user.middleName} ${user.lastName},</p> 
+    
+    This is to notify you that your course status on course code ${req.body.courseCode} with MRsoft International has been changed to ${req.body.courseStatus}.
+
+    <p>
+    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    </p>
+    
+    WITH MRSOFT, </br>
+    YOUR FUTURE AS A TECH ENGINEER IS BRIGHT.
+    
+    <p>
+    Thank you for chosing MRsoft.
+    </p>
+    
+    <p>
+    ${req.protocol}://${req.get('host')}
+    </p>
+    </body></html>"`
+
+
+
+    console.log(message+'\n') 
+    let userSetCorseMessage;
+    try{
+        await sendEmail({
+            email: user.email,
+            subject: "Usere account approval",
+            message: message
+        })
+        userSetCorseMessage = `User course status change notification mail successfull.`
+    }
+    catch(err){
+        // return next(new CustomError(`There is an error sending Usere account approval mail. Please try again later`, 500))
+        userSetCorseMessage = `User course status change notification mail failed.`   
+    }
+    ///
+
+   res.status(201).json({ 
+       status : "success",
+       userSetCorseMessage,
+       resource : "user",
+       action : "account approved"
+      })  
+}) 
+
+exports.protectc = asyncErrorHandler(async (req, res, next) => {
+    //1 read the token and check if it exist
+    const testToken = req.headers.authorization
+
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+
+    //3 read the token and check if the user still exist
+    const user = await User.findById({'_id': decodedToken._id})
+    if(!user){
+        const error = new CustomError('The user with the given token does not exist')
+    }
+    //4 If the user has changed the password after token was issued
+    const isPasswordChanged = await user.isPasswordChanged(decodedToken.iat)
+    if(isPasswordChanged){
+        const error = new CustomError('The password has been changed recently. Please login again')
+        next(error)
+    }
+
+    //allow user to access the route
+    req.user = user // reqxxx
+    next()
+})
+
+exports.fileToProfileImgPath = asyncErrorHandler(async (req, res, next) => {
+       SetUploadsfilePathHandler(req, `./uploads/profileImgs`)
+        next()
+  })
+  
+  exports.filesToFeedsPath = asyncErrorHandler(async (req, res, next) => {
+    console.log('req.body auth')
+    console.log(req)
+    let tpath = SetUploadsfilePathHandler(req, `./uploads/feeds`)
+    console.log('req.body auth tpath')
+    console.log(tpath)
+    next()
+  })
+  
+  exports.filesToSupportsPath = asyncErrorHandler(async (req, res, next) => {
+    SetUploadsfilePathHandler(req, `./uploads/supports`)
+    next()
+  })

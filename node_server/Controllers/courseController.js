@@ -2,7 +2,7 @@ const Course = require('../Models/courseModel');
 const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
-const CustomErrorHandler = require('../Utils/CustomError')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 
 
@@ -33,6 +33,7 @@ exports.getCourses = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.postCourse = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
         const course = await Course.create(req.body)
         res.status(201).json({ 
             status : "success",

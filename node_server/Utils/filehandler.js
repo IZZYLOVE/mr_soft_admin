@@ -6,8 +6,9 @@ const storage = multer.diskStorage({
     
     destination: (req, file, cb) => {
     console.log('filefilter cb 1')
-
-        cb(null, 'uploads')
+    req.body.targetFilepath 
+        // cb(null, 'uploads')
+        cb(null, req.headers.targetFilepath) // using the file path set by authcontroller
     },
     filename: (req, file, cb) => {
     console.log('filefilter cb2')

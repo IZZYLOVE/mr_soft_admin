@@ -76,7 +76,7 @@ const handleLogout = () => {
         </li>
 
         <li>
-          <Link to="./userprofile" onClick={onClose}>
+          <Link to="./changeprofileimage" onClick={onClose}>
             Profile Image
           </Link>
         </li>

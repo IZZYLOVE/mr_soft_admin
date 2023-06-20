@@ -1,0 +1,151 @@
+const SupportTicket = require('../Models/supportTicketModel');
+const ApiFeatures = require('../Utils/ApiFeatures')
+const asyncErrorHandler = require('../Utils/asyncErrorHandler');
+const CustomError = require('../Utils/CustomError');
+const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+
+
+
+exports.getSupportTickets = asyncErrorHandler(async (req, res, next) => {
+
+    let features = new ApiFeatures(SupportTicket.find(), req.query).filter().sort().limitfields().limitfields2().paginate()
+ 
+    let supportTickets = await features.query
+
+    req.query.page && paginationCrossCheck(enquiries.length)
+
+    res.status(200).json({ 
+        status : "success",
+        resource : "supportTicket",
+        lenght : supportTickets.length,
+        data : supportTickets
+       })  
+})
+
+exports.postSupportTicket = asyncErrorHandler(async (req, res, next) => {
+
+
+    const supportTicket = await SupportTicket.create(req.body) // create the supportTicket
+    res.status(201).json({ 
+        status : "success",
+        resource : "supportTicket",
+        supportTicket : "created",
+        lenght : supportTicket.length,
+        data : supportTicket
+    })  
+})
+
+
+exports.getSupportTicket = asyncErrorHandler(async (req, res, next) => {
+    // const movie = await movie.find({_id: req.param._id})
+    const supportTicket = await SupportTicket.findById(req.params._id)
+    if(!supportTicket){
+        const error = new CustomError(`SupportTicket with ID: ${req.params._id} is not found`, 404)
+        //return to prevent further execution of the rest of the codes
+        return next(error)
+    }
+    res.status(200).json({ 
+        status : "success",
+        resource : "supportTicket",
+        supportTicket : "created",
+        lenght : supportTicket.length,
+        data : supportTicket
+    })  
+})
+
+exports.patchSupportTicket = asyncErrorHandler(async (req, res, next) => {
+    const supportTicket = await SupportTicket.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
+    if(!supportTicket){
+        const error = new CustomError(`SupportTicket with ID: ${req.params._id} is not found`, 404)
+        return next(error)
+    }
+    res.status(200).json({ 
+        status : "success",
+        resource : "supportTicket",
+        action: "patch",
+        lenght : supportTicket.length,
+        data : supportTicket
+    })  
+})
+
+exports.putSupportTicket = asyncErrorHandler(async (req, res, next) => {
+    const supportTicket = await supportTicket.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
+    if(!supportTicket){
+        const error = new CustomError(`SupportTicket with ID: ${req.params._id} is not available`, 404)
+        return next(error)
+    }
+    res.status(200).json({ 
+        status : "success",
+        resource : "supportTicket",
+        action : "put",
+        lenght : supportTicket.length,
+        data : supportTicket
+    })  
+})
+
+exports.deleteSupportTicket = asyncErrorHandler(async (req, res, next) => {
+    const supportTicket = await SupportTicket.findByIdAndDelete(req.params._id, req.body, {new: true, runValidators: true})
+    if(!supportTicket){
+        const error = new CustomError(`SupportTicket with ID: ${req.params._id} is not available`, 404)
+        return next(error)
+    }
+    res.status(204).json({ 
+        status : "success",
+        resource : "supportTicket",
+        message: 'deleted'
+    })  
+})
+
+
+// exports.getSupportTicketByStack = asyncErrorHandler(async (req, res, next) => {
+//     //allows us access to the aggregation pipeline
+//     const mystack = req.params.stack
+//     const enquiry = await Enquiry.aggregate([
+//         {$unwind: '$stack'},
+//         { $group: {
+//             _id: '$stack',
+//             enquiryCount: {$sum: 1},
+//             enquiry:{$push: '$name'}
+//         }},
+//         {$addFields: {stack: "$_id"}}, //adds a firld stack
+//         {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
+//         {$sort: {enquiryCount: -1}}, // sort in decending order by setting -1
+//         { $match: {stack: mystack}},
+//     ]) 
+
+//     res.status(200).json({ 
+//         status : "success",
+//         resource : "enquiry",
+//         action : "aggregatation",
+//         lenght : enquiry.length,
+//         data: enquiry
+//     }) 
+// })
+
+
+// exports.getEnquiryByTechnology = asyncErrorHandler(async (req, res, next) => {
+//     //allows us access to the aggregation pipeline
+//     const mytechnology = req.params.technology
+//     const enquiry = await Enquiry.aggregate([
+//         {$unwind: '$technology'},
+//         { $group: {
+//             _id: '$technology',
+//             enquiryCount: {$sum: 1},
+//             enquirys:{$push: '$name'}
+//         }},
+//         {$addFields: {technology: "$_id"}}, //adds a field technology
+//         {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
+//         {$sort: {enquiryCount: -1}}, // sort in decending order by setting -1
+//         {$match: {technology: mytechnology}},
+
+
+//     ]) 
+
+//     res.status(200).json({ 
+//         status : "success",
+//         resource : "enquiry",
+//         action : "aggregatation",
+//         lenght : enquiry.length,
+//         data: enquiry
+//     }) 
+// })

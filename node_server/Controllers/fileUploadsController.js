@@ -1,9 +1,9 @@
-// const CustomError = require('../Utils/CustomError');
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
-
 const User = require('./../Models/userModel')
-
+const UnlinkSingleFile = require('./../Utils/UnlinkSingleFile')
+const ProcessSingleFileObj = require('./../Utils/ProcessSingleFileObj')
+const ProcessMultipleFilesArrayOfObjects = require('./../Utils/ProcessMultipleFilesArrayOfObjects')
 
 
 
@@ -13,47 +13,58 @@ exports.linkProfileImage = asyncErrorHandler(async(req, res, next) => {
     const decodedToken =  await GetUserDetailsFromHeader(testToken)
     
     const user = await User.findById(decodedToken._id)
-        const file = {
-            fileName: req.file.originalname,
-            filePath: `${req.protocol}://${req.get('host')}/${req.file.path}`,
-            fileType: req.file.mimetype,
-            fileSize: fileSizeFormatter(req.file.size, 2) //0.00
-        }
 
-        user.profileImg = file
+    //// unlink prev
+    if(user.profileImg && user.profileImg.filePath){
+        UnlinkSingleFile(user.profileImg.filePath, req)
+    }
 
-        await user.save({validateBeforeSave: false})
+    let newfileObj = ProcessSingleFileObj(req)
 
-        res.status(201).send('File Uploaded successfully')
+    user.profileImg = newfileObj
+
+    await user.save({validateBeforeSave: false})
+
+    res.status(201).send('File Uploaded successfully')
 })
 
 
 exports.unlinkProfileImage = asyncErrorHandler(async(req, res, next) => {
+    const testToken = req.headers.authorization
+
     const decodedToken =  await GetUserDetailsFromHeader(testToken)
 
-
     const user = await User.findById(decodedToken._id)
+    
+        if(user.profileImg && user.profileImg.filePath){
+            UnlinkSingleFile(user.profileImg.filePath, req)
+        }
 
         const file = undefined
 
         user.profileImg = file
 
-        await user.save({validateBeforeSave: false})
+        await user.save({validateBeforeSave: false}) 
 
         res.status(201).send('File unlinked successfully')
 
 })
 
 
+exports.multipleFilesUpload = async(req, res, next) => {
+    try{
+        let filesArray = ProcessMultipleFilesArrayOfObjects(req)
 
+        console.log(filesArray)
+        const multipleFiles = new MultipleFiles({
+            title: req.body.title,
+            files: filesArray
+        })
+        await multipleFiles.save() // save the file in db
+        res.status(201).send('File Uploaded successfully')
 
-const fileSizeFormatter = (bytes, decimal) => {
-    if(bytes === 0){
-        return "0 Bytes"
     }
-    const dm = decimal || 2
-    const sizes = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'YB', 'ZB']
-    const index = Math.floor(Math.log(bytes)/Math.log(1000))
-    return parseFloat((bytes / Math.pow(1000, index)).toFixed(dm)) + '-' + sizes[index]
-
+    catch(error){
+        res.status(400).send(error.message)
+    }
 }

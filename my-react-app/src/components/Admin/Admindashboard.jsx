@@ -160,7 +160,7 @@ export function Admindashboard() {
             <Route path="/users" element={<Users/>} />
             <Route path="/myprofile" element={<AdminProfile/>} />
             <Route path="/profileupdate" element={<AdminProfileUpdate/>} />
-            <Route path="/adminchangeprofileimage" element={<AdminChangeProfileImage/>} />
+            <Route path="/changeprofileimage" element={<AdminChangeProfileImage/>} />
             <Route path="/profileimage" element={<AdminProfileImage/>} />
             <Route path="/removeuser" element={<RemoveUser/>} />
             <Route path="/graduates" element={<Graduates/>} />

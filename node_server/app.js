@@ -16,6 +16,9 @@ const ratingRouter = require('./Routes/ratingroutes')
 const enquiryRouter = require('./Routes/enquiryroutes')
 const statsRouter = require('./Routes/statsroutes')
 const filesRouter = require('./Routes/fileuploadroutes')
+const supportRouter = require('./Routes/supportroutes')
+const supportTicketRouter = require('./Routes/supportsticketroutes')
+const feedsRouter = require('./Routes/feedsroutes')
 
 const CustomError = require('./Utils/CustomError')
 const globalErrorHandler = require('./Controllers/errorController');
@@ -54,6 +57,9 @@ app.use('/api/v1/ratings', ratingRouter)// mounting rating route
 app.use('/api/v1/enquiries', enquiryRouter)// mounting enquiry route
 app.use('/api/v1/stats', statsRouter)// mounting stats route
 app.use('/api/v1/files', filesRouter)// mounting stats route
+app.use('/api/v1/supports', supportRouter)// mounting support route
+app.use('/api/v1/supporttickets', supportTicketRouter)// mounting supportTicket route
+app.use('/api/v1/feeds', feedsRouter)// mounting supportTicket route
 
 
 

@@ -2,6 +2,10 @@ import React, { useContext, useState, useEffect } from 'react';
 // import { Usersidebar } from '../Usersidebar';
 import './userimg.css'
 import { AppContext } from '../../Context/App_Context';
+import {Link} from "react-router-dom"
+import { Icon } from '@iconify/react';
+
+
          
 
 export function ChangeProfileImage() {
@@ -27,6 +31,8 @@ export function ChangeProfileImage() {
       try {
         const formData = new FormData();
         formData.append('image', selectedImage);
+        console.log('formData')
+        console.log(formData)
 
         // let headerObj = {
         //   method: 'GET',
@@ -60,6 +66,22 @@ export function ChangeProfileImage() {
 
   return (
     <div className="user-dashboard">
+
+    <div class="just_a_container"> 
+		<div class="main_flex_container ">
+      
+        <div class=" son3x myspans" id='Overideflexdirection1ToRow'>
+              <span  title='Change profie image'>
+                <Link to="../changeprofileimage"><Icon icon="radix-icons:image" className='profileicon' width='20'/></Link>
+              </span>
+              <span title='Edit profile'> 
+                <Link to="../profileupdate"><Icon icon="tabler:edit" className='profileicon' width='20'/></Link>            
+              </span>
+        </div>
+
+
+		</div>
+		</div>
 
       <div className='infocontent'>
         <div className="info-container">

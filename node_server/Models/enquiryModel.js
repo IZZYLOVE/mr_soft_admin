@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const AutoLogFile = require('../Utils/AutoLogFile')
+
 
 //using the filesytem in the post-hook
 const fs = require('fs')
@@ -35,8 +37,9 @@ const enquirySchema = new mongoose.Schema(
 // USING MONGOOSE MIDDLEWARE
 //post hook
 enquirySchema.post('save', async function(doc, next){
+    const logFile = await AutoLogFile()
     const content = `A new enquiry document created by ${doc.userId} on ${doc.created}\n`
-    fs.writeFileSync('./Log/log.txt', content, {flag: 'a'},(err) => {
+    fs.writeFileSync(logFile, content, {flag: 'a'},(err) => {
         console.log(err.message)
     })
     next()
@@ -52,8 +55,9 @@ enquirySchema.pre(/^find/, async function(next){
 enquirySchema.post(/^find/, async function(docs,next){
     // this here points to the corrent querry
     this.endTime = Date.now()
+    const logFile = await AutoLogFile()
     const content = `Query took  ${this.endTime - this.startTime} in milliseconds to fetch the documents, on ${new Date}\n`
-    fs.writeFileSync('./Log/log.txt', content, {flag: 'a'},(err) => {
+    fs.writeFileSync(logFile, content, {flag: 'a'},(err) => {
         console.log(err.message)
     })
     next()

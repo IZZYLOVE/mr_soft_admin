@@ -73,8 +73,8 @@ export function Userdashboard({ formData }) {
       <Route path="/userprofile" element={<UserProfile/>} />
       <Route path="/usercourses" element={<UserCourses/>} />
       <Route path="/addcourse" element={<AddCourse/>} />
-      <Route path="/updateprofile" element={<UserProfileUpdate/>} />
-      <Route path="/userchangeprofileimage" element={<ChangeProfileImage/>} />
+      <Route path="/profileupdate" element={<UserProfileUpdate/>} />
+      <Route path="/changeprofileimage" element={<ChangeProfileImage/>} />
       <Route path="/usersupport" element={<UserSupport/>} />
       <Route path="/*" element={<Feeds/>} />
       </Routes>

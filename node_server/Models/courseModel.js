@@ -2,6 +2,9 @@ const mongoose = require('mongoose')
 
 //using the filesytem in the post-hook
 const fs = require('fs')
+const AutoLogFile = require('../Utils/AutoLogFile')
+
+
 
 const courseSchema = new mongoose.Schema(
         {
@@ -11,7 +14,7 @@ const courseSchema = new mongoose.Schema(
 
     "description": {type: String, required: [true, 'Please enter course description'], trim: true},
 
-    "CourseMode":{type: String, required: [true, 'Please enter course mode'], enum: ['Online', 'On-Site', 'Full-time', 'Part-time'], default: 'user', trim: true},
+    "CourseMode":{type: String, required: [true, 'Please enter course mode'], enum: ['Online', 'On-Site', 'Full-time', 'Part-time'], default: 'On-Site', trim: true},
     
     "Image": String,
 
@@ -56,8 +59,10 @@ const courseSchema = new mongoose.Schema(
 // USING MONGOOSE MIDDLEWARE
 //post hook
 courseSchema.post('save', async function(doc, next){
-    const content = `A new course document with name ${doc.name} created by ${doc.createdBy} on ${doc.created}\n`
-    fs.writeFileSync('./Log/log.txt', content, {flag: 'a'},(err) => {
+    const content = `A new course document with courseCode ${doc.courseCode} created by ${doc.createdBy} on ${doc.created}\n`
+    const logFile = await AutoLogFile()
+    console.log(logFile)
+    fs.writeFileSync(logFile, content, {flag: 'a'},(err) => {
         console.log(err.message)
     })
     next()
@@ -75,8 +80,10 @@ courseSchema.post(/^find/, async function(docs,next){
     // this here points to the corrent querry
     this.find({releaseDate: {$lte: Date.now()}})
     this.endTime = Date.now()
+    const logFile = await AutoLogFile()
+    console.log(logFile)
     const content = `Query took  ${this.endTime - this.startTime} in milliseconds to fetch the documents, on ${new Date}\n`
-    fs.writeFileSync('./Log/log.txt', content, {flag: 'a'},(err) => {
+    fs.writeFileSync(logFile, content, {flag: 'a'},(err) => {
         console.log(err.message)
     })
     next()
