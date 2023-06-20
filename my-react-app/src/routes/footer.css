@@ -16,8 +16,13 @@
     color: #177489
   }
 
-  .conlink {
-    color: white;
+  #contactlink {
+    color: #1ba9c9;
+  }
+
+  #contactlink:hover, .footer a:hover {
+    color: #28cdf2;
+    text-decoration: underline;
   }
 
   @media screen and (max-width: 767px) {

@@ -13,8 +13,11 @@ export function Footer() {
       DESIGNED AND DEVELOPED BY <a target='_blank' rel="noreferrer"  href='https://www.linkedin.com/in/kingdom-adele-3aa04087'>KINGDOM ADELE</a>, ASSISTED BY <a target='_blank' rel="noreferrer" href='https://www.example.com'>DAVID IROEGBU</a> AND POWERED BY <a target='_blank' rel="noreferrer" href='https://www.m-rinternational.com'>MRSOFT INTERNATIONAL</a>
       </div>
       <div className='text'>
+      <Link to='Contact' id='contactlink'>CONTACT US</Link>
+
+      </div>
+      <div className='text'>
       &copy;&nbsp;{APP_NAME}&nbsp;{YY}
-      <Link to='Contact' className='conlink'>Contact</Link>
       </div>
     </div>
   );
