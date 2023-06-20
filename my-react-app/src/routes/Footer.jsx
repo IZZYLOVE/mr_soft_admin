@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { AppContext } from '../Context/App_Context';
 import './footer.css';
+import { Link } from 'react-router-dom';
 
 export function Footer() {
   const { APP_NAME } = useContext(AppContext)
@@ -13,6 +14,7 @@ export function Footer() {
       </div>
       <div className='text'>
       &copy;&nbsp;{APP_NAME}&nbsp;{YY}
+      <Link to='Contact' className='conlink'>Contact</Link>
       </div>
     </div>
   );

@@ -16,6 +16,10 @@
     color: #177489
   }
 
+  .conlink {
+    color: white;
+  }
+
   @media screen and (max-width: 767px) {
     /* Styles for screens with a maximum width of 767px */
   

@@ -7,6 +7,7 @@ import { Footer } from './routes/Footer';
 import { AppContextProvider } from './Context/App_Context';
 import { Admin } from './BranchComponent/Admin';
 import { User } from './BranchComponent/User';
+import { Contact } from './routes/Contact';
 
 
 
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
+          <Route path="contact" element={<Contact />} />
           <Route path="register" element={<Register />} />
           <Route path="admin/*" element={<Admin />} />
           <Route path="user/*" element={<User />} />
