@@ -7,7 +7,7 @@ import { AppContext } from '../Context/App_Context';
 
 
 export function Register() {
-  const { API_base_url, StoredToken, StoredUserObj} = useContext(AppContext)
+  const { API_base_url, StoreToken, StoreUserObj} = useContext(AppContext)
 
 
   const navigate = useNavigate();
@@ -67,8 +67,8 @@ export function Register() {
       console.log(data);
       console.log(data.token);
       // Handle the response from the backend if needed
-      StoredToken(data.token) 
-      StoredUserObj(data.data)
+      StoreToken(data.token) 
+      StoreUserObj(data.data)
 
       alert('Registration successful, you have been successfully logged in and will be redirected to your dashboard');
 

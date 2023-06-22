@@ -54,7 +54,7 @@
   top: 50%;
   left: 5px;
   transform: translateY(-50%);
-  color: rgb(107, 107, 107);
+  color: rgb(202, 202, 202);
   font: 1rem monospace;
   pointer-events: none;
   transition: 0.5s;
@@ -73,7 +73,7 @@
   outline: none;
   font: 0.9rem cursive;
   font-weight: 600;
-  color: rgb(180, 180, 180);
+  color: rgb(250, 250, 250);
   padding: 0 35px 0 5px;
 }
 

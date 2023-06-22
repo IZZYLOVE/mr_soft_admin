@@ -68,8 +68,7 @@ export function Login() {
     <div className='body'>
       <div className='wrapper'>
         <Link to='/'>
-          <Icon icon='#' id='loginicon' width='30px' />
-          ...
+          <Icon icon='' id='loginicon' width='30px' />
         </Link>
         <div className='form'>
           <h2>Login</h2>
