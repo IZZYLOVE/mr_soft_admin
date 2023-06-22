@@ -3,9 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import './usersidebar.css';
 import { AppContext } from '../../Context/App_Context';
+// import logo from "public/MrsoftLogo.svg"
+// import logo from "../../../public/MrsoftLogo.svg"
+// import logo from "public/female-icon.jpg"
+// import logo from "public/female-icon.jpg"
 
 
 
+// public/female-icon.jpg
 export function Usersidebar(props) {
   const { getStoredUserObj, logout, isLoggedIn } = useContext(AppContext)
 
@@ -27,8 +32,10 @@ const handleLogout = () => {
 
   return (
     <nav className={`usersidebar ${isOpen ? 'open' : ''}`} id='usersidebar'>
+        
+        {/* <img className='navBarImg' src={logo} alt="Profile pixels" /> */}
       <ul>
-      <li>
+        <li>
           <Link to="#" onClick={onClose} className='userdash' id='userdash'>
            <Icon icon="tabler:xbox-x" className='userdashicon' width='30'/><span>User-Dashboard</span>
           </Link>

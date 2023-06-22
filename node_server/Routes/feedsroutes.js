@@ -8,7 +8,9 @@ const router = express.Router()
 
 router.route('/')
     .get(authController.protect,feedsController.getFeeds)
-    .post(authController.protect,authController.filesToFeedsPath,feedsController.postFeed) 
+    // .post(authController.protect,authController.filesToFeedsPath,feedsController.postFeed) 
+    .post(authController.protect,authController.filesToSupportsPath,feedsController.postFeed) 
+
 
 router.route('/:_id')
     .get(authController.protect,feedsController.getFeed)

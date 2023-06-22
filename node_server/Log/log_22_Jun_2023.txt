@@ -1,0 +1,6 @@
+Action took  57 in milliseconds to create the documents, on Thu Jun 22 2023 06:47:04 GMT+0100 (West Africa Standard Time)
+Action took  12 in milliseconds to create the documents, on Thu Jun 22 2023 06:48:31 GMT+0100 (West Africa Standard Time)
+Action took  4 in milliseconds to create the documents, on Thu Jun 22 2023 06:59:10 GMT+0100 (West Africa Standard Time)
+Action took  20 in milliseconds to create the documents, on Thu Jun 22 2023 07:14:08 GMT+0100 (West Africa Standard Time)
+Action took  33 in milliseconds to create the documents, on Thu Jun 22 2023 07:25:21 GMT+0100 (West Africa Standard Time)
+Action took  20 in milliseconds to create the documents, on Thu Jun 22 2023 07:26:24 GMT+0100 (West Africa Standard Time)

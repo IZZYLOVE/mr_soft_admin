@@ -32,7 +32,7 @@ exports.postFeed = asyncErrorHandler(async (req, res, next) => {
     console.log('req.files postFeed b4 If ')
     console.log(req.files)
 
-    if(req.files){
+    if(req.body){
         console.log('req.files postFeed b4Process')
         console.log(req.files)
         let filesArrayOfObjects = ProcessMultipleFilesArrayOfObjects(req)

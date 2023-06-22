@@ -27,19 +27,22 @@ const app = require('./app')
 console.log("process.env.TestingForProduction === "+process.env.TestingForProduction)
 console.log("process.env.NODE_ENV === "+process.env.NODE_ENV)
 
-let URL;
+let URL, HOST;
 if(process.env.NODE_ENV === "development"){
     console.log("NODE_ENV === development")
 
     URL = process.env.LOCAL_CONN
+    HOST = process.env.DEV_HOST
 }
 else if(process.env.TestingForProduction = true && process.env.NODE_ENV === "production"){
     console.log("NODE_ENV === production testing")
     URL = process.env.LOCAL_CONN
+    HOST = process.env.DEV_HOST
 }
 else{
     console.log("NODE_ENV === production")
     URL = process.env.HOSTED_CONN 
+    HOST = process.env.PROD_HOST 
 }
 
 //db connection
@@ -65,7 +68,12 @@ mongoose.connect(URL, {
 
 
 const port = process.env.PORT0 || 8300
-app.listen(port, () => {
-    console.log(`server already running on port ${port}`)
+const serverName = "MrSoftTraining"
+const server = app.listen(port, () => {
+    const host= server.address().address 
+    console.log(`${serverName} server already running on port ${port}`)
+    console.log(`server main URL: http://${host}:${port}`)
+    console.log(`server local URL: http://${HOST}:${port}`)
+
     console.log(`...waiting for database connection...`)
 })
