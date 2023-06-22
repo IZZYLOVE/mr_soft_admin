@@ -1,8 +1,8 @@
 const fileSizeFormatter = require('./fileSizeFormatter');
 
 module.exports = (req) => {
-  console.log('req.files In Process')
-  console.log(req.files)
+  // console.log('req.files In Process')
+  // console.log(req.files)
   let filesArray = []
   console.log('PROCEss filesArray b4')
   console.log(filesArray)
