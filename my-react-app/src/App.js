@@ -8,7 +8,7 @@ import { AppContextProvider } from './Context/App_Context';
 import { Admin } from './BranchComponent/Admin';
 import { User } from './BranchComponent/User';
 import { Contact } from './routes/Contact';
-
+import { Forgotpassword } from './routes/Forgotpassword';
 
 
 
@@ -20,6 +20,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="contact" element={<Contact />} />
+          <Route path="forgotpassword" element={<Forgotpassword />} />
           <Route path="register" element={<Register />} />
           <Route path="admin/*" element={<Admin />} />
           <Route path="user/*" element={<User />} />

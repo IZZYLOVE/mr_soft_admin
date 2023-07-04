@@ -1,0 +1,43 @@
+.forgot-password-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+  
+  .step-one,
+  .step-two,
+  .step-three {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+    transition: .5s;
+  }
+  
+  button:active {
+    background-color: #011933;
+  
+  }
+
+  input {
+    padding: 5px 19px 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  

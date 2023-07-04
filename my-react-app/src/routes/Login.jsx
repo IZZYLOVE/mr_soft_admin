@@ -100,7 +100,7 @@ export function Login() {
                 <input type='checkbox' />
                 Remember me
               </label>
-              <Link to='#'>Forgot password</Link>
+              <Link to='/forgotpassword'>Forgot password</Link>
             </div>
 
             {error && <div className='error-message'>{error}</div>}

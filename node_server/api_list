@@ -27,7 +27,7 @@ API_base_url = http://127.0.0.1:7300/
 
 # forgot password
 # methods: post
-{{API_base_url}}api/v1/users/forgotpassword
+{{API_base_url}}  
 
 # reset password
 # methods: patch
