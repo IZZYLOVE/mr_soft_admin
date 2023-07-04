@@ -14,6 +14,7 @@
   margin-bottom: 30px;
 }
 
+/* 
 .wrapper {
   position: relative;
   width: 400px;
@@ -27,12 +28,8 @@
   justify-content: center;
   padding: 2rem 0.5rem 2rem 0.5rem;
   
-}
+} */
 
-.wrapper .form {
-  width: 100%;
-  padding: 40px;
-}
 
 
 .input-box {
@@ -41,33 +38,7 @@
   margin-bottom: 30px;
 }
 
-.input-box label {
-  position: absolute;
-  top: 50%;
-  left: 5px;
-  transform: translateY(-50%);
-  color: rgba(0, 0, 0, 0.8);
-  font: 1rem monospace;
-  pointer-events: none;
-  transition: 0.5s;
-}
 
-.input-box input:focus ~ label,
-.input-box input:valid ~ label {
-  top: -5px;
-  font-size: 0.8rem;
-}
-
-.input-box input {
-  width: 10%;
-  height: 50px;
-  background: transparent;
-  border: none;
-  outline: none;
-  font: 0.9rem cursive;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.8);
-}
 
 .remember {
   font-size: 0.9rem;

@@ -4,6 +4,8 @@ const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
 const CustomErrorHandler = require('../Utils/CustomError')
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
 
 
 
@@ -44,6 +46,11 @@ exports.getRatings = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.postRating = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body.createdBy = decodedToken._id
+
+    req.body = HTMLspecialChars(req.body)
         const rating = await Rating.create(req.body)
         res.status(201).json({ 
             status : "success",
@@ -72,6 +79,7 @@ exports.getRating = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.patchRating = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
             const rating = await Rating.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
             if(!rating){
                 const error = new CustomError(`Rating with ID: ${req.params._id} is not found`, 404)
@@ -87,6 +95,7 @@ exports.patchRating = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.putRating = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
         const rating = await Rating.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
         if(!rating){
             const error = new CustomError(`Rating with ID: ${req.params._id} is not available`, 404)

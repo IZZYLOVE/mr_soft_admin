@@ -7,6 +7,8 @@ import { AppContext } from '../Context/App_Context';
 
 
 export function Login() {
+  // let back = <Icon icon="ep:back" className='usernavicon' width='30'/>
+
 
   const { API_base_url, handleAlreadyLoggedIn, StoreToken, StoreUserObj} = useContext(AppContext)
   const [isLoading, setIsLoading] = useState(false);
@@ -45,20 +47,23 @@ export function Login() {
         },
         body: JSON.stringify(formData),
       });
-
       const data = await response.json();
-      StoreToken(data.token) 
-      StoreUserObj(data.data)
-      if(data.data.role === 'admin'){
-        navigate(`/Admin`)
-      }
-      else{
-        navigate(`/User`)
+      if (response.ok) {
+        data.token && StoreToken(data.token) 
+        data.data && StoreUserObj(data.data)
+        if(data.data.role === 'admin'){
+          navigate(`/Admin`)
+        }
+        else{
+          navigate(`/User`)
+        }
+      } else {
+        throw Error(`${data.message}`)
       }
 
     } catch (error) {
       console.error('Error during login:', error);
-      setError('Incorrect credentials...');
+      setError(`${error}...`);
     }
 
     setIsLoading(false);
@@ -68,8 +73,7 @@ export function Login() {
     <div className='body'>
       <div className='wrapper'>
         <Link to='/'>
-          <Icon icon='#' id='loginicon' width='30px' />
-          ...
+          <Icon icon="ep:back" id='loginicon' width='20px' />
         </Link>
         <div className='form'>
           <h2>Login</h2>
@@ -101,7 +105,7 @@ export function Login() {
                 <input type='checkbox' />
                 Remember me
               </label>
-              <Link to='#'>Forgot password</Link>
+              <Link to='/forgotpassword'>Forgot password</Link>
             </div>
 
             {error && <div className='error-message'>{error}</div>}

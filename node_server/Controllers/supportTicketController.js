@@ -3,6 +3,8 @@ const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
 
 
 
@@ -12,7 +14,7 @@ exports.getSupportTickets = asyncErrorHandler(async (req, res, next) => {
  
     let supportTickets = await features.query
 
-    req.query.page && paginationCrossCheck(enquiries.length)
+    req.query.page && paginationCrossCheck(supportTickets.length)
 
     res.status(200).json({ 
         status : "success",
@@ -23,8 +25,11 @@ exports.getSupportTickets = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.postSupportTicket = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body.createdBy = decodedToken._id
 
-
+    req.body = HTMLspecialChars(req.body)
     const supportTicket = await SupportTicket.create(req.body) // create the supportTicket
     res.status(201).json({ 
         status : "success",
@@ -54,6 +59,7 @@ exports.getSupportTicket = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.patchSupportTicket = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const supportTicket = await SupportTicket.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!supportTicket){
         const error = new CustomError(`SupportTicket with ID: ${req.params._id} is not found`, 404)
@@ -69,6 +75,7 @@ exports.patchSupportTicket = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.putSupportTicket = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const supportTicket = await supportTicket.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!supportTicket){
         const error = new CustomError(`SupportTicket with ID: ${req.params._id} is not available`, 404)
@@ -97,55 +104,3 @@ exports.deleteSupportTicket = asyncErrorHandler(async (req, res, next) => {
 })
 
 
-// exports.getSupportTicketByStack = asyncErrorHandler(async (req, res, next) => {
-//     //allows us access to the aggregation pipeline
-//     const mystack = req.params.stack
-//     const enquiry = await Enquiry.aggregate([
-//         {$unwind: '$stack'},
-//         { $group: {
-//             _id: '$stack',
-//             enquiryCount: {$sum: 1},
-//             enquiry:{$push: '$name'}
-//         }},
-//         {$addFields: {stack: "$_id"}}, //adds a firld stack
-//         {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
-//         {$sort: {enquiryCount: -1}}, // sort in decending order by setting -1
-//         { $match: {stack: mystack}},
-//     ]) 
-
-//     res.status(200).json({ 
-//         status : "success",
-//         resource : "enquiry",
-//         action : "aggregatation",
-//         lenght : enquiry.length,
-//         data: enquiry
-//     }) 
-// })
-
-
-// exports.getEnquiryByTechnology = asyncErrorHandler(async (req, res, next) => {
-//     //allows us access to the aggregation pipeline
-//     const mytechnology = req.params.technology
-//     const enquiry = await Enquiry.aggregate([
-//         {$unwind: '$technology'},
-//         { $group: {
-//             _id: '$technology',
-//             enquiryCount: {$sum: 1},
-//             enquirys:{$push: '$name'}
-//         }},
-//         {$addFields: {technology: "$_id"}}, //adds a field technology
-//         {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
-//         {$sort: {enquiryCount: -1}}, // sort in decending order by setting -1
-//         {$match: {technology: mytechnology}},
-
-
-//     ]) 
-
-//     res.status(200).json({ 
-//         status : "success",
-//         resource : "enquiry",
-//         action : "aggregatation",
-//         lenght : enquiry.length,
-//         data: enquiry
-//     }) 
-// })

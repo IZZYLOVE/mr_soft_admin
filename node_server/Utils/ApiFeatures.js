@@ -45,9 +45,13 @@ class Apifeatures{
             this.query = this.query.select('-passwordResetTokenExp')
             this.query = this.query.select('-emailVerificationToken')
             this.query = this.query.select('-emailVerificationTokenExp')
+            this.query = this.query.select('-failedLogginAttempts')
+            this.query = this.query.select('-lastAttemptTime')
+            this.query = this.query.select('-loggedOutAllAt')
+
         }
         return this
-    }
+    } 
 
     limitfields2(){
 
@@ -56,6 +60,11 @@ class Apifeatures{
             this.query = this.query.select('-passwordResetTokenExp')
             this.query = this.query.select('-emailVerificationToken')
             this.query = this.query.select('-emailVerificationTokenExp')
+            this.query = this.query.select('-failedLogginAttempts')
+            this.query = this.query.select('-lastAttemptTime')
+            this.query = this.query.select('-loggedOutAllAt')
+
+            
         
         return this
     }

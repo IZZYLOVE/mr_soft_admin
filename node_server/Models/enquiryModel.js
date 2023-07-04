@@ -8,9 +8,7 @@ const fs = require('fs')
 const enquirySchema = new mongoose.Schema(
 {
     "email": {type: String,  required: [true, 'Please enter a valid email'], trim: true},// email
-
     "query": {type: String, required: [true, 'Please enter search query'], trim: true},
-
     "stack": {type: String, default: ['MERN'],
         enum: {
         values: ["MERN", "MEAN", "LAMP"],
@@ -18,16 +16,16 @@ const enquirySchema = new mongoose.Schema(
         },
         trim: true},
         // make a list of options with the values above
-
-    "prospect": String, 
-    
-    "month": String, 
-
     "technologies": {type: Array, default: ['JavaScript'], trim: true},
         // make a list of multiple selection options with the values below and generate an array with the selected options
         // values: ["HTML", "CSS", "JavaScript", "TypeScript", "React", "Express", "Node.js", "MongoDB", "Angular", "Vue", "PostgreSQL", "Linux", "Apache", "Mysql", "Php", "Pearl", "Python"],
+    
 
 
+    // not required in the user inpute form
+    "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
+    "prospect": String, 
+    "month": String, 
     "created": {type: Date, default: Date.now, immutable: true, trim: true},
 })
 

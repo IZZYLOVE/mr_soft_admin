@@ -10,6 +10,8 @@ const upload = require('../Utils/filehandler')
 router.route('/linkprofileimage')
     .put(authController.protect,authController.fileToProfileImgPath,upload.single('file'),fileUploadsController.linkProfileImage)
     .patch(authController.protect,authController.fileToProfileImgPath,upload.single('file'),fileUploadsController.linkProfileImage)
+    .post(upload.single('file'),fileUploadsController.linkProfileImage)
+
 
 
 router.route('/unlinkprofileimage')

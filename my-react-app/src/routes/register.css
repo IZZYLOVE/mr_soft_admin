@@ -14,12 +14,12 @@
   color: #aca6a6;
 }
 
-.regwrapper {
+
+.wrapper, .regwrapper {
   padding: 2rem;
   margin: 2rem 0 3rem 0;
   position: relative;
   width: 90%; 
-  max-width: 400px;
   height: auto;
   background: transparent;
   backdrop-filter: blur(20px);
@@ -31,7 +31,14 @@
   flex-direction: column; 
 }
 
-.regwrapper .form {
+.wrapper {
+  max-width: 400px;
+}
+.regwrapper {
+  max-width: 600px;
+}
+
+.wrapper .form, .regwrapper .form {
   width: 100%;
   padding: 40px;
 }
@@ -54,18 +61,21 @@
   top: 50%;
   left: 5px;
   transform: translateY(-50%);
-  color: rgb(107, 107, 107);
+  color: rgba(0, 0, 0, 0.8);
   font: 1rem monospace;
   pointer-events: none;
   transition: 0.5s;
 }
 
 .input-box input:focus ~ label,
-.input-box input:valid ~ label {
+.input-box input:valid ~ label,
+.input-box textarea:focus ~ label,
+.input-box textarea:valid ~ label
+ {
   top: -5px;
 }
 
-.input-box input {
+.input-box input, .input-box textarea{
   width: 100%;
   height: 100%;
   background: transparent;
@@ -73,9 +83,13 @@
   outline: none;
   font: 0.9rem cursive;
   font-weight: 600;
-  color: rgb(180, 180, 180);
+  /* color: rgb(180, 180, 180); */
+  color: rgba(255, 254, 254, 0.8);
   padding: 0 35px 0 5px;
 }
+
+
+ 
 
 .remember {
   font-size: 0.9em;
@@ -149,6 +163,7 @@
   transition: border-color 0.3s ease;
 }
 
+
 /* Styling for select input on focus */
 .select-input-box select:focus {
   outline: none;
@@ -160,6 +175,8 @@
   background-color: #f9f9f9;
   cursor: not-allowed;
 }
+
+
 
 @media (max-width: 600px) {
   .regwrapper {

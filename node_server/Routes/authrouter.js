@@ -24,15 +24,25 @@ const router = express.Router()
  router.route('/myprofile')
     .get(authController.protect,authController.getMyProfile)
 
+router.route('/changePassword')
+    .put(authController.protect,authController.changePassword)
+    .patch(authController.protect,authController.changePassword)
+
+router.route('/logoutall')
+    .put(authController.protect,authController.logOutAll)
+    .patch(authController.protect,authController.logOutAll)
+
 router.route('/:_id')
-    .put(authController.protect,authController.putUser)
-    .patch(authController.protect,authController.patchUser)
     .get(authController.protect,authController.getAuser)
+    .put(authController.protect,authController.restrict('admin'),authController.adminUpdateUser)
+    .patch(authController.protect,authController.restrict('admin'),authController.adminUpdateUser)
     .delete(authController.protect,authController.restrict('admin'),authController.deleteUser)// for multiple roles
 
 
 router.route('/')
     .get(authController.protect,authController.getUsers)
+    .put(authController.protect,authController.updateUser)
+    .patch(authController.protect,authController.updateUser)
 
 
  module.exports = router     

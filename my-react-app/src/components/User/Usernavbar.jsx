@@ -1,4 +1,3 @@
-import './usernavbar.css'
 import { useState, useContext } from 'react';
 import { Usersidebar } from './Usersidebar';
 import { Icon } from '@iconify/react';

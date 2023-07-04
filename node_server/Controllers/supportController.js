@@ -5,29 +5,38 @@ const CustomError = require('../Utils/CustomError');
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 const UnlinkMultipleFiles = require('../Utils/UnlinkMultipleFiles')
 const ProcessMultipleFilesArrayOfObjects = require('../Utils/ProcessMultipleFilesArrayOfObjects')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
 
 
 
 exports.getSupports = asyncErrorHandler(async (req, res, next) => {
+    console.log('getSupports')
 
     let features = new ApiFeatures(Support.find(), req.query).filter().sort().limitfields().limitfields2().paginate()
  
+    console.log('features')
+    console.log(features)
     let supports = await features.query
-
+    console.log('supports')
+    console.log(supports)
     req.query.page && paginationCrossCheck(supports.length)
 
     res.status(200).json({ 
         status : "success",
         resource : "support",
-        lenght : enquiries.length,
-        data : enquiries
+        lenght : supports.length,
+        data : supports
        })  
 })
 
 exports.postSupport = asyncErrorHandler(async (req, res, next) => {
-
-
-    if(req.body){
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body.createdBy = decodedToken._id
+    
+    req.body = HTMLspecialChars(req.body)
+    if(req.files){
     let filesArrayOfObjects = ProcessMultipleFilesArrayOfObjects(req)
     req.body.files = filesArrayOfObjects
     }
@@ -64,6 +73,7 @@ exports.getSupport = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.patchSupport = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const support = await Support.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!support){
         const error = new CustomError(`Support with ID: ${req.params._id} is not found`, 404)
@@ -82,6 +92,7 @@ exports.patchSupport = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.putSupport = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const support = await Support.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!support){
         const error = new CustomError(`Support with ID: ${req.params._id} is not available`, 404)
@@ -119,55 +130,3 @@ exports.deleteSupport = asyncErrorHandler(async (req, res, next) => {
 })
 
 
-// exports.getsupportByStack = asyncErrorHandler(async (req, res, next) => {
-//     //allows us access to the aggregation pipeline
-//     const mystack = req.params.stack
-//     const support = await Support.aggregate([
-//         {$unwind: '$stack'},
-//         { $group: {
-//             _id: '$stack',
-//             supportCount: {$sum: 1},
-//             support:{$push: '$name'}
-//         }},
-//         {$addFields: {stack: "$_id"}}, //adds a firld stack
-//         {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
-//         {$sort: {supportCount: -1}}, // sort in decending order by setting -1
-//         { $match: {stack: mystack}},
-//     ]) 
-
-//     res.status(200).json({ 
-//         status : "success",
-//         resource : "support",
-//         action : "aggregatation",
-//         lenght : support.length,
-//         data: support
-//     }) 
-// })
-
-
-// exports.getsupportByTechnology = asyncErrorHandler(async (req, res, next) => {
-//     //allows us access to the aggregation pipeline
-//     const mytechnology = req.params.technology
-//     const support = await Support.aggregate([
-//         {$unwind: '$technology'},
-//         { $group: {
-//             _id: '$technology',
-//             supportCount: {$sum: 1},
-//             supports:{$push: '$name'}
-//         }},
-//         {$addFields: {technology: "$_id"}}, //adds a field technology
-//         {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
-//         {$sort: {supportCount: -1}}, // sort in decending order by setting -1
-//         {$match: {technology: mytechnology}},
-
-
-//     ]) 
-
-//     res.status(200).json({ 
-//         status : "success",
-//         resource : "support",
-//         action : "aggregatation",
-//         lenght : support.length,
-//         data: support
-//     }) 
-// })

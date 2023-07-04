@@ -47,7 +47,6 @@
 .fatherx
 {
 display: flex;
-background-color: purple;
 flex-grow: 1;
 }
 .sonx{
@@ -160,3 +159,28 @@ align-items: center;
 
 /*
 */
+
+
+.flexedContainer {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	min-height: 200px;
+	flex-flow: 1;
+}
+
+.centerMe {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+	flex-flow: 1;
+}
+
+.mobileWidth, #mobileWidth {
+  max-width: 800px;
+}
+
+.mobileWidth .input-box input, #mobileWidth .input-box input, #mobileWidth .input-box textarea{
+  color: #000;
+}
+

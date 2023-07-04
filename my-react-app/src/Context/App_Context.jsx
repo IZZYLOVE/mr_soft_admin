@@ -12,7 +12,10 @@ export const AppContextProvider = (props) => {
     const APP_NAME = 'MRSOFT SOFTWARE ENGINEERING TRAINING'
 
      const [ChartData, setChartData] = useState([]);
-
+     const [newSupport, setNewSupport] = useState([]);
+     const [newContactMessage, setNewContactMessage] = useState([]);
+     const [newSupportCount, setNewSupportCount] = useState();
+     const [newContactMessageCount, setNewContactMessageCount] = useState();
 
     const [ChartLabel, setChartLabel] = useState([]);
     const [ChartData1, setChartData1] = useState([]);
@@ -103,7 +106,8 @@ export const AppContextProvider = (props) => {
 
     
 const contextValue = {API_base_url, handleAlreadyLoggedIn, getStoredToken, getStoredUserObj, userRole, ChartData, APP_NAME, ChartData1, ChartData2, ChartData3, ChartData4, ChartLabel, setChartData,
-  setChartData1, setChartData2, setChartData3, setChartData4, setChartLabel, pageTitle, setPageTitle, profileImage, StoreToken, StoreUserObj, logout, isLoggedIn
+  setChartData1, setChartData2, setChartData3, setChartData4, setChartLabel, pageTitle, setPageTitle, profileImage, StoreToken, StoreUserObj, logout, isLoggedIn, newContactMessageCount, setNewContactMessageCount,
+  newSupportCount, setNewSupportCount, newSupport, setNewSupport, newContactMessage, setNewContactMessage
 }
 
   return (

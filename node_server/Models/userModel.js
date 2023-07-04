@@ -37,20 +37,29 @@ const userSchema = new mongoose.Schema(
             // valuesOptions: ["done", "CSS", "JavaScript", "TypeScript"],
 
         "gender": {type: String, enum: ['Male', 'Female'], default: 'Male'},
-        "status": {type: String, enum: ['none', 'alumni', 'student', 'deffered'], default: 'none'},
-            // the options list should not contain none
-        "passwordChangedAt": {type: Date, default: Date.now, trim: true},
         // "passwordResetToken": {type: String, trim: true}, 
-        "passwordResetToken": String, 
         // "passwordResetTokenExp": {type: Date, trim: true, select: false}, 
-        "passwordResetTokenExp":  Date, 
-        "emailVerified" :  {type: Boolean, required: true, default: false,  immutable: true, trim: true},
-        "address": String, 
-        "emailVerificationToken": String, 
-        "emailVerificationTokenExp":  Date, 
+        "address": {type: String, required: [true, 'Please enter a valid address'], trim: true},
         "approved": {type: Boolean, required: true, default: false},
         "phone": {type: String, required: [true, 'Please enter phone'], trim: true},
+        
+        
+        
+        
+        
+        // not required in the user inpute form
+        'failedLogginAttempts': {type: Number, default: 0, trim: true}, 
+        'lastAttemptTime': {type: Date, default: Date.now, trim: true},
+        "status": {type: String, enum: ['none', 'alumni', 'student', 'deffered'], default: 'none'},
+        // the options list should not contain none
+        "emailVerified" :  {type: Boolean, required: true, default: false,  immutable: true, trim: true},
+        "passwordResetToken": String, 
+        "passwordChangedAt": {type: Date, default: Date.now, trim: true},
+        "loggedOutAllAt": {type: Date, default: Date.now, trim: true},
         "month": {type: String, default: thisMonth, immutable: true, trim: true},
+        "passwordResetTokenExp":  Date, 
+        "emailVerificationToken": String, 
+        "emailVerificationTokenExp":  Date, 
         "created": {type: Date, default: Date.now, immutable: true, trim: true,  select: false},
         "updated": {type: Date, default: Date.now, trim: true,  select: false},
     }
@@ -79,12 +88,21 @@ userSchema.methods.comparePasswordInDb = async function(password, passwordDb){
 //check if the user has changed password since the token was issued
 userSchema.methods.isPasswordChanged = async function(jwtTimeStamp){
     if(this.passwordChangedAt){
-        const passwordChangedTimeStamp =parseInt(this.passwordChangedAt.getTime()/1000, 10)// in base 10
+        const passwordChangedTimeStamp = parseInt(this.passwordChangedAt.getTime()/1000, 10)// in base 10
         return  jwtTimeStamp < passwordChangedTimeStamp // passwoard has been changed
     }
     return false
 }
 
+
+//check if the user has logged out from server since the token was issued
+userSchema.methods.isLoggedOut = async function(jwtTimeStamp){
+    if(this.passwordChangedAt){
+        const LoggedOutAllTimeStamp = parseInt(this.loggedOutAllAt.getTime()/1000, 10)// in base 10
+        return  jwtTimeStamp < LoggedOutAllTimeStamp // passwoard has been changed
+    }
+    return false
+}
 
 userSchema.methods.createResetPasswordToken = function(){
     const resetToken = crypto.randomBytes(32).toString('hex')

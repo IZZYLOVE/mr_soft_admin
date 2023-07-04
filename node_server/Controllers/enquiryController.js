@@ -4,6 +4,10 @@ const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
+const StatusStatsHandler = require('./../Utils/StatusStatsHandler')
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
+
 
 
 
@@ -24,52 +28,21 @@ exports.getEnquiries = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.postEnquiry = asyncErrorHandler(async (req, res, next) => {
-
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body.createdBy = decodedToken._id
+    
+    req.body = HTMLspecialChars(req.body)
     // UPDATE OR CREATE STATS STARTS
     let listEnquiry = (await Enquiry.find({email: req.body.email})).length
 
     console.log('listEnquiry')
     console.log(listEnquiry)
 
-    if(listEnquiry < 1){// this is a new individual, hence a valid prospect
-        let DATE = new Date()
-        let YY = DATE.getFullYear()
-        let mm = String(DATE).split(' ')[1] // to get th second element of the generated array
-        let thisMonth = `${mm}/${YY}`
-
-        // Add the following two fields to the request body
-        req.body.prospect = true
-        req.body.month = thisMonth
-
-        let stats = await Stats.findOne({month: thisMonth})
-        console.log('stats')
-        console.log(stats)
-        if(stats){
-            //Update stats
-            console.log('Update stats')
-            stats.enquiryCount += 1
-            stats.updated = Date.now()
-            stats.save()// we want to allow validation
-
-            console.log('updared stats')
-            console.log(stats)
-        }
-        else{
-            //Create stats
-            console.log('Create stats')
-            let newStats = {
-                "month": thisMonth,
-                "enquiryCount": 1
-            }
-
-            const newstats = await Stats.create(newStats)
-            console.log('newstats')
-            console.log(newstats)
-        }
+    if(listEnquiry < 1){
+        // this is a new individual, hence a valid prospect
+        await StatusStatsHandler('Enquiry', 'Enquiry', 'Enquiry', false)
     }
-    // UPDATE OR CREATE STATS ENDS
-
-
     const enquiry = await Enquiry.create(req.body) // create the enquiry
     res.status(201).json({ 
         status : "success",
@@ -99,6 +72,7 @@ exports.getEnquiry = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.patchEnquiry = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const enquiry = await Enquiry.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!enquiry){
         const error = new CustomError(`Enquiry with ID: ${req.params._id} is not found`, 404)
@@ -114,6 +88,7 @@ exports.patchEnquiry = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.putEnquiry = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const enquiry = await Enquiry.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!enquiry){
         const error = new CustomError(`Enquiry with ID: ${req.params._id} is not available`, 404)

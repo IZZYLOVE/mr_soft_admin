@@ -16,6 +16,7 @@ const statsSchema = new mongoose.Schema(
     "students": {type: Number, default: 0, trim: true},
     "deffered": {type: Number, default: 0, trim: true},
 
+    // not required in the user inpute form
     "created": {type: Date, default: Date.now, immutable: true, trim: true},
     "updated": {type: Date, default: Date.now, trim: true},
 

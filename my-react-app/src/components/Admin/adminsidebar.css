@@ -60,6 +60,11 @@
     padding: 1px;
  }
 
+.notifyCounts {
+  color: rgb(35,255,27);
+  width: 100%;
+}
+
  .AdminSideBareScroll {
   max-height: 60vh;
   overflow-y: scroll;

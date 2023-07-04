@@ -3,7 +3,9 @@ const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
 const User = require('./../Models/userModel')
 const UnlinkSingleFile = require('./../Utils/UnlinkSingleFile')
 const ProcessSingleFileObj = require('./../Utils/ProcessSingleFileObj')
-const ProcessMultipleFilesArrayOfObjects = require('./../Utils/ProcessMultipleFilesArrayOfObjects')
+const ProcessMultipleFilesArrayOfObjects = require('./../Utils/ProcessMultipleFilesArrayOfObjects');
+const limitUserDetailsServeFields = require('../Utils/limitUserDetailsServeFields');
+
 
 
 
@@ -14,18 +16,27 @@ exports.linkProfileImage = asyncErrorHandler(async(req, res, next) => {
     
     const user = await User.findById(decodedToken._id)
 
+    
     //// unlink prev
     if(user.profileImg && user.profileImg.filePath){
         UnlinkSingleFile(user.profileImg.filePath, req)
     }
-
+    
     let newfileObj = ProcessSingleFileObj(req)
 
     user.profileImg = newfileObj
 
     await user.save({validateBeforeSave: false})
 
-    res.status(201).send('File Uploaded successfully')
+    limitedUser = limitUserDetailsServeFields(user)
+    res.status(201).json({ 
+        status : "success",
+        resource : "user",
+        action: "profile Image change",
+        message: "File Uploaded successfully",
+        lenght : user.length,
+        data : limitedUser
+       })  
 })
 
 

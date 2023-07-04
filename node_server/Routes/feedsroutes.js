@@ -1,15 +1,16 @@
 const express = require('express')
 const router = express.Router()
 
- const feedsController = require('../Controllers/feedController')
+ const feedsController = require('../Controllers/feedsController')
  const authController = require('../Controllers/authController')
- 
+
+const upload = require('../Utils/filehandler')
 // ROUTES CHAINING
 
 router.route('/')
     .get(authController.protect,feedsController.getFeeds)
-    // .post(authController.protect,authController.filesToFeedsPath,feedsController.postFeed) 
-    .post(authController.protect,authController.filesToSupportsPath,feedsController.postFeed) 
+    .post(authController.protect,authController.filesToFeedsPath,upload.array('files'),feedsController.postFeed) 
+    // .post(authController.protect,authController.filesToSupportsPath,feedsController.postFeed) 
 
 
 router.route('/:_id')

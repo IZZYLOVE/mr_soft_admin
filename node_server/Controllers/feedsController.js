@@ -1,10 +1,13 @@
-const Feed = require('../Models/FeedModel');
+const Feed = require('../Models/FeedModel')
 const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
 const UnlinkMultipleFiles = require('../Utils/UnlinkMultipleFiles')
 const ProcessMultipleFilesArrayOfObjects = require('../Utils/ProcessMultipleFilesArrayOfObjects')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
+
 
 
 
@@ -18,34 +21,28 @@ exports.getFeeds = asyncErrorHandler(async (req, res, next) => {
 
     res.status(200).json({ 
         status : "success",
-        resource : "enquiry",
+        resource : "feed",
         lenght : feeds.length,
         data : feeds
        })  
 })
 
 exports.postFeed = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body.createdBy = decodedToken._id
+    req.body = HTMLspecialChars(req.body)
 
-    console.log('req.body postFeed')
-    console.log(req.body)
-
-    console.log('req.files postFeed b4 If ')
-    console.log(req.files)
-
-    if(req.body){
-        console.log('req.files postFeed b4Process')
-        console.log(req.files)
-        let filesArrayOfObjects = ProcessMultipleFilesArrayOfObjects(req)
-        console.log('req.files postFeed AftaProvess')
-        console.log(req.files)
-        req.body.files = filesArrayOfObjects
+    if(req.files){
+    let filesArrayOfObjects = ProcessMultipleFilesArrayOfObjects(req)
+    req.body.files = filesArrayOfObjects
     }
+    
+    const feed = await Feed.create(req.body) // create the support
 
-    const feed = await Feed.create(req.body) // create the feed
     res.status(201).json({ 
         status : "success",
         resource : "feed",
-        feed : "created",
         lenght : feed.length,
         data : feed
     })  
@@ -54,28 +51,31 @@ exports.postFeed = asyncErrorHandler(async (req, res, next) => {
 
 exports.getFeed = asyncErrorHandler(async (req, res, next) => {
     // const movie = await movie.find({_id: req.param._id})
-    const feed= await Feed.findById(req.params._id)
+    const feed = await Feed.findById(req.params._id)
     if(!feed){
-        const error = new CustomError(`Feed with ID: ${req.params._id} is not found`, 404)
+        const error = new CustomError(`feed with ID: ${req.params._id} is not found`, 404)
         //return to prevent further execution of the rest of the codes
         return next(error)
     }
+
+
     res.status(200).json({ 
         status : "success",
         resource : "feed",
-        feed : "created",
         lenght : feed.length,
         data : feed
     })  
 })
 
-
 exports.patchFeed = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
+
     const feed = await Feed.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!feed){
         const error = new CustomError(`Feed with ID: ${req.params._id} is not found`, 404)
         return next(error)
     }
+
 
 
     res.status(200).json({ 
@@ -87,13 +87,14 @@ exports.patchFeed = asyncErrorHandler(async (req, res, next) => {
     })  
 })
 
-
 exports.putFeed = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const feed = await Feed.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
     if(!feed){
         const error = new CustomError(`Feed with ID: ${req.params._id} is not available`, 404)
         return next(error)
     }
+
 
 
     res.status(200).json({ 
@@ -105,7 +106,6 @@ exports.putFeed = asyncErrorHandler(async (req, res, next) => {
     })  
 })
 
-
 exports.deleteFeed = asyncErrorHandler(async (req, res, next) => {
     const feed = await Feed.findByIdAndDelete(req.params._id, req.body, {new: true, runValidators: true})
     if(!feed){
@@ -113,10 +113,10 @@ exports.deleteFeed = asyncErrorHandler(async (req, res, next) => {
         return next(error)
     }
 
-    //// unlink multiple files
-    if(support.files){
-        UnlinkMultipleFiles(Feed.files, req)
-    }
+        //// unlink multiple files
+        if(feed.files){
+            UnlinkMultipleFiles(feed.files, req)
+        }
 
     res.status(204).json({ 
         status : "success",
@@ -126,7 +126,7 @@ exports.deleteFeed = asyncErrorHandler(async (req, res, next) => {
 })
 
 
-// exports.getfeedByStack = asyncErrorHandler(async (req, res, next) => {
+// exports.getFeedByStack = asyncErrorHandler(async (req, res, next) => {
 //     //allows us access to the aggregation pipeline
 //     const mystack = req.params.stack
 //     const feed = await Feed.aggregate([
@@ -152,27 +152,29 @@ exports.deleteFeed = asyncErrorHandler(async (req, res, next) => {
 // })
 
 
-// exports.getEnquiryByTechnology = asyncErrorHandler(async (req, res, next) => {
+// exports.getFeedByTechnology = asyncErrorHandler(async (req, res, next) => {
 //     //allows us access to the aggregation pipeline
 //     const mytechnology = req.params.technology
-//     const enquiry = await Enquiry.aggregate([
+//     const feed = await Feed.aggregate([
 //         {$unwind: '$technology'},
 //         { $group: {
 //             _id: '$technology',
-//             enquiryCount: {$sum: 1},
-//             enquirys:{$push: '$name'}
+//             feedCount: {$sum: 1},
+//             feeds:{$push: '$name'}
 //         }},
 //         {$addFields: {technology: "$_id"}}, //adds a field technology
 //         {$project: {_id: 0}}, // removes the _id field from selection by setting it to zero
-//         {$sort: {enquiryCount: -1}}, // sort in decending order by setting -1
+//         {$sort: {feedCount: -1}}, // sort in decending order by setting -1
 //         {$match: {technology: mytechnology}},
+
+
 //     ]) 
 
 //     res.status(200).json({ 
 //         status : "success",
-//         resource : "enquiry",
+//         resource : "feed",
 //         action : "aggregatation",
-//         lenght : enquiry.length,
-//         data: enquiry
+//         lenght : feed.length,
+//         data: feed
 //     }) 
 // })

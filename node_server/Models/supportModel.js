@@ -1,23 +1,19 @@
 const mongoose = require('mongoose')
-
-//using the filesytem in the post-hook
 const fs = require('fs')
 const AutoLogFile = require('../Utils/AutoLogFile')
 
 
 const supportSchema = new mongoose.Schema(
         {
-    "supportCode": {type: String, unique: true, required: [true, 'please enter supportCode'], trim: true},
-
-    "userId": {type: String, required: [true, 'Please enter userId'], trim: true},
+    "supportTicketId": {type: String, required: [true, 'please enter supportCode'], trim: true},
 
     "message": {type: String, required: [true, 'Please enter course description'], trim: true},
 
     "files": [Object],
 
-    // "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
-    
-    // "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
+    // not required in the user inpute form
+    "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
+    "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
     "created": {type: Date, default: Date.now, immutable: true, trim: true},
     "updated": {type: Date, default: Date.now, trim: true,  select: false}, 
 })

@@ -35,7 +35,7 @@ if(process.env.NODE_ENV === "development"){
     HOST = process.env.DEV_HOST
 }
 else if(process.env.TestingForProduction = true && process.env.NODE_ENV === "production"){
-    console.log("NODE_ENV === production testing")
+    console.log("NODE_ENV === production (testing)")
     URL = process.env.LOCAL_CONN
     HOST = process.env.DEV_HOST
 }
@@ -72,8 +72,8 @@ const serverName = "MrSoftTraining"
 const server = app.listen(port, () => {
     const host= server.address().address 
     console.log(`${serverName} server already running on port ${port}`)
-    console.log(`server main URL: http://${host}:${port}`)
-    console.log(`server local URL: http://${HOST}:${port}`)
+    console.log(`server URL: http://${host}:${port}`)
+    console.log(`client URL: http://${HOST}`)
 
     console.log(`...waiting for database connection...`)
 })

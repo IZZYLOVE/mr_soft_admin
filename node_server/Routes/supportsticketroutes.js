@@ -12,8 +12,8 @@ router.route('/')
     
 router.route('/:_id')
     .get(authController.protect,supportTicketController.getSupportTicket)
-    .patch(authController.protect,supportTicketController.patchSupportTicket)
-    .put(authController.protect,supportTicketController.putSupportTicket)
+    .patch(authController.protect,authController.restrict('admin'),supportTicketController.patchSupportTicket)
+    .put(authController.protect,authController.restrict('admin'),supportTicketController.putSupportTicket)
     .delete(authController.protect,authController.restrict('admin'),supportTicketController.deleteSupportTicket)// for single role
 
 module.exports = router

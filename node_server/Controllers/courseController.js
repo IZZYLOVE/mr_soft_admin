@@ -2,8 +2,9 @@ const Course = require('../Models/courseModel');
 const ApiFeatures = require('../Utils/ApiFeatures')
 const asyncErrorHandler = require('../Utils/asyncErrorHandler');
 const CustomError = require('../Utils/CustomError');
-const HTMLspecialChars = require('../Utils/HTMLspecialChars')
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
+const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
 
 
 
@@ -33,6 +34,10 @@ exports.getCourses = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.postCourse = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body.createdBy = decodedToken._id
+    
     req.body = HTMLspecialChars(req.body)
         const course = await Course.create(req.body)
         res.status(201).json({ 
@@ -64,6 +69,8 @@ exports.getACourse = asyncErrorHandler(async (req, res, next) => {
 
 exports.patchACourse = asyncErrorHandler(async (req, res, next) => {
         // const movie = await movie.find({_id: req.param._id})
+    req.body = HTMLspecialChars(req.body)
+
             const course = await Course.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
             if(!course){
                 const error = new CustomError(`Course with ID: ${req.params._id} is not found`, 404)
@@ -79,6 +86,8 @@ exports.patchACourse = asyncErrorHandler(async (req, res, next) => {
 })
 
 exports.putACourse = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
+
         // const movie = await movie.find({_id: req.param._id})
         const course = await Course.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
         if(!course){

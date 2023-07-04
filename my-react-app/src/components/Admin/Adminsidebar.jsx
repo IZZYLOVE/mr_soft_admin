@@ -8,7 +8,7 @@ import { AppContext } from '../../Context/App_Context';
 
 
 export function Adminsidebar(props) {
-  const { getStoredUserObj, logout, isLoggedIn } = useContext(AppContext)
+  const { getStoredUserObj, logout, isLoggedIn, newContactMessageCount, newSupportCount } = useContext(AppContext)
 
   const navigate = useNavigate();
 
@@ -23,6 +23,11 @@ export function Adminsidebar(props) {
   } 
 
   const { isOpen, onClose } = props;
+
+  let newSupportCountVal
+  newSupportCount && (newSupportCountVal = <span className='notifyCounts'>({newSupportCount})</span>)
+  let newContactMessageCountVal
+  newContactMessageCount && (newContactMessageCountVal = <span className='notifyCounts'>({newContactMessageCount})</span>)
 
   return (
     <nav className={`sidebar ${isOpen ? 'open' : ''}`} id='sidebar'>
@@ -139,7 +144,13 @@ export function Adminsidebar(props) {
         
         <li>
           <Link to="./adminsupport" onClick={onClose}>
-             Support
+             Support {newSupportCountVal}
+          </Link>
+        </li>
+
+        <li>
+          <Link to="./contactmessages" onClick={onClose}>
+             Contact Messages {newContactMessageCountVal}
           </Link>
         </li>
 
@@ -158,7 +169,7 @@ export function Adminsidebar(props) {
     </div>
       <ul>
 
-        <li onClick={ handleLogout }  >
+        <li onClick={handleLogout}  >
           <Link >
             Log out
           </Link>

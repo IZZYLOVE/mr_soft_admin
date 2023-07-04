@@ -7,8 +7,6 @@ const AutoLogFile = require('../Utils/AutoLogFile')
 
 const ratingSchema = new mongoose.Schema(
         {
-    "userId": {type: String,  required: [true, 'please enter a valid user id'], trim: true},
-    // "userId": {type: String,  required: true},
 
     "courseId": {type: String,  required: [true, 'please enter a valid course id'], trim: true},
     // "courseId": {type: String,  required: true},
@@ -21,8 +19,10 @@ const ratingSchema = new mongoose.Schema(
 
     "comment": {type: String, required: [true, 'please enter course description'], trim: true},
 
-    "created": {type: Date, default: Date.now, immutable: true, trim: true},
 
+    // not required in the user inpute form
+    "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
+    "created": {type: Date, default: Date.now, immutable: true, trim: true},
     "updated": {type: Date, default: Date.now, trim: true,  select: false},
 })
 

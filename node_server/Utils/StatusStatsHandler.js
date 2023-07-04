@@ -206,6 +206,36 @@ module.exports = async (oldz, newz, courseId, byId = true) => {
               }
             }
             return(newz) // returns the new user stats to the authcontroller to update the user stats
+        case "ENQUIRY":
+            if(statsx){
+                //Update stats
+                console.log('Update stats')
+                statsx.enquiryCount += 1
+                statsx.updated = now
+                statsx.save()// we want to allow validation
+
+                console.log('updated stats')
+                console.log(statsx)
+            }
+            else{
+                //Create stats
+                let StatsRecord = await Statsx.find()
+                let lastStatsRecord = { ...StatsRecord[StatsRecord.length - 1]}
+
+                console.log('Create stats')
+                let newStats = {
+                    "month": thisMonth, 
+                    "students": lastStatsRecord.students,
+                    "alumni": lastStatsRecord.deffered,
+                    "deffered": lastStatsRecord.deffered,
+                    "enquiryCount": 1
+                }
+
+                const newstats = await Statsx.create(newStats)
+                console.log('newstats')
+                console.log(newstats)
+            }
+            // UPDATE OR CREATE STATS ENDS
         default:
           return(oldz) // returns the old user stats to the authcontroller since no valid change made
       } 

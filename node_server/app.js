@@ -3,12 +3,13 @@ const express = require('express')
 const path = require('path')
 const bodyParserx = require('body-parser')
 let app = express()
+app.use(express.json())
 
 // To support cors and allow us send and recieve data through url we use cors
 const cors = require('cors');
-app.use(cors())
+app.use(cors()) // allows cross origin scripting
 app.use(bodyParserx.json()) 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'))) // lets us access static files in the upload folder
 
 const courseRouter = require('./Routes/courseroutes')
 const authRouter = require('./Routes/authrouter')
@@ -19,6 +20,7 @@ const filesRouter = require('./Routes/fileuploadroutes')
 const supportRouter = require('./Routes/supportroutes')
 const supportTicketRouter = require('./Routes/supportsticketroutes')
 const feedsRouter = require('./Routes/feedsroutes')
+const contactMessageRouter = require('./Routes/contactMessagetroutes')
 
 const CustomError = require('./Utils/CustomError')
 const globalErrorHandler = require('./Controllers/errorController');
@@ -27,6 +29,13 @@ const globalErrorHandler = require('./Controllers/errorController');
 
 const logger = function(req, res, next){
     console.log("custom middle ware called")
+    console.log("req.body")
+    console.log(req.body)
+    console.log("req.files")
+    console.log(req.files) 
+    console.log("req")
+    console.log(req) 
+
     next()
 }
 
@@ -60,6 +69,7 @@ app.use('/api/v1/files', filesRouter)// mounting stats route
 app.use('/api/v1/supports', supportRouter)// mounting support route
 app.use('/api/v1/supporttickets', supportTicketRouter)// mounting supportTicket route
 app.use('/api/v1/feeds', feedsRouter)// mounting supportTicket route
+app.use('/api/v1/contactmessages', contactMessageRouter)// mounting contact message route
 
 
 

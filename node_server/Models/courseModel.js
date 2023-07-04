@@ -22,12 +22,11 @@ const courseSchema = new mongoose.Schema(
   
     "stack": {type: String, default: ['MERN'],
         enum: {
-        values: ["MERN", "MEAN", "LAMP"],
+        values: ["MERN", "MEAN", "LAMP", "LEMP", "MERM"],
         message: "This stack does not exist"
         },
         trim: true},
         // make a list of options with the values above
-
 
     "technologies": {type: Array, default: ['JavaScript'], trim: true},
         // make a list of multiple selection options with the values below and generate an array with the selected options
@@ -38,15 +37,15 @@ const courseSchema = new mongoose.Schema(
         required: true
     },
 
+
+
+
+
+    // not required in the user inpute form
     "alumni": {type: Number, default: 0, trim: true},
-
     "students": {type: Number, default: 0, trim: true},
-    
     "deffered": {type: Number, default: 0, trim: true},
-
     "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
-    
-
     "ratings": {type: Number, default: 0, trim: true},
     "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
     "created": {type: Date, default: Date.now, immutable: true, trim: true},

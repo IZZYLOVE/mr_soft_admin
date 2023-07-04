@@ -7,16 +7,15 @@ const AutoLogFile = require('../Utils/AutoLogFile')
 
 const supportTicketSchema = new mongoose.Schema(
 {
-    "Code": {type: String, unique: true, required: [true, 'please enter course code'], trim: true},
 
-    "Topic": {type: String, unique: true, required: [true, 'Please enter course name'], trim: true}, 
+    "Topic": {type: String, required: [true, 'Please enter course name'], trim: true}, 
 
+    
+    // not required in the user inpute form
+    "status": {type: String, default: 'open', required: true, trim: true},
     "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy with the user _id'], trim: true},
-
-    "status": {type: String, default: 'open', trim: true},
-
+    "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
     "created": {type: Date, default: Date.now, immutable: true, trim: true},
-
     "updated": {type: Date, default: Date.now, trim: true,  select: false},
 })
 

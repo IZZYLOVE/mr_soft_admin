@@ -127,6 +127,7 @@ form h3 {
 
 textarea {
   resize: none;
+  width: 100%;
 }
 
 .card2 {

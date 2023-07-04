@@ -22,15 +22,22 @@ import { CreateFeed } from "./CreateFeed";
 import { GetFeeds } from "./GetFeeds";
 import { AdminSupport } from "./AdminSupport";
 import { AdminChangeProfileImage } from "./AdminChangeProfileImage";
+import { GetContactMessages } from "./GetsContactMessages";
 
 export function Admindashboard() {
-  const { API_base_url, isLoggedIn,  userRole, setChartLabel, setChartData1, setChartData2, setChartData3, setChartData4, StoreUserObj, getStoredToken } = useContext(AppContext)
+  const { API_base_url, isLoggedIn,  userRole, setChartLabel, setChartData1, setChartData2, setChartData3, setChartData4, StoreUserObj, getStoredToken, 
+    setNewContactMessageCount, setNewSupportCount, setNewSupport, setNewContactMessage } = useContext(AppContext)
   const navigate = useNavigate();
   let tempHandleGetMultipleData = useRef( )
   let tempIsLoggedIn = useRef( )
 
   let done = useRef(false)
 
+  useEffect(() => {
+  if(!getStoredToken()){
+    navigate(`/`)
+  }
+}, [ navigate ]);
 
   useEffect(() => {
     const handleIsLoggedIn = () => {
@@ -91,6 +98,8 @@ export function Admindashboard() {
   
   const handleGetMultipleData = () => {
 
+    // let headerObj = {}
+    
     let headerObj = {
             method: 'GET',
             headers: {
@@ -98,28 +107,40 @@ export function Admindashboard() {
               'authorization': `Bearer ${getStoredToken()}`,
             },
             // body: JSON.stringify(formData),
-          }
+     }
+          
     const myArray = [
       fetch(`${API_base_url}api/v1/users/myprofile`, headerObj), //User Object
       fetch(`${API_base_url}api/v1/stats/lateststats`, headerObj), // Stats Object
+      fetch(`${API_base_url}api/v1/supports?status=open`, headerObj), //support Object
+      fetch(`${API_base_url}api/v1/contactmessages?status=open`, headerObj), // ContactMessage Object
     ]
     async function fetchData(){
       // fails the rest of the fetch if one fails
       // then throws an error
         try{
           const res = await Promise.all(myArray) 
+          console.log(res)
           const data = await Promise.all(res.map((item) => { 
             return item.json();
           }))
-          // data is  an array
+          console.log(data)
 
+          // data is  an array
+          // if(data.status === 'success'){
           data[0].data && StoreUserObj(data[0].data)
           handleSetStatsArrays(data[1].data.reverse())
- 
+          setNewSupport(data[2].data)
+          setNewSupportCount(data[2].data.length)
+          setNewContactMessage(data[3].data)
+          setNewContactMessageCount(data[3].data.length)
+          // }
+          // else{
+          //   throw Error(data.message)
+          // }
         }
         catch(e){
-          console.log("multiple fetch failed")
-          throw Error("multiple fetch failed")
+          alert("could not fetch data from one or more resources",+e)
         } 
       }
       fetchData()
@@ -142,7 +163,7 @@ export function Admindashboard() {
 
     return () => {
     };
-  }, [  ]); 
+  }, []); 
 
 
     return (
@@ -168,6 +189,7 @@ export function Admindashboard() {
             <Route path="/createfeed" element={<CreateFeed/>} />
             <Route path="/getfeeds" element={<GetFeeds/>} />
             <Route path="/adminsupport" element={<AdminSupport/>} />
+            <Route path="/contactmessages" element={<GetContactMessages/>} />
             <Route path="/*" element={<Stats/>} />
           </Routes>
         </>

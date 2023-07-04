@@ -5,17 +5,16 @@
  }
 
 
- .adminnavHeader{
+ .adminnavHeader, .usernavHeader{
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 5px;
     background-color: #177489;
     cursor: pointer;
-
 }
 
-.adminnavHeader li{
+.adminnavHeader li, .usernavHeader li{
     display: inline-block;
 }
 
@@ -33,7 +32,6 @@
     height: 30px;
     border-radius: 50%;
 	background: rgb(0, 0, 0);
-
 }
 
 .navBarImg:hover

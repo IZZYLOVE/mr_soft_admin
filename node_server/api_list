@@ -11,17 +11,35 @@ API_base_url = http://127.0.0.1:7300/
 # methods: post
 {{API_base_url}}api/v1/users/login
 
+
+# logout All from all devices
+# methods: patch/put
+{{API_base_url}}api/v1/users/logoutall
+
 # User profile
 # The Bearer profile
 # methods: get
 {{API_base_url}}api/v1/users/myprofile
 
-# get all users
+# get all users and update mine
 # methods: get
-{{API_base_url}}api/v1/users/
+# put/patch for logged in user 
+{{API_base_url}}api/v1/users
 
-# get/put one user
+
+# changed password for logged in user
+# methods: put/patch
+{{API_base_url}}api/v1/users/changepassword
+
+
+# get one user
 # methods: get
+{{API_base_url}}api/v1/users/:_id
+{{API_base_url}}api/v1/users/646cf8dced7c13012963967a
+
+
+# put/patch one user, restricted to admin
+# methods: put/patch
 {{API_base_url}}api/v1/users/:_id
 {{API_base_url}}api/v1/users/646cf8dced7c13012963967a
 
@@ -287,6 +305,10 @@ API_base_url = http://127.0.0.1:7300/
 {{API_base_url}}api/v1/supports/:_id
 {{API_base_url}}api/v1/supports/646b2ebe06fa59d06462a33e
 
+# SUPPORTs FOT SUPPORT-TECKET CODE
+# methods: get
+{{API_base_url}}api/v1/supports?supportCode=46te4e4ebtb
+
 
 ###
 ### SUPPORT TICKETS
@@ -303,6 +325,11 @@ API_base_url = http://127.0.0.1:7300/
 {{API_base_url}}api/v1/supporttickets/:_id
 {{API_base_url}}api/v1/supporttickets/646b2ebe06fa59d06462a33e
 
+# Open
+# methods: get
+{{API_base_url}}api/v1/supporttickets?status=open
+
+
 
 ###
 ### FEEDS
@@ -318,3 +345,26 @@ API_base_url = http://127.0.0.1:7300/
 # methods: get, put, patch, delete
 {{API_base_url}}api/v1/feeds/:_id
 {{API_base_url}}api/v1/feeds/646b2ebe06fa59d06462a33e
+
+
+
+
+
+###
+### CONTACT MESSAGES
+###
+
+# getAll/post contact message
+# methods: get and post 
+{{API_base_url}}/api/v1/contactmessages
+
+
+# getOne/delete contact messege
+# with contact messege id
+# methods: get, delete
+{{API_base_url}}api/v1/contactmessages/:_id
+{{API_base_url}}api/v1/contactmessages/646b2ebe06fa59d06462a33e
+
+# Open
+# methods: get
+{{API_base_url}}api/v1/contactmessages?status=open

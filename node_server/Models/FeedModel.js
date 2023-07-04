@@ -6,16 +6,22 @@ const AutoLogFile = require('../Utils/AutoLogFile')
 
 
 const feedSchema = new mongoose.Schema(
-        {
-    "userId": {type: String, unique: true, required: [true, 'please enter userId'], trim: true},
+{
 
-    "thetext": {type: String, required: [true, 'Please enter thetesxt message'], trim: true},
-
+    "message": {type: String, required: [true, 'Please enter the message'], trim: true},
     "files": [Object],
+    "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
 
+
+
+    // not required in the first user inpute form but to be updated later
+    // for now not required in this project
     "likes": {type: Number, default: 0, trim: true},
     "dislikes": {type: Number, default: 0, trim: true},
-    "releaseDate": {type: Date, default: Date.now, required: true, trim: true},
+
+
+    // not required in the user inpute form
+    "createdBy": {type: String, required: [true, 'Please complete the hidden field createdBy'], trim: true},
     "created": {type: Date, default: Date.now, immutable: true, trim: true},
     "updated": {type: Date, default: Date.now, trim: true,  select: false},
 })
@@ -44,7 +50,7 @@ feedSchema.pre(/^find/, async function(next){
 
 feedSchema.post(/^find/, async function(docs,next){
     // this here points to the corrent querry
-    // this.find({releaseDate: {$lte: Date.now()}})
+    this.find({releaseDate: {$lte: Date.now()}})
     this.endTime = Date.now()
     const logFile = await AutoLogFile()
     const content = `Query took  ${this.endTime - this.startTime} in milliseconds to fetch the documents, on ${new Date}\n`

@@ -4,8 +4,8 @@ const Stats = require('./../Models/statsModal')
 const asyncErrorHandler = require('./../Utils/asyncErrorHandler')
 const StatusStatsHandler = require('./../Utils/StatusStatsHandler')
 const jwt = require('jsonwebtoken')
-// const bcrypt = require('bcrypt')
-const util = require('util')
+const bcrypt = require('bcrypt') // used in registration function
+const util = require('util') // used in a function
 const sendEmail = require('./../Utils/email')
 const limitUserDetailsServeFields = require('../Utils/limitUserDetailsServeFields')
 const paginationCrossCheck = require('../Utils/paginationCrossCheck')
@@ -13,7 +13,17 @@ const crypto = require('crypto')
 const ApiFeatures = require('../Utils/ApiFeatures')
 const GetUserDetailsFromHeader = require('../Utils/GetUserDetailsFromHeader')
 const SetUploadsfilePathHandler = require('../Utils/SetUploadsfilePathHandler')
+const HTMLspecialChars = require('../Utils/HTMLspecialChars')
 
+if(process.env.NODE_ENV === "development"){
+    HOST = process.env.DEV_HOST
+}
+else if(process.env.TestingForProduction = true && process.env.NODE_ENV === "production"){
+    HOST = process.env.DEV_HOST
+}
+else{
+    HOST = process.env.PROD_HOST 
+}
 
 
 
@@ -29,6 +39,7 @@ const signToken = (_id, email, role) => {
 }
 
 exports.signup = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     let newUser = await User.create(req.body)
     const token = signToken(newUser._id, newUser.email, newUser.role)
     ///
@@ -38,7 +49,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
 
     
     //4 SEND THE TOKEN TO THE USER VIA EMAIL 
-    const verifyUrl = `${req.protocol}://${req.get('host')}/api/v1/users/verifyemail/${VerificationToken}`
+    const verifyUrl = `${req.protocol}://${HOST}/api/v1/users/verifyemail/${VerificationToken}`
     // const message = `We have recieved a password reset request. Please use the link below to reset your password\n\n ${resetUrl} \n\n
     // this link will be valid for 10 munutes.`
 
@@ -64,7 +75,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
         </td></tr></table>
     
     <p>
-    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    For information on MRsoft International visit <a href='${req.protocol}://${HOST}'>${req.protocol}://${HOST}</a>
     </p>
     
     WITH MRSOFT, </br>
@@ -75,7 +86,7 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     <p>
-    ${req.protocol}://${req.get('host')}
+    ${req.protocol}://${HOST}
     </p>
     </body></html>"`
 
@@ -83,23 +94,30 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
 
     console.log(message+'\n') 
     let emailverificationMessage;
-    try{
-        await sendEmail({
-            email: newUser.email,
-            subject: "Password reset request",
-            message: message
-        })
-        emailverificationMessage = `Email verification mail has been sent to  ${newUser.email}, pleae veryfy your email address.`
+    let tries = 0
+    let success = 0
+    const sendAnEmail = async () => {
+        tries += 1
+        try{
+            await sendEmail({
+                email: newUser.email,
+                subject: "Password reset request",
+                message: message
+            })
+            emailverificationMessage = `Email verification mail has been sent to  ${newUser.email}, pleae veryfy your email address.`
+            success += 1
+        }
+        catch(err){
+            newUser.emailVerificationToken = undefined,
+            newUser.emailVerificationTokenExp = undefined,
+            await newUser.save({validateBeforeSave: false})
+    
+            emailverificationMessage = `Email verification mail failed.`
+            // return next(new CustomError(`There is an error sending password reset email. Please try again later`, 500))
+            
+        }
     }
-    catch(err){
-        newUser.emailVerificationToken = undefined,
-        newUser.emailVerificationTokenExp = undefined,
-        await newUser.save({validateBeforeSave: false})
- 
-        // return next(new CustomError(`There is an error sending password reset email. Please try again later`, 500))
-        emailverificationMessage = `Email verification mail failed.`
-        
-    }
+    tries < 4 && success < 1 && sendAnEmail () // allows 5 tries to send email before proceeding
     ///
     limitedUser = limitUserDetailsServeFields(newUser)
     
@@ -114,12 +132,14 @@ exports.signup = asyncErrorHandler(async (req, res, next) => {
         user : "created",
         lenght : newUser.length,
         emailverificationMessage,
+        tries,
         data : limitedUser
        })  
 })
 
 
 exports.login = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     // const { username, password } = req.body
     const email = req.body.email
     const password = req.body.password
@@ -134,19 +154,50 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
     let user = await User.findOne({email}).select('+password')
 
 
-    
     // const isMatch = await user.comparePasswordInDb(password, user.password)
-    if(!user || !(await user.comparePasswordInDb(password, user.password))){
-        const error = new CustomError('Incorrect login details', 400)
+    // handle brut
+    if(user.failedLogginAttempts < 5){
+        if(!user || !(await user.comparePasswordInDb(password, user.password))){
+            user.failedLogginAttempts += 1
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+            const error = new CustomError(`Incorrect login details, ${5 - user.failedLogginAttempts} attempt(s) left`, 400)
+            return next(error)
+        }
+        else{
+            user.failedLogginAttempts = 0
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+        }
+    }
+    else if((new Date() - user.lastAttemptTime) > 1800000) {// 30 min after last failled attempt
+        // cancel prev attempt records
+        user.failedLogginAttempts = 0
+        user.lastAttemptTime = new Date()
+        await user.save({validateBeforeSave: false})
+
+        //validate new login attempt
+        if(!user || !(await user.comparePasswordInDb(password, user.password))){
+            user.failedLogginAttempts = 1
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+            const error = new CustomError('Incorrect login details', 400)
+            return next(error)
+        }
+        else{
+            user.failedLogginAttempts = 0
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+        }
+    }
+    else{
+        const error = new CustomError('Incorrect login details or temprarily blocked', 400)
         return next(error)
     }
 
     const token = signToken(user._id, user.email, user.role)
 
     limitedUser = limitUserDetailsServeFields(user)
-
-    console.log('limited user obj')
-    console.log(limitedUser)
 
     res.status(201).json({ 
         status : "success",
@@ -162,7 +213,6 @@ exports.login = asyncErrorHandler(async (req, res, next) => {
 exports.protect = asyncErrorHandler(async (req, res, next) => {
     //1 read the token and check if it exist
     const testToken = req.headers.authorization
-
     const decodedToken =  await GetUserDetailsFromHeader(testToken)
 
     //3 read the token and check if the user still exist
@@ -174,6 +224,12 @@ exports.protect = asyncErrorHandler(async (req, res, next) => {
     const isPasswordChanged = await user.isPasswordChanged(decodedToken.iat)
     if(isPasswordChanged){
         const error = new CustomError('The password has been changed recently. Please login again')
+        next(error)
+    }
+
+    const isLoggedOut = await user.isLoggedOut(decodedToken.iat)
+    if(isLoggedOut){
+        const error = new CustomError('This account has been logged out from server recently. Please login again')
         next(error)
     }
 
@@ -206,6 +262,7 @@ exports.restrict = (...role) => {//wrapper function
 }
 
 exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
 
     //1 CONFIRM IF A USER WITH THAT EMAIL EXIST IN DB
     // const user = await User.findOne({email: req.body.username, phone: req.body.username})// for phone or email login system
@@ -218,12 +275,11 @@ exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
     }
     //2 GENERATE A RANDOM TOKEN FOR THE USER
     const resetToken = await user.createResetPasswordToken();
-    await user.save({validateBeforeSave: false}) // this saves the encrypted token and the expiry date generated in user.createResetPasswordToken() and {validateBeforeSave: false} prevents validation 
-    console.log('forgotPassword resetToken')
-    console.log(resetToken+'\n') 
+    await user.save({validateBeforeSave: false}) // this saves the encrypted token and the expiry date generated in user.createResetPasswordToken() and {validateBeforeSave: false} prevents validation  
     
     //4 SEND THE TOKEN TO THE USER VIA EMAIL 
-    const resetUrl = `${req.protocol}://${req.get('host')}/api/v1/users/resetpassword/${resetToken}`
+
+    const resetUrl = `${HOST}/resetpassword?resetToken=${resetToken}`
     // const message = `We have recieved a password reset request. Please use the link below to reset your password\n\n ${resetUrl} \n\n
     // this link will be valid for 10 munutes.`
 
@@ -250,7 +306,7 @@ exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
         </td></tr></table>
     
     <p>
-    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    For information on MRsoft International visit <a href='${req.protocol}://${HOST}'>${req.protocol}://${HOST}</a>
     </p>
     
     WITH MRSOFT, </br>
@@ -261,7 +317,7 @@ exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     <p>
-    ${req.protocol}://${req.get('host')}
+    ${req.protocol}://${HOST}
     </p>
     </body></html>"`
 
@@ -298,6 +354,7 @@ exports.forgotpassword = asyncErrorHandler(async (req, res, next) => {
 
 
 exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const cryptotoken = crypto.createHash('sha256').update(req.params.token).digest('hex')
    const user = await User.findOne({passwordResetToken: cryptotoken, passwordResetTokenExp: {$gt: Date.now()}}) 
    
@@ -328,7 +385,7 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
 
     ///
     //4 SEND THE TOKEN TO THE USER VIA EMAIL 
-    const verifyUrl = `${req.protocol}://${req.get('host')}/api/v1/users/verifyemail/${VerificationToken}`
+    const verifyUrl = `${req.protocol}://${HOST}/api/v1/users/verifyemail/${VerificationToken}`
     // const message = `We have recieved a password reset request. Please use the link below to reset your password\n\n ${resetUrl} \n\n
     // this link will be valid for 10 munutes.`
 
@@ -344,7 +401,7 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
     
     
     <p>
-    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    For information on MRsoft International visit <a href='${req.protocol}://${HOST}'>${req.protocol}://${HOST}</a>
     </p>
     
     WITH MRSOFT, </br>
@@ -355,7 +412,7 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     <p>
-    ${req.protocol}://${req.get('host')}
+    ${req.protocol}://${HOST}
     </p>
     </body></html>"`
 
@@ -391,6 +448,80 @@ exports.resetpassword = asyncErrorHandler(async (req, res, next) => {
       })  
 }) 
 
+
+exports.changePassword = asyncErrorHandler(async (req, res, next) => {
+
+    if( req.body.email){
+        const error = new CustomError(`Unauthorized action detected, you can not change email through this link`, 404) 
+    }
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body = HTMLspecialChars(req.body)
+
+    const password = req.body.oldpassword
+    
+    const user = await User.findById(decodedToken._id).select('+password')
+
+    let repass = await user.comparePasswordInDb(password, user.password)
+
+    // handle brut
+    if(user.failedLogginAttempts < 5){
+        if(!user || !(await user.comparePasswordInDb(password, user.password))){
+            user.failedLogginAttempts += 1
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+            const error = new CustomError(`Incorrect login details, ${5 - user.failedLogginAttempts} attempt(s) left`, 400)
+            return next(error)
+        }
+        else{
+            user.failedLogginAttempts = 0
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+        }
+    }
+    else if((new Date() - user.lastAttemptTime) > 1800000) {// 30 min after last failled attempt
+        // cancel prev attempt records
+        user.failedLogginAttempts = 0
+        user.lastAttemptTime = new Date()
+        await user.save({validateBeforeSave: false})
+
+        //validate new login attempt
+        if(!user || !(await user.comparePasswordInDb(password, user.password))){
+            user.failedLogginAttempts = 1
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+            const error = new CustomError('Incorrect login details', 400)
+            return next(error)
+        }
+        else{
+            user.failedLogginAttempts = 0
+            user.lastAttemptTime = new Date()
+            await user.save({validateBeforeSave: false})
+        }
+    }
+    else{
+        const error = new CustomError('Incorrect login details or temprarily blocked', 400)
+        return next(error)
+    }
+
+    
+    if(user){
+        user.password = req.body.password
+        user.confirmPassword = req.body.confirmPassword
+        user.password = req.body.password  
+        user.passwordChangedAt = Date.now()
+        user.passwordResetToken = undefined
+        user.passwordResetTokenExp = undefined
+        user.save()// we want to allow validation
+
+    }
+
+        res.status(200).json({ 
+            status : "success",
+            resource : "user",
+            action: "password change"
+        })  
+})
 
 exports.getUsers = asyncErrorHandler(async (req, res, next) => {
 
@@ -448,11 +579,17 @@ exports.getMyProfile = asyncErrorHandler(async (req, res, next) => {
     })  
 })
 
-exports.patchUser= asyncErrorHandler(async (req, res, next) => {
+exports.updateUser = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    req.body = HTMLspecialChars(req.body)
+    if(req.body.password || req.body.email){
+        const error = new CustomError(`Unauthorized action detected, you can not change email or password through this link`, 404) 
+    }
     // const user = await user.find({_id: req.param._id})
-        const user = await User.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
+        const user = await User.findByIdAndUpdate(decodedToken._id, req.body, {new: true, runValidators: true})
         if(!user){
-            const error = new CustomError(`User with ID: ${req.params._id} is not found`, 404)
+            const error = new CustomError(`User with ID: ${decodedToken._id} is not found`, 404)
             return next(error)
         }
         limitedUser = limitUserDetailsServeFields(user)
@@ -467,23 +604,55 @@ exports.patchUser= asyncErrorHandler(async (req, res, next) => {
 })
 
 
-exports.putUser = asyncErrorHandler(async (req, res, next) => {
-    // const user = await user.find({_id: req.param._id})
-    const user = await User.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
+
+exports.logOutAll = asyncErrorHandler(async (req, res, next) => {
+    const testToken = req.headers.authorization
+    const decodedToken =  await GetUserDetailsFromHeader(testToken)
+    
+    const user = await User.findById(decodedToken._id)
+    
     if(!user){
-        const error = new CustomError(`User with ID: ${req.params._id} is not available`, 404)
+        const error = new CustomError(`User with ID: ${decodedToken._id} is not available`, 404)
         return next(error)
     }
-    limitedUser = limitUserDetailsServeFields(user)
+    
+    if(user){ 
+        user.loggedOutAllAt = Date.now()
+        let loggedout = await user.save({validateBeforeSave: false})
+        console.log('log out all '+loggedout)
+    }
 
     res.status(200).json({ 
         status : "success",
         resource : "user",
-        action : "put",
-        lenght : user.length,
-        data : limitedUser
-    })  
+        action: "logout all"
+    }) 
+    
 })
+
+exports.adminUpdateUser = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
+    if(req.body.password || req.body.email){
+        const error = new CustomError(`Unauthorized action detected, you can not change email or password through this link`, 404) 
+    }
+    // const user = await user.find({_id: req.param._id})
+        const user = await User.findByIdAndUpdate(req.params._id, req.body, {new: true, runValidators: true})
+        if(!user){
+            const error = new CustomError(`User with ID: ${req.params._id} is not found`, 404)
+            return next(error)
+        }
+        limitedUser = limitUserDetailsServeFields(user)
+
+        res.status(200).json({ 
+            status : "success",
+            resource : "user",
+            action: "update",
+            lenght : user.length,
+            data : limitedUser
+        })  
+})
+
+
 
 exports.deleteUser = asyncErrorHandler(async (req, res, next) => {
         const user = await User.findByIdAndDelete(req.params._id, req.body, {new: true, runValidators: true})
@@ -500,6 +669,7 @@ exports.deleteUser = asyncErrorHandler(async (req, res, next) => {
 
 
 exports.verifyEmail = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const cryptotoken = crypto.createHash('sha256').update(req.params.token).digest('hex')
    const user = await User.findOne({emailVerificationToken: cryptotoken}) 
    
@@ -529,6 +699,7 @@ exports.verifyEmail = asyncErrorHandler(async (req, res, next) => {
 
 
 exports.approveUser = asyncErrorHandler(async (req, res, next) => {
+    req.body = HTMLspecialChars(req.body)
     const user = await User.findById(req.params._id)
 
    if(!user){
@@ -595,7 +766,7 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
     This is to notify you that your account with MRsoft International has been approved.
 
     <p>
-    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    For information on MRsoft International visit <a href='${req.protocol}://${HOST}'>${req.protocol}://${HOST}</a>
     </p>
     
     WITH MRSOFT, </br>
@@ -606,7 +777,7 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     <p>
-    ${req.protocol}://${req.get('host')}
+    ${req.protocol}://${HOST}
     </p>
     </body></html>"`
 
@@ -639,7 +810,8 @@ exports.approveUser = asyncErrorHandler(async (req, res, next) => {
 
 
 
-exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
+exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {// by admin
+    req.body = HTMLspecialChars(req.body)
     const user = await User.findById(req.params._id)
 
    if(!user){
@@ -687,7 +859,7 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
     This is to notify you that your account status with MRsoft International has been changed to ${req.body.status}.
 
     <p>
-    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    For information on MRsoft International visit <a href='${req.protocol}://${HOST}'>${req.protocol}://${HOST}</a>
     </p>
     
     WITH MRSOFT, </br>
@@ -698,7 +870,7 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     <p>
-    ${req.protocol}://${req.get('host')}
+    ${req.protocol}://${HOST}
     </p>
     </body></html>"`
 
@@ -733,7 +905,8 @@ exports.setUserStatus = asyncErrorHandler(async (req, res, next) => {
 exports.setUserCourse = asyncErrorHandler(async (req, res, next) => {
     const testToken = req.headers.authorization
     const decodedToken =  await GetUserDetailsFromHeader(testToken)
-
+    
+    req.body = HTMLspecialChars(req.body)
     const user = await User.findById(decodedToken._id)
 
    if(!user){
@@ -785,7 +958,7 @@ exports.setUserCourse = asyncErrorHandler(async (req, res, next) => {
     This is to notify you that your course status on course code ${req.body.courseCode} with MRsoft International has been changed to ${req.body.courseStatus}.
 
     <p>
-    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    For information on MRsoft International visit <a href='${req.protocol}://${HOST}'>${req.protocol}://${HOST}</a>
     </p>
     
     WITH MRSOFT, </br>
@@ -796,7 +969,7 @@ exports.setUserCourse = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     <p>
-    ${req.protocol}://${req.get('host')}
+    ${req.protocol}://${HOST}
     </p>
     </body></html>"`
 
@@ -829,6 +1002,7 @@ exports.setUserCourse = asyncErrorHandler(async (req, res, next) => {
 
 exports.adminSetUserCourse = asyncErrorHandler(async (req, res, next) => {
     
+    req.body = HTMLspecialChars(req.body)
     const user = await User.findById(req.body.student_id)
 
    if(!user){
@@ -880,7 +1054,7 @@ exports.adminSetUserCourse = asyncErrorHandler(async (req, res, next) => {
     This is to notify you that your course status on course code ${req.body.courseCode} with MRsoft International has been changed to ${req.body.courseStatus}.
 
     <p>
-    For information on MRsoft International visit <a href='${req.protocol}://${req.get('host')}'>${req.protocol}://${req.get('host')}</a>
+    For information on MRsoft International visit <a href='${req.protocol}://${HOST}'>${req.protocol}://${HOST}</a>
     </p>
     
     WITH MRSOFT, </br>
@@ -891,7 +1065,7 @@ exports.adminSetUserCourse = asyncErrorHandler(async (req, res, next) => {
     </p>
     
     <p>
-    ${req.protocol}://${req.get('host')}
+    ${req.protocol}://${HOST}
     </p>
     </body></html>"`
 
@@ -921,44 +1095,23 @@ exports.adminSetUserCourse = asyncErrorHandler(async (req, res, next) => {
       })  
 }) 
 
-exports.protectc = asyncErrorHandler(async (req, res, next) => {
-    //1 read the token and check if it exist
-    const testToken = req.headers.authorization
-
-    const decodedToken =  await GetUserDetailsFromHeader(testToken)
-
-    //3 read the token and check if the user still exist
-    const user = await User.findById({'_id': decodedToken._id})
-    if(!user){
-        const error = new CustomError('The user with the given token does not exist')
-    }
-    //4 If the user has changed the password after token was issued
-    const isPasswordChanged = await user.isPasswordChanged(decodedToken.iat)
-    if(isPasswordChanged){
-        const error = new CustomError('The password has been changed recently. Please login again')
-        next(error)
-    }
-
-    //allow user to access the route
-    req.user = user // reqxxx
-    next()
-})
 
 exports.fileToProfileImgPath = asyncErrorHandler(async (req, res, next) => {
        SetUploadsfilePathHandler(req, `./uploads/profileImgs`)
         next()
   })
   
-  exports.filesToFeedsPath = asyncErrorHandler(async (req, res, next) => {
-    console.log('req.body auth')
-    console.log(req)
+exports.filesToFeedsPath = asyncErrorHandler(async (req, res, next) => {
     let tpath = SetUploadsfilePathHandler(req, `./uploads/feeds`)
-    console.log('req.body auth tpath')
-    console.log(tpath)
     next()
   })
   
-  exports.filesToSupportsPath = asyncErrorHandler(async (req, res, next) => {
+exports.filesToSupportsPath = asyncErrorHandler(async (req, res, next) => {
+    SetUploadsfilePathHandler(req, `./uploads/supports`)
+    next()
+  })
+
+exports.checkBrut = asyncErrorHandler(async (req, res, next) => {
     SetUploadsfilePathHandler(req, `./uploads/supports`)
     next()
   })

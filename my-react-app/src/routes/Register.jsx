@@ -1,14 +1,14 @@
 import './register.css'
 import React, { useState, useContext} from 'react';
 import { BeatLoader } from 'react-spinners';
-import { useNavigate }  from 'react-router-dom';
 import { AppContext } from '../Context/App_Context';
+import { Link, useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 
 
 
 export function Register() {
   const { API_base_url, StoreToken, StoreUserObj} = useContext(AppContext)
-
 
   const navigate = useNavigate();
 
@@ -22,13 +22,11 @@ export function Register() {
     password: '',
     confirmPassword: '',
     gender: '', 
+    address: ''
   });
 
   const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    setFormData({...formData, [event.target.name]: event.target.value });
   };
 
   const validateForm = () => {
@@ -67,8 +65,8 @@ export function Register() {
       console.log(data);
       console.log(data.token);
       // Handle the response from the backend if needed
-      StoreToken(data.token) 
-      StoreUserObj(data.data)
+      data.token && StoreToken(data.token) 
+      data.data && StoreUserObj(data.data)
 
       alert('Registration successful, you have been successfully logged in and will be redirected to your dashboard');
 
@@ -89,7 +87,11 @@ export function Register() {
   return (
     <div className='regbody'>
       <div className='regwrapper'>
+
         <div className='regform'>
+        <Link to='/'>
+          <Icon icon="ep:back" id='loginicon' width='20px' />
+        </Link>
           <h2>Register</h2>
           <form onSubmit={handleSubmit}>
             <div className='firstrow'>
@@ -175,6 +177,18 @@ export function Register() {
               </div>
             </div>
 
+            <div className='input-box'>
+              <textarea
+                  name='address'
+                  value={formData.address}
+                  onChange={handleChange}
+                  rows="4"
+                  // cols="50"
+                  required
+                  ></textarea>
+              <label>Address*</label>
+            </div>
+
             <div className='select-input-box'>
               <select
                 name='gender'
@@ -187,6 +201,8 @@ export function Register() {
                 <option value='Female'>Female</option>
               </select>
             </div>
+
+
 
             <button type='submit' className='butn' disabled={isLoading} required>
               {isLoading ? (

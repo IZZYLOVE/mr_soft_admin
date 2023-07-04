@@ -19,9 +19,6 @@ export function Userdashboard({ formData }) {
   const navigate = useNavigate();
 
 
-
-
-
   useEffect(() => {
     const handleIsLoggedIn = () => {
       console.log('handleIsLoggedIn ran')
@@ -40,23 +37,28 @@ export function Userdashboard({ formData }) {
   useEffect(() => {
     let url = `${API_base_url}api/v1/users/myprofile`
     const fetchData = async (url) => {
-      await fetch(url , {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'authorization': `Bearer ${getStoredToken()}`,
-        },
-        // body: JSON.stringify(formData),
-      })
-      .then(res => {
-        if(!res.ok){
-          throw Error('could not fetch the data for that resource')
+      try {
+        const response = await fetch(url , {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': `Bearer ${getStoredToken()}`,
+          },
+          // body: JSON.stringify(formData),
+        })
+        const data = await response.json();
+        if(data.status === 'success'){
+          data.data && StoreUserObj(data.data)
         }
-        return res.json();
-      })
-      .then(data => {
-        data.data && StoreUserObj(data.data)
-      })
+        else{
+          throw Error('could not fetch the data for that resource, '+data.message)
+        }
+        
+      } catch (error) {
+        // Handle any errors
+        alert(error)
+        console.error('Request failed:', error);
+      }
     }
     isLoggedIn() && fetchData(url)
 
