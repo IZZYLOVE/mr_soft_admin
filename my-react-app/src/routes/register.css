@@ -62,6 +62,7 @@
   left: 5px;
   transform: translateY(-50%);
   color: rgba(0, 0, 0, 0.8);
+
   font: 1rem monospace;
   pointer-events: none;
   transition: 0.5s;
@@ -85,6 +86,7 @@
   font-weight: 600;
   /* color: rgb(180, 180, 180); */
   color: rgba(255, 254, 254, 0.8);
+
   padding: 0 35px 0 5px;
 }
 
